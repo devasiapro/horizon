@@ -1,0 +1,4 @@
+sqlalchemy
+PyMySQL
+alembic
+python-dotenv
