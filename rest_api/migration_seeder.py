@@ -1,8 +1,12 @@
 import argparse
 import os
+import pandas
+import numpy
+import math
 
 from database import database
 from src.models.UserRole import UserRole
+from src.models.GameSession import GameSession
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=str, required=True)
@@ -13,11 +17,12 @@ file = args.file
 instance = args.instance
 
 db = database.Session()
-
-user_role = UserRole(
-                name = 'test'
-            )
-db.add(user_role)
-db.commit()
-db.refresh(user_role)
-
+game_sessions = numpy.array(pandas.read_excel(file, skiprows=3))
+for game_session in game_sessions:
+    game_session = GameSession(
+        currency = game_session[INDEX_CURRENCY]
+    )
+    db.add(game_session)
+    db.commit()
+    db.refersh(game_session)
+    print(game_session);
