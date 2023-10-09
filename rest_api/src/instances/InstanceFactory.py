@@ -1,9 +1,12 @@
-class InstanceFactory():
+from .Dragon import Dragon
+from .Dragon88 import Dragon88
 
-    def buildInstance(instance_type):
-        if instance_type == 'dragon88'
-            return instance_type
+class InstanceFactory:
+
+    def buildInstance(self, instance_type):
+        if instance_type == 'dragon88':
+            return Dragon88()
         if instance_type == 'dragon':
-            return instance_type
+            return Dragon() 
 
-        return instance_type
+        return Dragon88() 

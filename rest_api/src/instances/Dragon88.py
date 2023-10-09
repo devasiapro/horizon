@@ -1,4 +1,4 @@
-class Dragon88():
+class Dragon88:
     INDEX_CURRENCY = 0
     INDEX_COMPANY = 1
     INDEX_INSTANCE = 2

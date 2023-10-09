@@ -1,2 +1,2 @@
-class Dragon():
+class Dragon:
     pass
