@@ -10,7 +10,7 @@ class GameSession(database.Base):
     player = relationship('Player', back_populates='game_sessions')
     date_played = Column(Date(), nullable=False)
     game_id = Column(Integer(), ForeignKey('game.id'), nullable=False)
-    game = relationship('Game', back_populates='game_sessions')
+    game = relationship('Game', back_populates='game_sessions', lazy=False)
     client_platform_id = Column(Integer(), ForeignKey('client_platform.id'), nullable=False)
     client_platform = relationship('ClientPlatform', back_populates='client_platforms')
     total_game_bet = Column(Numeric(10, 2, asdecimal=True), nullable=False)

@@ -9,5 +9,5 @@ class Game(database.Base):
     client_type = relationship('ClientType', back_populates='games')
     name = Column(String(256), nullable=False)
     game_type_id = Column(Integer, ForeignKey('game_type.id'), nullable=False)
-    game_type = relationship('GameType', back_populates='games')
+    game_type = relationship('GameType', back_populates='games', lazy=False)
     game_sessions = relationship('GameSession', back_populates='game')
