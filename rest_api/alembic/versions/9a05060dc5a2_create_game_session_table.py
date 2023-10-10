@@ -30,10 +30,9 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(['game_id'], ['game.id'], ondelete='cascade'),
         sa.Column('client_platform_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['client_platform_id'], ['client_platform.id'], ondelete='cascade'),
-        sa.Column('return_to_play', sa.DECIMAL(5, 2), nullable=False),
-        sa.Column('total_game_bet', sa.DECIMAL(5, 2), nullable=False),
-        sa.Column('total_game_win', sa.DECIMAL(5, 2), nullable=False),
-        sa.Column('total_game_income', sa.DECIMAL(5, 2), nullable=False)
+        sa.Column('total_game_bet', sa.DECIMAL(10, 2), nullable=False),
+        sa.Column('total_game_win', sa.DECIMAL(10, 2), nullable=False),
+        sa.Column('total_game_income', sa.DECIMAL(10, 2), nullable=False)
     )
     pass
 

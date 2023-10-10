@@ -2,3 +2,9 @@ sqlalchemy
 PyMySQL
 alembic
 python-dotenv
+mysql-connector-python
+pandas
+numpy
+cryptography
+openpyxl
+pydantic
