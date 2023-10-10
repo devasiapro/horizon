@@ -20,8 +20,8 @@ from src.models.TopLevelEntity import TopLevelEntity
 from src.instances.InstanceFactory import InstanceFactory
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--file', type=str, required=True)
-parser.add_argument('--instance', type=str, required=True)
+parser.add_argument('--file', type=str, required=True, help="Absolute Excel file path with file name in Y-m-d format")
+parser.add_argument('--instance', type=str, required=True, help="'dragon' or 'dragon88'")
 
 args = parser.parse_args()
 file = args.file
@@ -58,25 +58,28 @@ for index, game_session in enumerate(game_sessions):
         db.commit()
         db.refresh(player_model)
 
-    top_level_entity_model = db.query(TopLevelEntity).filter(TopLevelEntity.name == game_session[instance.INDEX_TOP_LEVEL_ENTITY]).first()
-    if not top_level_entity_model:
-        top_level_entity_model = TopLevelEntity(
-            name = game_session[instance.INDEX_TOP_LEVEL_ENTITY]
-        )
-        db.add(top_level_entity_model)
-        db.commit()
-        db.refresh(top_level_entity_model)
+    top_level_entity_model = None
+    if not pandas.isna(game_session[instance.INDEX_TOP_LEVEL_ENTITY]):
+        top_level_entity_model = db.query(TopLevelEntity).filter(TopLevelEntity.name == game_session[instance.INDEX_TOP_LEVEL_ENTITY]).first()
+        if not top_level_entity_model:
+            top_level_entity_model = TopLevelEntity(
+                name = game_session[instance.INDEX_TOP_LEVEL_ENTITY]
+            )
+            db.add(top_level_entity_model)
+            db.commit()
+            db.refresh(top_level_entity_model)
 
-    kiosk_model = db.query(Kiosk).filter(Kiosk.brand == game_session[instance.INDEX_KIOSK]).first()
-    if not kiosk_model:
-        kiosk_model = Kiosk(
-            brand = game_session[instance.INDEX_KIOSK],
-            operator_id = operator_model.id,
-            top_level_entity_id = operator_model.id
-        )
-        db.add(kiosk_model)
-        db.commit()
-        db.refresh(kiosk_model)
+    if not pandas.isna(game_session[instance.INDEX_KIOSK]):
+        kiosk_model = db.query(Kiosk).filter(Kiosk.brand == game_session[instance.INDEX_KIOSK]).first()
+        if not kiosk_model:
+            kiosk_model = Kiosk(
+                brand = game_session[instance.INDEX_KIOSK],
+                operator_id = operator_model.id,
+                top_level_entity_id = operator_model.id
+            )
+            db.add(kiosk_model)
+            db.commit()
+            db.refresh(kiosk_model)
 
     client_type_model = db.query(ClientType).filter(ClientType.name == game_session[instance.INDEX_CLIENT_TYPE]).first()
     if not client_type_model:
