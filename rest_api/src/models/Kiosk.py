@@ -10,3 +10,4 @@ class Kiosk(database.Base):
     operator = relationship('Operator', back_populates='kiosks')
     top_level_entity_id = Column(Integer, ForeignKey('top_level_entity.id'), nullable=False)
     top_level_entity = relationship('TopLevelEntity', back_populates='kiosks')
+    players = relationship('Player', back_populates='kiosk')

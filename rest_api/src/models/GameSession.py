@@ -7,7 +7,7 @@ class GameSession(database.Base):
     id = Column(Integer, primary_key=True, index=True)
     currency = Column(String(32), nullable=False)
     player_id = Column(Integer(), ForeignKey('player.id'), nullable=False)
-    player = relationship('Player', back_populates='game_sessions')
+    player = relationship('Player', back_populates='game_sessions', lazy=False)
     date_played = Column(Date(), nullable=False)
     game_id = Column(Integer(), ForeignKey('game.id'), nullable=False)
     game = relationship('Game', back_populates='game_sessions', lazy=False)
