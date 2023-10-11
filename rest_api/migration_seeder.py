@@ -44,21 +44,7 @@ for index, game_session in enumerate(game_sessions):
         db.commit()
         db.refresh(operator_model)
 
-    player_model = db.query(Player).filter(Player.username == game_session[instance.INDEX_USERNAME]).first()
-    if not player_model:
-        player_model = Player(
-            username = game_session[instance.INDEX_USERNAME],
-            operator_id = operator_model.id,
-            player_currency = game_session[instance.INDEX_PLAYER_CURRENCY],
-            language = game_session[instance.INDEX_LANGUAGE],
-            country = game_session[instance.INDEX_COUNTRY],
-            player_code = game_session[instance.INDEX_PLAYER_CODE]
-        )
-        db.add(player_model)
-        db.commit()
-        db.refresh(player_model)
-
-    top_level_entity_model = None
+    top_level_entity_model = TopLevelEntity()
     if not pandas.isna(game_session[instance.INDEX_TOP_LEVEL_ENTITY]):
         top_level_entity_model = db.query(TopLevelEntity).filter(TopLevelEntity.name == game_session[instance.INDEX_TOP_LEVEL_ENTITY]).first()
         if not top_level_entity_model:
@@ -69,6 +55,7 @@ for index, game_session in enumerate(game_sessions):
             db.commit()
             db.refresh(top_level_entity_model)
 
+    kiosk_model = Kiosk()
     if not pandas.isna(game_session[instance.INDEX_KIOSK]):
         kiosk_model = db.query(Kiosk).filter(Kiosk.brand == game_session[instance.INDEX_KIOSK]).first()
         if not kiosk_model:
@@ -80,6 +67,21 @@ for index, game_session in enumerate(game_sessions):
             db.add(kiosk_model)
             db.commit()
             db.refresh(kiosk_model)
+
+    player_model = db.query(Player).filter(Player.username == game_session[instance.INDEX_USERNAME]).first()
+    if not player_model:
+        player_model = Player(
+            username = game_session[instance.INDEX_USERNAME],
+            operator_id = operator_model.id,
+            player_currency = game_session[instance.INDEX_PLAYER_CURRENCY],
+            language = game_session[instance.INDEX_LANGUAGE],
+            country = game_session[instance.INDEX_COUNTRY],
+            player_code = game_session[instance.INDEX_PLAYER_CODE],
+            kiosk_id = kiosk_model.id
+        )
+        db.add(player_model)
+        db.commit()
+        db.refresh(player_model)
 
     client_type_model = db.query(ClientType).filter(ClientType.name == game_session[instance.INDEX_CLIENT_TYPE]).first()
     if not client_type_model:

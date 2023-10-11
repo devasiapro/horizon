@@ -28,11 +28,10 @@ def upgrade() -> None:
         sa.Column('player_currency', sa.String(32), nullable=False),
         sa.Column('language', sa.String(32), nullable=False),
         sa.Column('country', sa.String(64), nullable=False),
-        sa.Column('player_code', sa.String(32), nullable=False)
+        sa.Column('player_code', sa.String(32), nullable=False),
+        sa.Column('kiosk_id', sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(['kiosk_id'], ['kiosk.id'], ondelete='cascade')
     )
-    pass
-
 
 def downgrade() -> None:
     op.drop_table('player');
-    pass
