@@ -21,7 +21,7 @@ export const Register = () => {
 
   const register = async () => {
     try {
-      const response = await axios.post('http://localhost/api/register', {
+      const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/register`, {
         'username': username,
         'password': password
       });
