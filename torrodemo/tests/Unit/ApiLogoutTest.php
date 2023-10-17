@@ -17,11 +17,12 @@ class ApiLogoutTest extends TestCase
     public function test_player_successfully_logout(): void
     {
         $this->seed();
-
+        Http::fake([
+            config('torro.api_url') . '/api/end-session' => Http::response([], 200)
+        ]);
+        Http::withHeaders([])->post(config('torro.api_url') . '/api/end-session');
         $player = Player::factory()->create();
-
         Sanctum::actingAs($player);
-
         $response = $this->postJson('api/logout');
         $response->assertStatus(200);
     }

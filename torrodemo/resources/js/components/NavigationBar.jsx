@@ -20,7 +20,6 @@ export const NavigationBar = () => {
   const authHook = useAuth();
 
   useEffect(() => {
-    console.log('useEffect');
     const init = async () => {
       try {
         await authHook.startupLoginCheck();
@@ -63,13 +62,20 @@ export const NavigationBar = () => {
         </Button> 
         <Spacer />
         <ButtonGroup gap="4">
-          <Button 
-            onClick={() => navigate('/guide')}
-            variant="outline" 
-            colorScheme="green"
-          >
-            Guide
-          </Button>
+            <>
+              { authContext.auth.isSignedIn &&
+              <Text marginTop="10px">
+                Balance: {authContext.auth.player.currency} {authContext.auth.player.balance}
+              </Text>
+              }
+              <Button 
+                onClick={() => navigate('/guide')}
+                variant="outline" 
+                colorScheme="green"
+              >
+                Guide
+              </Button>
+            </>
           { !authContext.auth.isSignedIn &&
             <>
             <Button 
@@ -89,6 +95,7 @@ export const NavigationBar = () => {
             </>
           }
           { authContext.auth.isSignedIn &&
+            <>
             <Button 
               onClick={() => logout()}
               variant="outline" 
@@ -96,6 +103,7 @@ export const NavigationBar = () => {
             >
               Logout   
             </Button>
+            </>
           }
         </ButtonGroup>
       </Flex>
