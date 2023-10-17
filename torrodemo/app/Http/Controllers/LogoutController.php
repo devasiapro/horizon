@@ -22,7 +22,22 @@ class LogoutController extends Controller
 
     public function __invoke(Request $request)
     {
+        $casinoUserId = auth()->user()->casino_user_id;
         auth()->user()->tokens()->delete();
+
+        $hash = md5($casinoUserId . config('torro.secret_key')); 
+        $payload = [
+            'user_id' => $casinoUserId,
+            'hash' => $hash,
+        ];
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Content-Length' =>  strlen(json_encode($payload)),
+            'X-Api-Key' => config('torro.api_key'),
+        ])
+        ->withOptions(['verify' => false])
+        ->post(config('torro.api_url') . '/api/end-session', $payload);
+
         return response()->json([], 200);
     }
 }

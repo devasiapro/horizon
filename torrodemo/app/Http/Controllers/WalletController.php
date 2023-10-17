@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+use App\Models\Player;
+use App\Models\Game;
+
+class WalletController extends Controller
+{
+    private Player $player;
+    private Game $game;
+
+    public function __construct(Player $player, Game $game)
+    {
+        $this->player= $player;
+        $this->game = $game;
+    }
+
+    public function __invoke(Request $request)
+    {
+        switch ($request->get('action')) {
+            case 'request_balance':
+                $player = $this
+                    ->player
+                    ->where('casino_user_id', $request->get('user_id'))
+                    ->firstOrFail();
+
+                $hash = md5(
+                    'request_balance' . 
+                    $player->casino_user_id . 
+                    $request->get('token') . 
+                    config('torro.secret_key')
+                );
+
+                if ($hash !== $request->get('hash')) {
+                    return response()->json([
+                        'message' => 'Invalid hash',
+                    ], 401);
+                }
+                
+                $hash = md5(true . 
+                    $player->balance . 
+                    $player->casino_user_id . 
+                    $request->get('token') . 
+                    config('torro.secret_key')
+                );
+
+                return response()->json([
+                    'success' => true,
+                    'balance' => $player->balance, 
+                    'user_id' => $player->casino_user_id,
+                    'token' => $request->get('token'),
+                    'hash' => $hash,
+                ]);
+                break;
+            case 'update_balance':
+                $player = $this
+                    ->player
+                    ->where('casino_user_id', $request->get('user_id'))
+                    ->firstOrFail();
+
+                $game = $this
+                    ->game
+                    ->where('launch_code', '=', $request->get('game_name'))
+                    ->firstOrFail();
+
+                $hash = md5(
+                    $request->get('action') . 
+                    $request->get('user_id') .
+                    $request->get('bet') .
+                    $request->get('win') .
+                    $request->get('is_jackpot') .
+                    $request->get('game_name') .
+                    $request->get('transaction_id') .
+                    $request->get('round_id') .
+                    $request->get('session_id') .
+                    $request->get('token') .
+                    config('torro.secret_key')
+                );
+
+                if ($hash !== $request->get('hash')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid hash',
+                        'reason' => 'Invalid hash',
+                    ], 401);
+                }
+
+                $player->balance = $player->balance + 
+                    ($request->get('win') - $request->get('bet'));
+                $player->save();
+
+                $hash = md5(
+                    true . 
+                    $player->balance . 
+                    $request->get('token') . config('torro.secret_key'));
+
+                return response()->json([
+                    'success' =>  true,
+                    'balance' => $player->balance,
+                    'token' => $request->get('token'),
+                    'hash' => $hash,
+                    'reason' => '',
+                ], 200); 
+               break; 
+            default:
+                return response()->json([
+                    'message' => 'Invalid action.', 
+                ], 422);
+        }
+    }
+}

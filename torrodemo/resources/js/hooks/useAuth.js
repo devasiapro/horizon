@@ -50,9 +50,7 @@ export const useAuth = () => {
   };
 
   const startupLoginCheck = async () => {
-    console.log('startupLoginCheck');
     const cookie = new Cookies();
-    console.log('cookie', cookie.get('is_auth'));
     if (cookie.get('is_auth')) {
       try {
         const response = await axios.get(`${import.meta.env.VITE_APP_URL}/api/me`);
