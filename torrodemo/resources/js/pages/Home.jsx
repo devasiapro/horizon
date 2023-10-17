@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 import { NavigationBar } from '../components/NavigationBar';
+import { Footer } from '../components/Footer';
 import { AuthContext } from '../context/AuthContext';
 
 export const Home = () => {
@@ -89,6 +90,7 @@ export const Home = () => {
         )}
         </Grid>
       </Container>
+      <Footer />
     </div>
   );
 };

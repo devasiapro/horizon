@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 
+import { Footer } from '../components/Footer';
 import { NavigationBar } from '../components/NavigationBar';
 import { AuthContext } from '../context/AuthContext';
 import { useAuth } from '../hooks/useAuth';
@@ -83,6 +84,7 @@ export const Login = () => {
         </Button>
 
       </Container>
+      <Footer />
     </React.Fragment>
   );
 };

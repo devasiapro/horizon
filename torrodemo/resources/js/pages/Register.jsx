@@ -13,6 +13,7 @@ import {
   FormHelperText
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { Footer } from '../components/Footer';
 
 export const Register = () => {
   const [username, setUsername] = useState('');
@@ -71,6 +72,7 @@ export const Register = () => {
         </Button>
 
       </Container>
+      <Footer />
     </React.Fragment>
   );
 };

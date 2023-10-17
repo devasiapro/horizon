@@ -9,6 +9,7 @@ import {
   CardHeader,
   Heading
 } from '@chakra-ui/react';
+import { Footer } from '../components/Footer';
 
 export const Guide = () => {
   const sampleCode = `
@@ -87,6 +88,7 @@ call();
           </CardBody>
         </Card>
       </Container>
+      <Footer />
     </div>
   );
 };
