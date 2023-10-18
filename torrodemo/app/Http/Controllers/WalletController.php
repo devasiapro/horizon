@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class WalletController extends Controller
 
     public function __invoke(Request $request)
     {
+        Log::info('Torrospin callback action: ' . $request->get('action'));
         switch ($request->get('action')) {
             case 'request_balance':
                 $player = $this
@@ -40,6 +42,7 @@ class WalletController extends Controller
                 );
 
                 if ($hash !== $request->get('hash')) {
+                    Log::error('Torrospin callback: Invalid hash. ' . json_encode($request->all()));
                     return response()->json([
                         'message' => 'Invalid hash',
                     ], 401);
@@ -76,7 +79,7 @@ class WalletController extends Controller
                     $request->get('user_id') .
                     $request->get('bet') .
                     $request->get('win') .
-                    $request->get('is_jackpot') .
+                    $request->get('Is_jackpot') .
                     $request->get('game_name') .
                     $request->get('transaction_id') .
                     $request->get('round_id') .
