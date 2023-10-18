@@ -33,9 +33,22 @@ export const Home = () => {
     init();
   }, []);
 
+  const randHex = (len) => {
+    const maxlen = 8;
+    const min = Math.pow(16, Math.min(len, maxlen) - 1);
+    const max = Math.pow(16, Math.min(len, maxlen)) - 1;
+    const n = Math.floor(Math.random() * (max - min + 1)) + min;
+    let r = n.toString(24);
+    while (r.length < len) {
+       r = r + randHex(len - maxlen);
+    }
+    return r;
+  };
+
   const play = async (game) => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/game-link`, {
+        token: randHex(16),
         launch_code: game.launch_code,
         device: 'desktop'
       }, {
