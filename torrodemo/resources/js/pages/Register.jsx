@@ -37,7 +37,6 @@ export const Register = () => {
       setNotificationMessage('You\'re registration was successful! Please try to login.');
     } catch (err) {
       if (err.response.status === 422) {
-        console.log(err.response.data.errors.username[0]);
         setErrors(err.response.data.errors);
       } else if (err.response.status === 500) {
         setOtherError(
