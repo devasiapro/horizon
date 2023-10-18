@@ -38,5 +38,6 @@ class ApiLoginTest extends TestCase
         ]);
 
         $response->assertStatus(422);
+        $response->assertSee('The username field is required');
     }
 }

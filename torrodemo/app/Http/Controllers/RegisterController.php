@@ -19,7 +19,7 @@ class RegisterController extends Controller
         $this->player = $player;
     }
 
-    public function __invoke(RegisterRequest $request): Player
+    public function __invoke(RegisterRequest $request)
     {
         $username = $request->get('username');
         $casinoUserId = Str::random(8);
@@ -29,7 +29,7 @@ class RegisterController extends Controller
         $this->player->casino_user_id = $casinoUserId;
         $this->player->is_added_to_torro = false;
         $this->player->currency = 'USD';
-        $this->player->balance = 1000.00;
+        $this->player->balance = 2500.00;
         $this->player->save();
         
         $hash = md5($casinoUserId . $username . config('torro.secret_key'));
@@ -50,10 +50,11 @@ class RegisterController extends Controller
         if ($response->successful()) {
             $this->player->is_added_to_torro = true;
             $this->player->save();
+            return response()->json($this->player);
         } else {
-            // TODO: Torrospin API fail action
+            $this->player->delete();
+            return response()->json([
+                'message' => 'A 3rd party issue has been detected. Please report to the admin: ' . $response->body()], 500);
         }
-
-        return $this->player;
     }
 }
