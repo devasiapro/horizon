@@ -74,16 +74,18 @@ class WalletController extends Controller
                     ->where('launch_code', '=', $request->get('game_name'))
                     ->firstOrFail();
 
+                // TODO: Stop hard coding this because the order of parameters are changing or
+                // unreliable. Create a function to automatically extract values and hash.
                 $hash = md5(
-                    $request->get('action') . 
+                    $request->get('action') .
                     $request->get('user_id') .
                     $request->get('bet') .
                     $request->get('win') .
-                    $request->get('Is_jackpot') .
+                    $request->get('is_jackpot') .
                     $request->get('game_name') .
                     $request->get('transaction_id') .
-                    $request->get('round_id') .
                     $request->get('session_id') .
+                    $request->get('round_id') .
                     $request->get('token') .
                     config('torro.secret_key')
                 );
