@@ -2,3 +2,12 @@ sqlalchemy
 PyMySQL
 alembic
 python-dotenv
+mysql-connector-python
+wheel
+pandas
+numpy
+cryptography
+openpyxl
+pydantic
+uvicorn
+fastapi

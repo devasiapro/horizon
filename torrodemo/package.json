@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.1.0",
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.8.0",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@chakra-ui/react": "^2.8.1",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "dotenv": "^16.3.1",
+        "framer-motion": "^10.16.4",
+        "install": "^0.13.0",
+        "localforage": "^1.10.0",
+        "match-sorter": "^6.3.1",
+        "npm": "^10.2.0",
+        "react": "^18.2.0",
+        "react-cookie": "^6.1.1",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.16.0",
+        "sort-by": "^1.2.0"
+    }
+}
