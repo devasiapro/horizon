@@ -52,8 +52,8 @@ class ApiWalletTorrospinTest extends TestCase
             0.00 .
             $game->launch_code .
             'transactionid' .
-            'roundid' .
             'sessionid' .
+            'roundid' .
             'tokentoken' .
             config('torro.secret_key')
         );
@@ -71,8 +71,8 @@ class ApiWalletTorrospinTest extends TestCase
                 'remained' => 15,
             ],
             'transaction_id' => 'transactionid',
-            'round_id' => 'roundid',
             'session_id' => 'sessionid',
+            'round_id' => 'roundid',
             'token' => 'tokentoken',
             'hash' => $hash,
         ]);
