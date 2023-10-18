@@ -24,7 +24,7 @@ class GameLinkController extends Controller
     public function __invoke(Request $request)
     {
         $player = auth()->user();
-        $token = $player->tokens()->first() ? $player->tokens()->first()->token : '';
+        $token = $request->get('token');
         $hash = md5($token .
             $request->get('launch_code') .
             $player->casino_user_id .
