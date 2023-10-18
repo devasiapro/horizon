@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class RegisterController extends Controller
 
     public function __invoke(RegisterRequest $request)
     {
+        Log::info('start register: ' . $request->get('username'));
         $username = $request->get('username');
         $casinoUserId = Str::random(8);
 
@@ -52,6 +54,7 @@ class RegisterController extends Controller
             $this->player->save();
             return response()->json($this->player);
         } else {
+            Log::error('torrospin add user failed: ' . $response->body());
             $this->player->delete();
             return response()->json([
                 'message' => 'A 3rd party issue has been detected. Please report to the admin: ' . $response->body()], 500);
