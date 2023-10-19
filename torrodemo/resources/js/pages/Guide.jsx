@@ -13,6 +13,7 @@ import { Footer } from '../components/Footer';
 import { Tutorial } from '../components/Tutorial';
 import { ApiReference } from '../components/ApiReference';
 import { CallbackUrlReference } from '../components/CallbackUrlReference';
+import { DeveloperReference } from '../components/DeveloperReference';
 
 export const Guide = () => {
   return (
@@ -23,6 +24,7 @@ export const Guide = () => {
           <Tab pt="20px" pb="20px">Tutorial</Tab>
           <Tab pt="20px" pb="20px">API Reference</Tab>
           <Tab pt="20px" pb="20px">Callback URL Reference</Tab>
+          <Tab pt="20px" pb="20px">Developer Reference</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -33,6 +35,9 @@ export const Guide = () => {
           </TabPanel>
           <TabPanel>
             <CallbackUrlReference />
+          </TabPanel>
+          <TabPanel>
+            <DeveloperReference />
           </TabPanel>
         </TabPanels>
       </Tabs>
