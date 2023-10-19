@@ -18,11 +18,11 @@ export const Guide = () => {
   return (
     <div>
       <NavigationBar />
-      <Tabs>
+      <Tabs isFitted>
         <TabList>
-          <Tab>Tutorial</Tab>
-          <Tab>API Reference</Tab>
-          <Tab>Callback URL Reference</Tab>
+          <Tab pt="20px" pb="20px">Tutorial</Tab>
+          <Tab pt="20px" pb="20px">API Reference</Tab>
+          <Tab pt="20px" pb="20px">Callback URL Reference</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
