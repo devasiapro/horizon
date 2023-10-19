@@ -6,6 +6,8 @@ import {
   Text,
   Image,
   Button,
+  Heading,
+  Divider,
   GridItem,
   CardBody,
   Container,
@@ -71,11 +73,51 @@ export const Home = () => {
     <div>
       <NavigationBar />
       <Container mt="40px" maxW="container.xl">
+        <Heading>Slot Games</Heading>
         <Grid 
           templateColumns='repeat(6, 1fr)' 
           gap={4}
         >
         { games.map((game) => {
+            if (game.game_type !== 'slot') {
+              return;
+            }
+            return (
+              <GridItem key={game.id} w='100%'>
+                <Card>
+                  <CardBody>
+                    <Image
+                      src={game.thumbnail_url}
+                    />
+                  </CardBody>
+                  <CardFooter>
+                    { authContext.auth.isSignedIn &&
+                      <Button onClick={() => play(game)} variant='solid' colorScheme='green'>
+                        Play
+                      </Button>
+                    }
+                    { !authContext.auth.isSignedIn &&
+                      <Text>
+                        Login To Play
+                      </Text>
+                    }
+                  </CardFooter>
+                </Card>
+              </GridItem>
+            );
+          }
+        )}
+        </Grid>
+        <Divider borderW="1px" mt="40px" mb="40px" />
+        <Heading>Live Games</Heading>
+        <Grid 
+          templateColumns='repeat(6, 1fr)' 
+          gap={4}
+        >
+        { games.map((game) => {
+            if (game.game_type !== 'live') {
+              return;
+            }
             return (
               <GridItem key={game.id} w='100%'>
                 <Card>
