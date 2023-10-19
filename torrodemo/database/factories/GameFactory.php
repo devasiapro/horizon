@@ -17,10 +17,13 @@ class GameFactory extends Factory
      */
     public function definition(): array
     {
+        $arr = ['slot', 'live'];
+        shuffle($arr);
         return [
             'name' => fake()->word() . ' ' . fake()->word(),
             'thumbnail_url' => fake()->imageUrl(),
             'launch_code' => fake()->word(),
+            'game_type' => $arr[0],
         ];
     }
 }
