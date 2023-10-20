@@ -47,19 +47,19 @@ class ProductionSeeder extends Seeder
         Game::factory()->create([
             'name' => 'Dragon Tiger',
             'thumbnail_url' => 'https://demo.horizon88.com/Resized%20Live%20Games/Dragon%20Tiger.jpg',
-            'launch_code' => 'dtl',
+            'launch_code' => 'dtl;dtl_dragontiger',
             'game_type' => 'live',
         ]);
         Game::factory()->create([
             'name' => 'Bet On Poker',
             'thumbnail_url' => 'https://demo.horizon88.com/Resized%20Live%20Games/Bet%20On%20Poker.jpg',
-            'launch_code' => 'bs_pokl',
+            'launch_code' => 'bs_pokl;bs_pokl_betonpoker',
             'game_type' => 'live',
         ]);
         Game::factory()->create([
             'name' => 'Roulette',
             'thumbnail_url' => 'https://demo.horizon88.com/Resized%20Live%20Games/Roulette.jpg',
-            'launch_code' => 'rol_loungerol',
+            'launch_code' => 'rol;rol_loungerol',
             'game_type' => 'live',
         ]);
     }
