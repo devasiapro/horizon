@@ -212,10 +212,16 @@ call();
 
           <AccordionItem>
             <h1>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  Request Link Real
+              <AccordionButton bg="blue.50">
+                <Box display="flex" as="span" flex="1" textAlign="left">
+                  <Tag colorScheme="teal" variant="solid" size="lg">
+                    Post
+                  </Tag> 
+                  <Text ml="20px" mt="6px">
+                    /request-link-real
+                  </Text>
                 </Box>
+                <AccordionIcon />
               </AccordionButton>
             </h1>
             <AccordionPanel pb={4}>
@@ -225,10 +231,16 @@ call();
 
           <AccordionItem>
             <h1>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  End Session
+              <AccordionButton bg="blue.50">
+                <Box display="flex" as="span" flex="1" textAlign="left">
+                  <Tag colorScheme="teal" variant="solid" size="lg">
+                    Post
+                  </Tag> 
+                  <Text ml="20px" mt="6px">
+                    /end-session
+                  </Text>
                 </Box>
+                <AccordionIcon />
               </AccordionButton>
             </h1>
             <AccordionPanel pb={4}>
