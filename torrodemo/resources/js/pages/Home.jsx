@@ -49,8 +49,9 @@ export const Home = () => {
 
   const play = async (game) => {
     try {
+      const token = randHex(16);
       const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/game-link`, {
-        token: randHex(16),
+        token: token,
         launch_code: game.launch_code,
         device: 'desktop'
       }, {
@@ -60,7 +61,22 @@ export const Home = () => {
       });
       console.log('response', response);
       if (response.data.status === 200) {
-        window.open(response.data.url, game.name, 'popup');
+        const gameWindow = window.open(response.data.url, game.name, 'popup');
+        const timer = setInterval(async () => {
+          console.log('window.closed()');
+          if (gameWindow.closed) {
+            clearInterval(timer);
+            try {
+              const response = await axios.post(
+                `${import.meta.env.VITE_APP_URL}/api/game-close`, {
+                'request_token': token,
+              });
+              console.log('response', response);
+            } catch (err) {
+              console.log('err', err);
+            }
+          }
+        }, 1000);
       } else {
         window.alert('Error: ' + response.data.message);
       }
@@ -108,7 +124,7 @@ export const Home = () => {
           }
         )}
         </Grid>
-        <Divider borderW="1px" mt="40px" mb="40px" />
+        <Divider borderw="1px" mt="40px" mb="40px" />
         <Heading>Live Games</Heading>
         <Grid 
           templateColumns='repeat(6, 1fr)' 
