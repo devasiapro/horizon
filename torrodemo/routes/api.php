@@ -8,6 +8,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\GameListController;
 use App\Http\Controllers\GameLinkController;
+use App\Http\Controllers\GameCloseController;
 use App\Http\Controllers\WalletController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -22,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/me', MeController::class);
 
 Route::get('game', GameListController::class);
 Route::middleware('auth:sanctum')->post('game-link', GameLinkController::class);
+Route::post('game-close', GameCloseController::class);
 
 Route::post('wallet/torrospin', WalletController::class);
