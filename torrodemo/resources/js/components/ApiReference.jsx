@@ -24,7 +24,15 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton
+  ModalCloseButton,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer
 } from '@chakra-ui/react';
 
 export const ApiReference = () => {
@@ -74,12 +82,33 @@ const call = async () => {
 call();
   `
 
+  const docs = {
+    addUser: {
+      headers: `
+'Content-Type': 'application/json'
+'X-Api-Key': API_KEY_HERE
+`,
+      parameters: `
+{
+    "casino_user_id": "casinouserid",
+    "username": "casinouser",
+    "hash": "hashhere"
+}
+      `,
+      responseSuccess: `
+{
+  "casino_user_id": "casinouserid",
+  "username": "casinouser"
+}
+`
+    }
+  };
+
   return (
     <React.Fragment>
       <Heading mt="40px" align="center" mb="40px" fontSize="2xl">
         API Reference 
       </Heading>
-
       <Center>
       <Box p="20px" w="1024px" borderRadius="md" borderWidth="1px">
         <Text mb="20px" color="blue.500">https://api.torrospins.com/api</Text>
@@ -103,12 +132,79 @@ call();
               <Text>Add a player to Torrospin records.</Text>
               <Divider mt="10px" mb="10px"/> 
               <Text as="b">Headers:</Text>
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.addUser.headers }
+                  </pre>
+                </Code>
+              </Text>
               <Divider mt="10px" mb="10px"/> 
               <Text as="b">Parameters:</Text>
+              <TableContainer mt="20px" mb="20px" borderWidth="1px">
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th>Name</Th>
+                      <Th>Description</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>casino_user_id</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Your generated 8 character unique name.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Username</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          The username used in login.
+                        </Text>
+                      </Td>   
+                    </Tr>
+                    <Tr>
+                      <Td>Hash</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Generated hash key. Please refer to the Developer Reference on
+                          how to generate a hash key.
+                        </Text>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.addUser.parameters }
+                  </pre>
+                </Code>
+              </Text>
               <Divider mt="10px" mb="10px"/> 
               <Text as="b">Responses:</Text>
+              <Text>201</Text>
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.addUser.responseSuccess }
+                  </pre>
+                </Code>
+              </Text>
+              
               <Divider mt="10px" mb="10px"/> 
-              <Button onClick={onOpen}>
+              <Button 
+                variant="outline" 
+                colorScheme="green"
+                onClick={onOpen}
+              >
                 Code Sample
               </Button>
             </AccordionPanel>
@@ -123,7 +219,7 @@ call();
               </AccordionButton>
             </h1>
             <AccordionPanel pb={4}>
-              adalsdlasfajldjalsdjladjalk
+              Test
             </AccordionPanel>
           </AccordionItem>
 
