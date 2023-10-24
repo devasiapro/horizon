@@ -61,22 +61,11 @@ export const Home = () => {
       });
       console.log('response', response);
       if (response.data.status === 200) {
-        const gameWindow = window.open(response.data.url, game.name, 'popup');
-        const timer = setInterval(async () => {
-          console.log('window.closed()');
-          if (gameWindow.closed) {
-            clearInterval(timer);
-            try {
-              const response = await axios.post(
-                `${import.meta.env.VITE_APP_URL}/api/game-close`, {
-                'request_token': token,
-              });
-              console.log('response', response);
-            } catch (err) {
-              console.log('err', err);
-            }
-          }
-        }, 1000);
+        const gameWindow = window.open(
+          `${import.meta.env.VITE_APP_URL}/play?token=${token}&game_url=${response.data.url}`,
+          game.name, 
+          'popup'
+        );
       } else {
         window.alert('Error: ' + response.data.message);
       }
