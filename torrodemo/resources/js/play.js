@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 window.addEventListener('beforeunload', async (ev) => {
-  ev.preventDefault();
   const token = document.querySelector('#token').value;
   try {
-    const response = await axios.post(
+    axios.post(
       `${import.meta.env.VITE_APP_URL}/api/game-close`, {
       'request_token': token,
     });
@@ -14,4 +13,7 @@ window.addEventListener('beforeunload', async (ev) => {
   } finally {
 
   }
+  // STUB: remove popup if it is not needed to ensure that axios post makes the call.
+  // ev.preventDefault();
+  // ev.returnValue = '';
 });
