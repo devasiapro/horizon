@@ -36,7 +36,10 @@ class GameCloseController extends Controller
         ->post(config('torro.api_url') . '/api/gameClosed', $payload);
 
         if ($response->successful()) {
-            return response()->json(json_decode($response->body()));
+            return response()->json([
+                'data' => json_decode($response->body()),
+                'status' => $response->status(),
+            ]);
         } else {
             // TODO: Torrospin API fail action
             return response()->json([
