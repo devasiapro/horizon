@@ -4,6 +4,8 @@
 
 CRM application for Realsourcing to monitor transactions between providers and developers.
 
+Note that Torrospin Demo has it's own setup in the "torrodemo" folder.
+
 ## Local Installation
 
 ### Requirements
