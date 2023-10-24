@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class GameCloseController extends Controller
@@ -17,6 +18,7 @@ class GameCloseController extends Controller
 
     public function __invoke(Request $request)
     {
+        Log::info($request->get('request_token'));
         $requestToken = $request->get('request_token');
         $hash = md5($requestToken .
             config('torro.secret_key')

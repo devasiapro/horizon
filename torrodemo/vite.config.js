@@ -7,7 +7,7 @@ export default defineConfig({
     watch: false
   },
   plugins: [
-    laravel(['resources/js/app.jsx']),
+    laravel(['resources/js/app.jsx', 'resources/js/play.js']),
     react(),
   ],
   server: {
