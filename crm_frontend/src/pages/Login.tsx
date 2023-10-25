@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,16 +17,34 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
+import axios from 'axios';
+
+import { useAuthHook } from '../hooks/useAuthHook';
 
 const horizonLogo = "https://sys-stg.horizon88.com/img/horizon-logo.png";
 const backgroundImage = "https://sys-stg.horizon88.com/img/login.jpg";
 
 export const Login = () => {
-  const [user, setUser] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const handleSubmit = (): void => {
 
+  const authHook = useAuthHook();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event): void => {
+    event.preventDefault() 
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { 
+        email, password 
+      });
+      authHook.setAsLogged(response.data.user, response.data.token);
+      navigate('/');
+    } catch (err) {
+      console.log('err', err);
+    } finally {
+
+    }
   };
 
   return (
@@ -48,8 +66,6 @@ export const Login = () => {
         bg={"whiteAlpha.800"}
         minWidth={"300px"}
         maxWidth={"400px"}
-        // width={"400px"}
-        // height={"500px"}
         p={6}
       >
         <Image
@@ -67,9 +83,6 @@ export const Login = () => {
         <Box>
           <form onSubmit={handleSubmit}>
             <FormControl>
-              {/* <FormLabel htmlFor="username" ml={"20px"}>
-                Username:
-              </FormLabel> */}
               <InputGroup mt={8}>
                 <InputLeftElement pointerEvents="none" ml={1}>
                   <EmailIcon color="horizon.300" />
@@ -78,12 +91,12 @@ export const Login = () => {
                   type="text"
                   id="username"
                   autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   required
                   borderRadius={"20px"}
                   mb={3}
-                  placeholder="Email"
+                  placeholder="Username"
                   color={"horizon.300"}
                   fontWeight={800}
                   bg={"horizon.50"}
@@ -100,7 +113,7 @@ export const Login = () => {
                   type="password"
                   id="password"
                   autoComplete="off"
-                  onChange={(e) => setPwd(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   value={password}
                   required
                   borderRadius={"20px"}
