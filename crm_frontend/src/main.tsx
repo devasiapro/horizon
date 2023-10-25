@@ -7,10 +7,11 @@ import {
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import { AuthContext } from './context/AuthContext';
+import { Layout } from './pages/Layout';
+import { ProtectedRoute } from './pages/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { MyTheme } from "./theme/MyTheme";
-import { ProtectedRoute } from './components/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,9 @@ const router = createBrowserRouter([
     element: <Login />
   },
   { path: '/',
-    element: <ProtectedRoute />,
+    element: (
+      <ProtectedRoute />
+    ),
     children: [
       {
         path: '/',

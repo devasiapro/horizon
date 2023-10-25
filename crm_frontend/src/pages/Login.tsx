@@ -35,7 +35,9 @@ export const Login = () => {
   const handleSubmit = async (event): void => {
     event.preventDefault() 
     try {
-      const response = await axios.post('http://localhost:8888/login', { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { 
+        email, password 
+      });
       authHook.setAsLogged(response.data.user, response.data.token);
       navigate('/');
     } catch (err) {

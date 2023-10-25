@@ -60,14 +60,14 @@ export const useAuthHook = () => {
     try {
       const cookie = new Cookies();
       const token = cookie.get('token');
-        const response = await axios.post('http://localhost:8888/auth', {}, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth`, {}, {
           headers: {
             Authorization: `Bearer ${token}`
           }
       });
       setAsLogged(response.data.user, response.data.token);
     } catch (err) {
-
+      console.log('err', err);
     } finally {
 
     }

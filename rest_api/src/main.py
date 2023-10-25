@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import game_earning, customer_income, login, auth
+from .routes import game_earning, customer_income, login, auth, logout
 
 app = FastAPI(
     title = "Horizon REST API"
@@ -20,3 +20,4 @@ app.include_router(game_earning.router)
 app.include_router(customer_income.router)
 app.include_router(login.router)
 app.include_router(auth.router)
+app.include_router(logout.router)

@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuthHook } from '../hooks/useAuthHook';
+import { Layout } from '../pages/Layout';
 
-export const ProtectedRoute = () => {
+export const ProtectedRoute = ({ children }) => {
   const authHook = useAuthHook();
 
   useEffect(() => {
@@ -17,5 +18,9 @@ export const ProtectedRoute = () => {
     return <Navigate to="/login" />
   }
 
-  return <Outlet />
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  );
 };
