@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -19,6 +19,8 @@ import {
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import axios from 'axios';
 
+import { useAuthHook } from '../hooks/useAuthHook';
+
 const horizonLogo = "https://sys-stg.horizon88.com/img/horizon-logo.png";
 const backgroundImage = "https://sys-stg.horizon88.com/img/login.jpg";
 
@@ -27,12 +29,17 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const authHook = useAuthHook();
+  const navigate = useNavigate();
+
   const handleSubmit = async (event): void => {
-    event.preventDefault();
+    event.preventDefault() 
     try {
       const response = await axios.post('http://localhost:8888/login', { email, password });
+      authHook.setAsLogged(response.data.user, response.data.token);
+      navigate('/');
     } catch (err) {
-
+      console.log('err', err);
     } finally {
 
     }

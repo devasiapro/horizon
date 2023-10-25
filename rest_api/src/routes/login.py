@@ -22,6 +22,7 @@ from src.models.TopLevelEntity import TopLevelEntity
 
 from database import database
 from src.schemas.Login import Login
+from src.schemas.LoginResponse import LoginResponse 
 
 import os
 import pandas
@@ -45,7 +46,11 @@ def generate_token(data: dict):
     return encoded_jwt
 
 @router.post('')
-def login(request: Login, db: Session = Depends(database.get_db)):     
+def login(
+        request: Login, 
+        db: Session = Depends(database.get_db)
+    ) -> LoginResponse:
+
     user = db.query(User).filter(
         User.email == request.email
     ).first()
@@ -69,6 +74,7 @@ def login(request: Login, db: Session = Depends(database.get_db)):
     )
 
     return {
-        "access_token": access_token, 
-        "token_type": "bearer"
+        "token": access_token, 
+        "token_type": "bearer",
+        "user": user
     }

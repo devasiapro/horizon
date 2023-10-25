@@ -17,9 +17,7 @@ export const useAuth = () => {
       return date;
   }
 
-
   const setAsLogged = (player, token) => {
-
     const cookie = new Cookies();
     cookie.set('is_auth', true, {
       path: '/', 
