@@ -63,8 +63,7 @@ export const Home = () => {
       if (response.data.status === 200) {
         const gameWindow = window.open(
           `${import.meta.env.VITE_APP_URL}/play?token=${token}&game_url=${encodeURIComponent(response.data.url)}`,
-          game.name, 
-          'popup'
+          game.name
         );
       } else {
         window.alert('Error: ' + response.data.message);
