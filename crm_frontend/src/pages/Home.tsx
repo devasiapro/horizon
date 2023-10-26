@@ -19,6 +19,7 @@ import moment from 'moment';
 
 import { useAuthHook } from '../hooks/useAuthHook';
 import { IncomePerCustomer } from '../pages/IncomePerCustomer';
+import { KPIContainer } from '../components/KPIContainer';
 
 export const Home = () => {
   const [topData, setTopData] = useState([]);
@@ -105,7 +106,12 @@ export const Home = () => {
         mb={{ base: 3, sm: 6, md: 7, lg: 6 }}
         mt={{ base: 1, sm: 2, md: 4, lg: 6 }}
       >
-        {/** TODO: KPI Grid **/}
+        <KPIContainer 
+          currentDateStart={yesterday.clone().weekday(0)}
+          currentDateEnd={yesterday}
+          previousDateStart={weekBefore.clone().weekday(0)}
+          previousDateEnd={weekBefore}
+        />
       </Box>
 
       <Box>

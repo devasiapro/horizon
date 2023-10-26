@@ -32,7 +32,9 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(['client_platform_id'], ['client_platform.id'], ondelete='cascade'),
         sa.Column('total_game_bet', sa.DECIMAL(10, 2), nullable=False),
         sa.Column('total_game_win', sa.DECIMAL(10, 2), nullable=False),
-        sa.Column('total_game_income', sa.DECIMAL(10, 2), nullable=False)
+        sa.Column('total_game_income', sa.DECIMAL(10, 2), nullable=False),
+        sa.Column('rtp', sa.Integer(), nullable=True),
+        sa.Column('number_of_spins', sa.Integer(), nullable=False)
     )
     pass
 

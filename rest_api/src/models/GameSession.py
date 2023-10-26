@@ -16,3 +16,5 @@ class GameSession(database.Base):
     total_game_bet = Column(Numeric(10, 2, asdecimal=True), nullable=False)
     total_game_win = Column(Numeric(10, 2, asdecimal=True), nullable=False)
     total_game_income = Column(Numeric(10, 2, asdecimal=True), nullable=False)
+    rtp = Column(Integer(), nullable=True)
+    number_of_spins = Column(Integer(), nullable=False)

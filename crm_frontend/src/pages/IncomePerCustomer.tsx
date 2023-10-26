@@ -40,11 +40,11 @@ export const IncomePerCustomer = ({ topData, yesterday, weekBefore }) => {
               <Flex mt="20px">
                 <HStack spacing={1} color={"horizon.300"}>
                   <Text fontSize={"14px"} fontWeight={"800"}>
-                    Last Week: {weekBefore.clone().weekday(0).format('MMM Do, YYYY')} - {weekBefore.format('MMM Do, YYYY')}
+                    Last Week: {weekBefore.clone().weekday(0).format('MMM DD, YYYY')} - {weekBefore.format('MMM DD, YYYY')}
                   </Text>
                   <Divider orientation="vertical" ml="20px" mr="20px" />
                   <Text fontSize={"14px"} fontWeight={"800"}>
-                    Current Week: {yesterday.clone().weekday(0).format('MMM Do, YYYY')} - {yesterday.format('MMM Do, YYYY')}
+                    Current Week: {yesterday.clone().weekday(0).format('MMM DD, YYYY')} - {yesterday.format('MMM DD, YYYY')}
                   </Text>
                 </HStack>
               </Flex>
