@@ -38,13 +38,11 @@ const App = () => {
   });
 
   return (
-    <React.StrictMode>
-      <ChakraProvider theme={MyTheme}>
-        <AuthContext.Provider value={{ auth, setAuth }}>
-          <RouterProvider router={router} />
-        </AuthContext.Provider>
-      </ChakraProvider>
-    </React.StrictMode>
+    <ChakraProvider theme={MyTheme}>
+      <AuthContext.Provider value={{ auth, setAuth }}>
+        <RouterProvider router={router} />
+      </AuthContext.Provider>
+    </ChakraProvider>
   );
 };
 

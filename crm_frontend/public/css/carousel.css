@@ -1,0 +1,9 @@
+.carousel .carousel .dot {
+  background-color: #374a16; /* Customize the color of inactive dots */
+  color: #374a16;
+}
+
+.carousel .carousel .dot.selected {
+  background-color: #ecf1e3; /* Customize the color of the active dot */
+  color: #ecf1e3;
+}

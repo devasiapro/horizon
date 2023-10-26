@@ -6,6 +6,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 export const useAuthHook = () => {
+  const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
   const getAuthCookieExpiration = () => {
@@ -68,6 +69,7 @@ export const useAuthHook = () => {
       setAsLogged(response.data.user, response.data.token);
     } catch (err) {
       console.log('err', err);
+      navigate('/login');
     } finally {
 
     }

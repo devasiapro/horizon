@@ -1,0 +1,9 @@
+.striped {
+  background-color: rgba(55, 74, 22, 0.05);
+  font-size: 14px;
+}
+
+.header {
+  text-align: center;
+  font-size: 20px;
+}
