@@ -25,7 +25,7 @@ import {
 import { BsChevronDoubleRight, BsCaretDownFill } from "react-icons/bs";
 import styles from "../../public/css/Table.module.css";
 
-export const IncomePerCustomer = ({ topData, yesterday, weekBefore }) => {
+export const IncomePerCustomer = ({ topData, yesterday, weekBefore, filter }) => {
   return (
     <React.Fragment>
       <Box>
@@ -34,7 +34,7 @@ export const IncomePerCustomer = ({ topData, yesterday, weekBefore }) => {
             <Box mt={3} mb={5} px={5}>
               <Flex>
                 <Heading size="md" color={"horizon.300"}>
-                  Income per Customer
+                  Income per {filter.charAt(0).toUpperCase() + filter.slice(1)}
                 </Heading>
               </Flex>
               <Flex mt="20px">
@@ -60,7 +60,7 @@ export const IncomePerCustomer = ({ topData, yesterday, weekBefore }) => {
                   <Tr>
                     <Th fontSize={"14px"}>
                       <Flex>
-                        Customer{" "}
+                        {filter}
                         <BsCaretDownFill
                           cursor={"pointer"}
                           color="horizon.300"
