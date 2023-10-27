@@ -11,7 +11,8 @@ import {
   ListItem,
   ListIcon,
   OrderedList,
-  UnorderedList
+  UnorderedList,
+  Link
 } from '@chakra-ui/react';
 
 export const Tutorial = () => {
@@ -53,7 +54,7 @@ export const Tutorial = () => {
               <CardBody>
                 <Text>
                   Once approved, you will received account info that 
-                  you will used for integration.
+                  you will use for integration.
                 </Text>
                 <UnorderedList> 
                   <ListItem>
@@ -80,8 +81,8 @@ export const Tutorial = () => {
             <Card>
               <CardBody>
                 <Text>
-                This is an optional step. Login to https://back.torrospins.com. 
-                In the sidebar, go to Casino and add yours.    
+                This is an optional step. Login to Torrospin staging back office <Link href="https://back.torrospins.com" color={'blue'}>https://back.torrospins.com</Link>. 
+                In the sidebar, go to Casino and add your sub-casino if needed.    
                 </Text>
               </CardBody>
             </Card>
@@ -91,7 +92,7 @@ export const Tutorial = () => {
             <Card>
               <CardBody>
                 <Text>
-                Integrate the "/api/add/user" in your registration or for existing users.
+                Integrate the <b>"/api/add/user"</b> in your registration or for existing users.
                 Everytime a new user registers, this API must be called to also register
                 the user to Torrospin. Please check the reference here for detailed
                 implementation.
@@ -104,7 +105,7 @@ export const Tutorial = () => {
             <Card>
               <CardBody>
                 <Text>
-                Use "/api/request_link/real" when clicking "Play" button in the games.
+                Use <b>"/api/request_link/real"</b> when clicking "Play" button in the games.
                 Refer to this API reference for more details. 
                 </Text>
               </CardBody>
@@ -116,7 +117,7 @@ export const Tutorial = () => {
               <CardBody>
                 <Text>
                 Implement a callback hook to the wallet URL that you provided. The first
-                implementation is for Request Balance. This will be used by Torrospin
+                implementation is for <b>Request Balance</b>. This will be used by Torrospin
                 to check the player's balance. For more details, check the documentation
                 here.
                 </Text>
@@ -128,9 +129,32 @@ export const Tutorial = () => {
             <Card>
               <CardBody>
                 <Text>
-                Implement a callback hook for updating the player's balance. This is called
+                Implement a callback hook for <b>Update Balance</b>. This is called
                 for changes in user's balance based on his bets and winnings. 
                 Please refer to the documenmtation here.
+                </Text>
+              </CardBody>
+            </Card>
+          </ListItem>
+          <ListItem mb="20px">
+            <Card>
+              <CardBody>
+                <Text>
+                Implement a callback hook for <b>Refund Balance</b>. This is called 
+                in times of technical issues in the game server. The wallet must refund the failed bet
+                of the player. Please refer to the documentation here.
+                </Text>
+              </CardBody>
+            </Card>
+          </ListItem>
+          <ListItem mb="20px">
+            <Card>
+              <CardBody>
+                <Text>
+                Implement a callback hook for <b>Transfer Funds</b>. This is called 
+                whenever there is a wagering requirements for free spins. The wallet 
+                must receive the request and update the balacne of the player. 
+                Please refer to the documentation here.
                 </Text>
               </CardBody>
             </Card>
