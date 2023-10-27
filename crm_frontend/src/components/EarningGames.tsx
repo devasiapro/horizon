@@ -44,6 +44,7 @@ export const EarningGames = ({title, icon, games}) => {
           {games.slice(0, 5).map((game, index) => {
             return (
               <Box
+                key={game.game}
                 bg={"horizon.100"}
                 borderRadius={"50"}
                 mb={"7px"}
@@ -52,7 +53,7 @@ export const EarningGames = ({title, icon, games}) => {
                   <Circle size="25px" bg="horizon.300" color="white" ml={1}>
                     <Text fontSize={"10px"}>{ index + 1 }</Text>
                   </Circle>
-                  <Tooltip label={"Category"}>
+                  <Tooltip label={game.game}>
                     <Box pl={1}>
                       <Text fontSize={"12px"} fontWeight={"800"}>
                         {game.game.slice(0, 15)}...
@@ -76,15 +77,16 @@ export const EarningGames = ({title, icon, games}) => {
           {games.slice(5, 10).map((game, index) => {
             return (
               <Box
+                key={game.game}
                 bg={"horizon.100"}
                 borderRadius={"50"}
                 mb={"7px"}
               >
                 <Flex align={"center"}>
                   <Circle size="25px" bg="horizon.300" color="white" ml={1}>
-                    <Text fontSize={"10px"}>{ index + 5 }</Text>
+                    <Text fontSize={"10px"}>{ index + 6 }</Text>
                   </Circle>
-                  <Tooltip label={"Category"}>
+                  <Tooltip label={game.game}>
                     <Box pl={1}>
                       <Text fontSize={"12px"} fontWeight={"800"}>
                         {game.game.slice(0, 15)}...
