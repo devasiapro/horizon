@@ -20,6 +20,7 @@ import moment from 'moment';
 import { useAuthHook } from '../hooks/useAuthHook';
 import { IncomePerCustomer } from '../pages/IncomePerCustomer';
 import { KPIContainer } from '../components/KPIContainer';
+import { EarningGamesContainer } from '../components/EarningGamesContainer';
 
 export const Home = () => {
   const [topData, setTopData] = useState([]);
@@ -84,6 +85,7 @@ export const Home = () => {
   }, []);
 
   const handleCategoryFilerChange = async () => {
+
   };
 
   return (
@@ -127,6 +129,16 @@ export const Home = () => {
               yesterday={yesterday}
               weekBefore={weekBefore}
             />
+          </GridItem>
+          <GridItem colSpan={{ base: 12, lg: 6 }}>
+            <Box boxShadow="lg" mb={4}>
+            </Box>
+            <SimpleGrid columns={2} gap={4}>
+              <EarningGamesContainer 
+                dateTo={currentDateEnd}
+                dateFrom={currentDateStart}
+              />
+            </SimpleGrid>
           </GridItem>
         </Grid>
       </Box>
