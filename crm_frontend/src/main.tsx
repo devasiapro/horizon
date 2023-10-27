@@ -11,6 +11,11 @@ import { Layout } from './pages/Layout';
 import { ProtectedRoute } from './pages/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
+import { CustomerList } from './pages/CustomerList';
+import { CustomerAdd } from './pages/CustomerAdd';
+import { CustomerAddTransfer } from './pages/CustomerAddTransfer';
+import { CustomerEdit } from './pages/CustomerEdit';
+import { CustomerView } from './pages/CustomerView';
 import { MyTheme } from "./theme/MyTheme";
 
 const router = createBrowserRouter([
@@ -26,7 +31,27 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />
-      }
+      },
+      {
+        path: '/customer',
+        element: <CustomerList />
+      },
+      {
+        path: '/customer/add/transfer',
+        element: <CustomerAdd />
+      },
+      {
+        path: '/customer/add/seamless',
+        element: <CustomerAdd />
+      },
+      {
+        path: '/customer/:customerId',
+        element: <CustomerView />
+      },
+      {
+        path: '/customer/:customerId/edit',
+        element: <CustomerEdit />
+      },
     ]
   }
 ]);
