@@ -28,9 +28,7 @@ def upgrade() -> None:
         sa.Column('game_type_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['game_type_id'], ['game_type.id'], ondelete='cascade'),
     )
-    pass
 
 
 def downgrade() -> None:
     op.drop_table('game')
-    pass

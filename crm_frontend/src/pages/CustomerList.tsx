@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Spacer,
@@ -20,6 +21,8 @@ import { AddIcon } from '@chakra-ui/icons'
 
 
 export const CustomerList = () => {
+  const navigate = useNavigate();
+
   return (
     <Box p={{ base: 2, md: 4, lg: 6 }}>
       <Flex mb="20px" gap="2">
@@ -27,6 +30,7 @@ export const CustomerList = () => {
           Customers
         </Heading>
         <Button
+          onClick={() => navigate('/customer/add?wallet_type=transfer&step=1')}
           size="md"
           type="button"
           colorScheme="horizon"
@@ -34,6 +38,7 @@ export const CustomerList = () => {
           <AddIcon /> Transfer
         </Button>
         <Button
+          onClick={() => navigate('/customer/add?wallet_type=seamless&step=1')}
           mr="20px"
           size="md"
           type="button"

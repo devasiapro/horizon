@@ -84,9 +84,9 @@ export const Home = () => {
         });
         return earning ? earning.earning : 0;
       }); 
-      const total = earnings.reduce((total, earning) => {
+      const total = earnings.length ? earnings.reduce((total, earning) => {
         return total + earning;
-      });
+      }) : 0;
       return total;
     });
     console.log('performances', performances);

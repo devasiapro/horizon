@@ -13,6 +13,7 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { CustomerList } from './pages/CustomerList';
 import { CustomerAdd } from './pages/CustomerAdd';
+import { CustomerAddSeamless } from './pages/CustomerAddSeamless';
 import { CustomerAddTransfer } from './pages/CustomerAddTransfer';
 import { CustomerEdit } from './pages/CustomerEdit';
 import { CustomerView } from './pages/CustomerView';
@@ -37,11 +38,7 @@ const router = createBrowserRouter([
         element: <CustomerList />
       },
       {
-        path: '/customer/add/transfer',
-        element: <CustomerAdd />
-      },
-      {
-        path: '/customer/add/seamless',
+        path: '/customer/add',
         element: <CustomerAdd />
       },
       {
