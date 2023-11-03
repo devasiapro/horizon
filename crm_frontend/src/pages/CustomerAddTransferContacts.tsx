@@ -45,16 +45,22 @@ export const CustomerAddTransferContacts = ({ step }) => {
     navigate('/customer/add?wallet_type=transfer&step=2');
   };
 
+  const cleanValues = (arr: string[]) => {
+    return arr.map(element => {
+      return element.split();
+    });
+  };
+
   const onSubmit = async (ev) => {
     ev.preventDefault();
     const token = useAuth.getAuth().token;
 
-    const languages = formTransfer.languages ? formTransfer.languages.split(',') : [];
-    const currencies = formTransfer.currencies ? formTransfer.currencies.split(',') : [];
+    const languages = formTransfer.languages ? cleanValues(formTransfer.languages.split(',')) : [];
+    const currencies = formTransfer.currencies ? cleanValues(formTransfer.currencies.split(',')) : [];
     const domainWhitelist = formTransfer.domain_whitelist ? 
-      formTransfer.domain_whitelist.split(',') : 
+      cleanValues(formTransfer.domain_whitelist.split(',')) : 
       [];
-    const ipWhitelist = formTransfer.ip_whitelist ? formTransfer.ip_whitelist.split(',') : [];
+    const ipWhitelist = formTransfer.ip_whitelist ? cleanValues(formTransfer.ip_whitelist.split(',')) : [];
 
     const payload = {
       wallet_type: 'transfer',

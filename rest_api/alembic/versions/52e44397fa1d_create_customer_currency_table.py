@@ -25,8 +25,8 @@ def upgrade() -> None:
         sa.Column('customer_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['customer_id'], ['customer_module.id'], ondelete='cascade'),
         sa.Column('currency_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['currency_id'], ['language.id'], ondelete='cascade'),
-        sa.Column('is_default', sa.Boolean(), nullable=False, default=False)
+        sa.ForeignKeyConstraint(['currency_id'], ['currency.id'], ondelete='cascade'),
+        sa.Column('is_default', sa.Boolean(), nullable=False, server_default=sa.false())
     )
 
 

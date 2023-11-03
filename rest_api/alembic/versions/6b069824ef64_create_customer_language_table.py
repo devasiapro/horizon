@@ -1,7 +1,7 @@
 """create customer language table
 
-Revision ID: 651430bab4e1
-Revises: 2ebbb87a8436
+Revision ID: 6b069824ef64
+Revises: 0b36503a59e0
 Create Date: 2023-10-31 17:09:18.710771
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '651430bab4e1'
-down_revision: Union[str, None] = '2ebbb87a8436'
+revision: str = '6b069824ef64'
+down_revision: Union[str, None] = '0b36503a59e0'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
