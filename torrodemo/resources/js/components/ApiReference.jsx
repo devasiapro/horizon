@@ -101,6 +101,39 @@ call();
   "username": "casinouser"
 }
 `
+    },
+
+    requestlinkReal: {
+      headers:`
+        'Content-Type' : 'application/json'
+        'X-Api-Key' : API_KEY_HERE
+      `,
+
+      parameters:`
+      {
+        "token":"exampleToken123123",
+        "game_name":"arc",
+        "user_id":"exampleplayer",
+        "bank_id":"Casino_USD",
+        "currency":"USD",
+        "quit_link":"https://yourlobby.example.com",
+        "device":"desktop",
+        "lang":"en",
+        "free_spin":0,
+        "lobby":"True",
+        "hash":"0174191354994ebf4cc545cd4b525119"
+    }
+      `,
+      responsesSuccess:`
+      {
+        "message":"URL was created.",
+        "success":true,
+        "url":"https:\/\/examplelauncher.torrospin.eu\/GameLauncher?gameCodeName=arc&username=exampleplayer&externalToken=exampleToken123123&casino=ptstaging3.33&clientType=casino&clientPlatform=web&language=EN&playMode=1&lobbyUrl=https:\/\/yourlobby.example.com\/quit-link",
+        "token": "exampletoken123qweasdzxc"
+        "status": 200
+      }
+      `
+
     }
   };
 
@@ -225,7 +258,152 @@ call();
               </AccordionButton>
             </h1>
             <AccordionPanel pb={4}>
-              Test
+              <Text as="b">Description:</Text>
+              <Text> Generate URL to redirect or open a new window for a player access specific game. This API will be called after clicking the "play" button on a specific game in this platform. </Text>
+
+              <Divider mt="10px" mb="10px"/> 
+              <Text as="b">Headers:</Text>
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.requestlinkReal.headers }
+                  </pre>
+                </Code>
+              </Text>
+              <Divider mt="10px" mb="10px"/>
+              <Text as="b">Parameters:</Text>
+              <TableContainer mt="20px" mb="20px" borderWidth="1px">
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th>Name</Th>
+                      <Th>Description</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>token</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Your generated token.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>game_name</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Specific game code of a game. For slot game, you must pass the "launch code" of a game.<br/> Example, Buffalo Blitz = "bfb".<br/><br/>To launch a live game, you must pass the "Game Type Code"  + ";" + "Alias".<br/> Example, Live Baccarat = "ubal;bal_baccarat1".
+                        </Text>
+                      </Td>   
+                    </Tr>
+                    <Tr>
+                      <Td>user_id</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                        Your generated 8 character unique name.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>bank_id</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Generated and Assigned bank_id to your casino.<br/>
+                          Will be given by the one who created your entity in seamless platform.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>currency</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Currency code. For Ex. CNY or MYR.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>quit_link</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Quit link where the player will be redirect once he exits the game.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>device</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                          Identifier whether the player plays on desktop or mobile
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>lang</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                         Language code. For example : EN
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>free_spin</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                         Number of freespin assigned to the player.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>lobby</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                         Boolean value, Could be true or false. If it's true, once the player clicks a live game.<br/> It will be redirected to the lobby. But if false and the game alias is passed.<br/> It will be redirected to the actual live game itself.
+                        </Text>
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>hash</Td>
+                      <Td>
+                        <Text fontSize="12px" color="red">*Required</Text>
+                        <Text>
+                        Generated hash key. Please refer to the Developer Reference on how to generate a hash key.
+                        </Text>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.requestlinkReal.parameters }
+                  </pre>
+                </Code>
+              </Text>
+              <Divider mt="10px" mb="10px"/> 
+              <Text as="b">Responses:</Text>
+              <Text>201</Text>
+              <Text>
+                <Code>
+                  <pre>
+                    { docs.requestlinkReal.responsesSuccess }
+                  </pre>
+                </Code>
+              </Text>
+
+
             </AccordionPanel>
           </AccordionItem>
 
