@@ -1,19 +1,23 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class CustomerTransferRequest(BaseModel):
-    billing_contact: str
-    brand_name: str
-    business_contact: str
-    company_contact: str
-    currencies: List[str]
-    customer_contact: str
-    domain_whitelist: List[str]
-    ip_whitelist: List[str]
-    languages: List[str]
-    maintainer_contact: str
-    merchant_chinese_name: str
-    merchant_english_name: str
-    prefix: str
-    technical_contact: str
-    wallet_type: str
+    billing_contact: Optional[str] = None
+    brand_name: Optional[str] = None
+    business_contact: Optional[str] = None
+    company_contact: Optional[str] = None
+    currencies: Optional[List[str]] = None
+    customer_contact: Optional[str] = None
+    domain_whitelist: Optional[List[str]] = None
+    ip_whitelist: Optional[List[str]] = None
+    languages: Optional[List[str]] = None
+    maintainer_contact: Optional[str] = None
+    merchant_chinese_name: Optional[str] = None
+    merchant_english_name: Optional[str] = None
+    prefix: Optional[str] = None
+    technical_contact: Optional[str] = None
+    wallet_type: Optional[str] = None
+
+class CustomerSeamlessRequest(BaseModel):
+
+    pass

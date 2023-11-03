@@ -54,7 +54,6 @@ export const CustomerAddTransferContacts = ({ step }) => {
   const onSubmit = async (ev) => {
     ev.preventDefault();
     const token = useAuth.getAuth().token;
-
     const languages = formTransfer.languages ? cleanValues(formTransfer.languages.split(',')) : [];
     const currencies = formTransfer.currencies ? cleanValues(formTransfer.currencies.split(',')) : [];
     const domainWhitelist = formTransfer.domain_whitelist ? 
@@ -86,6 +85,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('response', response);
       if (response.status === 200) {
         setFormTransfer({
           merchant_english_name: '',
@@ -105,17 +105,12 @@ export const CustomerAddTransferContacts = ({ step }) => {
         });    
         navigate('/customer/add?wallet_type=transfer&step=4'); 
       }
-      console.log('response', response);
     } catch (err) {
       console.log('err', err);
     } finally {
 
     }
   };
-
-  useEffect(() => {
-    console.log('useAuth', useAuth.getAuth());
-  }, []);
 
   useEffect(() => {
     const isComplete = formTransfer.business_contact && 

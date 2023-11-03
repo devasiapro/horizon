@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database import database
-from src.schemas.CustomerRequest import CustomerTransferRequest
+from src.schemas.CustomerRequest import CustomerTransferRequest, CustomerSeamlessRequest
 from src.models.CustomerModule import CustomerModule
 from src.models.Currency import Currency
 from src.models.Language import Language
@@ -18,14 +18,25 @@ router = APIRouter(
 
 @router.post('')
 def create_customer(
-        request: CustomerTransferRequest,
+        request: CustomerTransferRequest | CustomerSeamlessRequest,
         db: Session = Depends(database.get_db)
     ):
+    if (request.wallet_type == 'seamless'):
+        create_customer_seamless(request, db)
+    else:
+        create_customer_transfer(request, db)
 
+def create_customer_seamless(request, db):
+    customer_model = CustomerModule(
+
+    )
+    pass
+
+def create_customer_transfer(request, db):
     customer_model = CustomerModule(
         merchant_english_name = request.merchant_english_name,
         merchant_chinese_name = request.merchant_chinese_name,
-        wallet_type = request.wallet_type,
+        wallet_type = 'transfer',
         prefix = request.prefix,
         business_contact = request.business_contact,
         billing_contact = request.billing_contact,
