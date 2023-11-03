@@ -47,7 +47,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
 
   const cleanValues = (arr: string[]) => {
     return arr.map(element => {
-      return element.split();
+      return element.trim();
     });
   };
 
@@ -86,6 +86,25 @@ export const CustomerAddTransferContacts = ({ step }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      if (response.status === 200) {
+        setFormTransfer({
+          merchant_english_name: '',
+          merchant_chinese_name: '',
+          brand_name: '',
+          languages: '',
+          currencies: '',
+          prefix: '',
+          domain_whitelist: '',
+          ip_whitelist: '',
+          business_contact: '',
+          billing_contact: '',
+          technical_contact: '',
+          customer_contact: '',
+          maintainer_contact: '',
+          company_contact: '',
+        });    
+        navigate('/customer/add?wallet_type=transfer&step=4'); 
+      }
       console.log('response', response);
     } catch (err) {
       console.log('err', err);

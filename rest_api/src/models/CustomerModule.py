@@ -45,3 +45,4 @@ class CustomerModule(database.Base):
         backref='languages'
     )
     ip_whitelist = relationship('IpWhitelist', back_populates='customer')
+    domain_whitelist = relationship('DomainWhitelist', back_populates='customer')

@@ -9,6 +9,7 @@ from src.models.CustomerModule import CustomerModule
 from src.models.Currency import Currency
 from src.models.Language import Language
 from src.models.IpWhitelist import IpWhitelist
+from src.models.DomainWhitelist import DomainWhitelist
 
 router = APIRouter(
     tags=['Customer'],
@@ -77,7 +78,16 @@ def create_customer(
         db.add(ip_whitelist_model)
         db.commit()
         db.refresh(ip_whitelist_model)
-    
+
+    for domain in request.domain_whitelist:
+        domain_whitelist_model = DomainWhitelist(
+            domain = domain,
+            customer_id = customer_model.id
+        )
+        db.add(domain_whitelist_model)
+        db.commit()
+        db.refresh(domain_whitelist_model)
+
     return customer_model 
 
 @router.get('')

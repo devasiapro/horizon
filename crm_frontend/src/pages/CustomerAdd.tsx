@@ -4,6 +4,7 @@ import { CustomerAddSeamless } from './CustomerAddSeamless';
 import { CustomerAddTransfer } from './CustomerAddTransfer';
 import { CustomerAddTransferProductInfo } from './CustomerAddTransferProductInfo';
 import { CustomerAddTransferContacts } from './CustomerAddTransferContacts';
+import { CustomerAddTransferSubmitted } from './CustomerAddTransferSubmitted';
 import { FormTransferContext } from '../context/FormTransferContext';
 
 export const CustomerAdd = () => {
@@ -35,6 +36,8 @@ export const CustomerAdd = () => {
       return <CustomerAddTransferProductInfo step={step} /> 
     } else if (step === 3) {
       return <CustomerAddTransferContacts step={step}/>
+    } else if (step === 4) {
+      return <CustomerAddTransferSubmitted step={step}/>
     }
     return <CustomerAddTransfer step={3} /> 
   };
