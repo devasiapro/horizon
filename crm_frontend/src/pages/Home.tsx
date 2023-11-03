@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Text,
   Button,
   Card,
   Flex,
@@ -25,14 +26,21 @@ import { PerformanceGraph } from '../components/PerformanceGraph';
 
 export const Home = () => {
   const [topData, setTopData] = useState([]);
+  const [currentDateTime, setCurrentDateTime] = useState('');
   const [performances, setPerformances] = useState({
     labels: '',
     datasets: []
   });
+  const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('customer');
+  const yesterday = moment().subtract(1, 'days');
+  const weekBefore = moment().subtract(8, 'days');
 
-  const categoryFilter = ["Customer", "Country", "Product"];
+  const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
+  const currentDateEnd = yesterday.format('YYYY-MM-DD');
+  const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
+  const previousDateEnd = weekBefore.format('YYYY-MM-DD');
 
-  const fetchIncomes = async (dateFrom, dateTo) => {
+  const fetchCustomerIncomes = async (dateFrom, dateTo) => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/customer-income`, {
       params: {
         date_from: dateFrom,
@@ -42,13 +50,26 @@ export const Home = () => {
     return response;
   };
 
-  const yesterday = moment().subtract(1, 'days');
-  const weekBefore = moment().subtract(8, 'days');
+  const fetchCountryIncomes = async (dateFrom, dateTo) => {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/country-income`, {
+      params: {
+        date_from: dateFrom,
+        date_to: dateTo,
+      }
+    });
+    return response;
+  };
 
-  const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
-  const currentDateEnd = yesterday.format('YYYY-MM-DD');
-  const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
-  const previousDateEnd = weekBefore.format('YYYY-MM-DD');
+  const fetchProductIncomes = async (dateFrom, dateTo) => {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/product-income`, {
+      params: {
+        date_from: dateFrom,
+        date_to: dateTo,
+      }
+    });
+    return response;
+  };
+
 
   const generateGraphData = (firstDay, lastDay, incomes) => {
     const labels = [];
@@ -63,9 +84,9 @@ export const Home = () => {
         });
         return earning ? earning.earning : 0;
       }); 
-      const total = earnings.reduce((total, earning) => {
+      const total = earnings.length ? earnings.reduce((total, earning) => {
         return total + earning;
-      });
+      }) : 0;
       return total;
     });
     console.log('performances', performances);
@@ -73,10 +94,24 @@ export const Home = () => {
   }; 
 
   const processIncomes = async () => {
-    const responses = await Promise.all([
-      fetchIncomes(currentDateStart, currentDateEnd),
-      fetchIncomes(previousDateStart, previousDateEnd),
-    ]);
+    let responses;
+
+    if (selectedIncomeFilter === 'country') {
+      responses = await Promise.all([
+        fetchCountryIncomes(currentDateStart, currentDateEnd),
+        fetchCountryIncomes(previousDateStart, previousDateEnd),
+      ]);
+    } else if (selectedIncomeFilter === 'product') {
+      responses = await Promise.all([
+        fetchProductIncomes(currentDateStart, currentDateEnd),
+        fetchProductIncomes(previousDateStart, previousDateEnd),
+      ]);
+    } else {
+      responses = await Promise.all([
+        fetchCustomerIncomes(currentDateStart, currentDateEnd),
+        fetchCustomerIncomes(previousDateStart, previousDateEnd),
+      ]);
+    }
 
     const incomeCurrents = responses[0].data;
     const incomePreviouses = responses[1].data;
@@ -124,6 +159,7 @@ export const Home = () => {
     incomeCurrents.sort((a, b) => {
       return b.total_earnings - a.total_earnings;
     });
+
     const comparedIncomes = incomeCurrents.map((incomeCurrent, index) => {
       const counterPart = incomePreviouses.find((incomePrevious) => {
         return incomePrevious.name === incomeCurrent.name;
@@ -148,13 +184,17 @@ export const Home = () => {
     setTopData(comparedIncomes);
   };
 
+  setTimeout(() => {
+    setCurrentDateTime(moment().format('MMM Do YYYY, h:mm:ss a'));
+  }, 1000);
+
   useEffect(() => {
     processIncomes();
   }, []);
 
-  const handleCategoryFilerChange = async () => {
-
-  };
+  useEffect(() => {
+    processIncomes();
+  }, [selectedIncomeFilter]);
 
   return (
     <Box mx={6} mt={8} mb={8}>
@@ -166,7 +206,7 @@ export const Home = () => {
           <Spacer />
           <Box bg={"white"} borderRadius={8} px={2}>
             <Flex height={"47px"} align={"center"}>
-              {/** TODO: Filter buttons **/}
+              <Text>{currentDateTime}</Text>
             </Flex>
           </Box>
         </Flex>
@@ -185,6 +225,44 @@ export const Home = () => {
       </Box>
 
       <Box>
+        <Flex align={"center"} mb="20px">
+          <Box bg={"white"} borderRadius={8} px={2}>
+            <Flex height={"47px"} align={"center"}>
+              <Button 
+                variant={selectedIncomeFilter === 'customer' ? 'solid' : 'ghost'}
+                mr="10px"
+                size="sm"
+                type="button"
+                colorScheme="horizon"
+                onClick={() => setSelectedIncomeFilter('customer')}
+              >
+                Customer
+              </Button>
+              <Button 
+                variant={selectedIncomeFilter === 'country' ? 'solid' : 'ghost'}
+                mr="10px"
+                size="sm"
+                type="button"
+                colorScheme="horizon"
+                onClick={() => setSelectedIncomeFilter('country')}
+              >
+                Country
+              </Button>
+              <Button 
+                variant={selectedIncomeFilter === 'product' ? 'solid' : 'ghost'}
+                size="sm"
+                type="button"
+                colorScheme="horizon"
+                onClick={() => setSelectedIncomeFilter('product')}
+              >
+                Product
+              </Button>
+            </Flex>
+          </Box>
+        </Flex>
+      </Box>
+
+      <Box>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
           <GridItem
             colSpan={{ base: 12, lg: 6 }}
@@ -193,6 +271,7 @@ export const Home = () => {
             borderRadius={"5px"}
           >
             <IncomePerCustomer
+              filter={selectedIncomeFilter}
               topData={topData}
               yesterday={yesterday}
               weekBefore={weekBefore}

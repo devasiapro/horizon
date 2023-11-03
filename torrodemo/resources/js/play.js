@@ -4,7 +4,7 @@ window.addEventListener('beforeunload', async (ev) => {
   const token = document.querySelector('#token').value;
   try {
     axios.post(
-      `${import.meta.env.VITE_APP_URL}/api/game-close`, {
+      `https://call-the-closeapi.com/api/game-close`, {
       'request_token': token,
     });
   } catch (err) {
