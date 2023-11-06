@@ -145,6 +145,7 @@ class WalletController extends Controller
                         $request->get('reason') .
                         config('torro.secret_key')
                 );
+                
                 Log::info('This is the hash: ' . $hash);
 
                 if ($hash !== $request->get('hash')) {
