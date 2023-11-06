@@ -34,22 +34,17 @@ class WalletController extends Controller
                     ->where('casino_user_id', $request->get('user_id'))
                     ->firstOrFail();
 
-                if (isset($_POST['game_round_close'])) {
-                    $hash = md5(
+                $gameRoundClose = $request->has('game_round_close') ? $request->get('game_round_close') : '';
+                $hash = md5(
                         'request_balance' .
                             $player->casino_user_id .
                             $request->get('token') .
-                            $request->get('game_round_close') .
+                            $gameRoundClose .
+                            $request->get('round_id') .
                             config('torro.secret_key')
                     );
-                } else {
-                    $hash = md5(
-                        'request_balance' .
-                            $player->casino_user_id .
-                            $request->get('token') .
-                            config('torro.secret_key')
-                    );
-                }
+                Log::info('This is the hash: ' . $hash);
+
 
                 if ($hash !== $request->get('hash')) {
                     Log::error('Torrospin callback: Invalid hash. ' . json_encode($request->all()));
@@ -87,8 +82,8 @@ class WalletController extends Controller
 
                 // TODO: Stop hard coding this because the order of parameters are changing or
                 // unreliable. Create a function to automatically extract values and hash.
-                if (isset($_POST['game_round_close'])) {
-                    $hash = md5(
+                $gameRoundClose = $request->has('game_round_close') ? $request->get('game_round_close') : '';
+                $hash = md5(
                         $request->get('action') .
                             $request->get('user_id') .
                             $request->get('bet') .
@@ -99,24 +94,10 @@ class WalletController extends Controller
                             $request->get('round_id') .
                             $request->get('session_id') .
                             $request->get('token') .
-                            $request->get('game_round_close') .
+                            $gameRoundClose .
                             config('torro.secret_key')
                     );
-                } else {
-                    $hash = md5(
-                        $request->get('action') .
-                            $request->get('user_id') .
-                            $request->get('bet') .
-                            $request->get('win') .
-                            $request->get('is_jackpot') .
-                            $request->get('game_name') .
-                            $request->get('transaction_id') .
-                            $request->get('round_id') .
-                            $request->get('session_id') .
-                            $request->get('token') .
-                            config('torro.secret_key')
-                    );
-                }
+                Log::info('This is the hash: ' . $hash);
 
 
                 if ($hash !== $request->get('hash')) {
@@ -164,6 +145,7 @@ class WalletController extends Controller
                         $request->get('reason') .
                         config('torro.secret_key')
                 );
+                Log::info('This is the hash: ' . $hash);
 
                 if ($hash !== $request->get('hash')) {
                     return response()->json([
