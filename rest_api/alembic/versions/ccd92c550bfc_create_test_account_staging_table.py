@@ -21,6 +21,7 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.create_table(
         'test_account_staging',
+        sa.Column('id', sa.Integer(), primary_key=True),
         sa.Column('customer_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['customer_id'], ['customer_module.id'], ondelete='cascade'),
         sa.Column('username', sa.String(256), nullable=False),

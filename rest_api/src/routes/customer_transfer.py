@@ -12,15 +12,19 @@ from src.models.IpWhitelist import IpWhitelist
 from src.models.DomainWhitelist import DomainWhitelist
 
 router = APIRouter(
-    tags=['Customer'],
-    prefix='/customer'
+    tags=['Customer Transfer'],
+    prefix='/customer/transfer'
 )
 
-def customer_transfer_add(request, db):
+@router.post('')
+def create_customer(
+        request: CustomerTransferRequest,
+        db: Session = Depends(database.get_db)
+    ):
     customer_model = CustomerModule(
         merchant_english_name = request.merchant_english_name,
         merchant_chinese_name = request.merchant_chinese_name,
-        wallet_type = request.wallet_type,
+        wallet_type = 'transfer',
         prefix = request.prefix,
         business_contact = request.business_contact,
         billing_contact = request.billing_contact,
@@ -84,34 +88,3 @@ def customer_transfer_add(request, db):
         db.refresh(domain_whitelist_model)
 
     return customer_model 
-
-def customer_seamless_add(request, db):
-    pass
-
-
-@router.post('')
-def create_customer(
-        request: CustomerTransferRequest | CustomerSeamlessRequest,
-        db: Session = Depends(database.get_db)
-    ):
-
-    if (request.wallet_type == "seamless"):
-        return customer_seamless_add(request, db)
-    else:
-        return customer_transfer_add(request, db) 
-
-@router.get('')
-def list_customer():
-    pass
-
-@router.get('/:customer_id')
-def view_customer():
-    pass
-
-@router.put(':/customer_id')
-def edit_customer():
-    pass
-
-@router.delete(':/customer_id')
-def delete_customer():
-    pass

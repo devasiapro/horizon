@@ -44,5 +44,10 @@ class CustomerModule(database.Base):
         secondary=customer_language,
         backref='languages'
     )
-    ip_whitelist = relationship('IpWhitelist', back_populates='customer')
-    domain_whitelist = relationship('DomainWhitelist', back_populates='customer')
+    ip_whitelist = relationship('IpWhitelist', back_populates = 'customer')
+    domain_whitelist = relationship('DomainWhitelist', back_populates = 'customer')
+    regulations = relationship('Regulation', back_populates = 'customer')
+    market_jurisdictions = relationship('MarketJurisdiction', back_populates = 'customer')
+    office_ips = relationship('OfficeIp', back_populates = 'customer')
+    test_account_stagings = relationship('TestAccountStaging', back_populates = 'customer')
+    test_account_productions = relationship('TestAccountProduction', back_populates = 'customer')
