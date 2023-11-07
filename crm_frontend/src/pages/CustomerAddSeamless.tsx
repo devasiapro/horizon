@@ -41,7 +41,7 @@ export const CustomerAddSeamless = ({ step }) => {
       formSeamless.brand_name &&
       formSeamless.regulations &&
       formSeamless.market_jurisdiction &&
-      formSeamless.license &&
+      formSeamless.licenses &&
       formSeamless.office_ips &&
       formSeamless.language_used &&
       formSeamless.currencies_used &&
@@ -160,13 +160,13 @@ export const CustomerAddSeamless = ({ step }) => {
                   onChange={(e) =>
                     setFormSeamless({
                       ...formSeamless,
-                      license: e.target.value,
+                      licenses: e.target.value,
                     })
                   }
                   borderRadius={"8px"}
                   bg={"horizon.150"}
                   name="license"
-                  value={formSeamless.license}
+                  value={formSeamless.licenses}
                 />
               </FormControl>
               <FormControl>

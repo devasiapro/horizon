@@ -39,21 +39,62 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
     navigate('/customer/add?wallet_type=seamless&step=3');
   };
 
+  const cleanValues = (arr: string[]) => {
+    return arr.map(element => {
+      return element.trim();
+    });
+  };
+
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const token = useAuth.getAuth().token;
 
+    const token = useAuth.getAuth().token;
+    const regulations = formSeamless.regulations ? 
+      cleanValues(formSeamless.regulations.split(',')) : 
+      [];
+    const marketJurisdiction = formSeamless.market_jurisdiction ? 
+      cleanValues(formSeamless.market_jurisdiction.split(',')) :
+      [];
+    const licenses = formSeamless.license ? cleanValues(formSeamless.license.split(',')) : [];
+    const officeIps = formSeamless.office_ips ? 
+      cleanValues(formSeamless.office_ips.split(',')) : 
+      [];
+    const languages = formSeamless.language_used ? 
+      cleanValues(formSeamless.language_used.split(',')) : 
+      [];
+    const currencies = formSeamless.currencies ? 
+      cleanValues(formSeamless.currencies.split(',')) : 
+      [];
+
+    const testAccountStagings = formSeamless.test_account_stagings.split(',').map(accounts => {
+      return cleanValues(accounts.split('/'));
+    }).map(account => {
+      return {
+        username: account[0],
+        password: account[1]
+      };
+    });
+
+    const testAccountProductions = formSeamless.test_account_productions.split(',').map(accounts => {
+      return cleanValues(accounts.split('/'));
+    }).map(account => {
+      return {
+        username: account[0],
+        password: account[1]
+      };
+    });
+     
     const payload = {
       wallet_type: 'seamless',
       merchant_english_name: formSeamless.merchant_english_name,
       brand_name: formSeamless.brand_name,
-      regulations: formSeamless.regulations,
-      market_jurisdiction: formSeamless.market_jurisdiction,
-      license: formSeamless.license,
-      office_ips: formSeamless.office_ips,
-      language_used: formSeamless.language_used,
-      currencies_used: formSeamless.currencies_used,
-      default_curency: formSeamless.default_currency,
+      regulations: regulations,
+      market_jurisdiction: marketJurisdiction,
+      licenses: licenses,
+      office_ips: officeIps,
+      languages_used: languages,
+      currencies_used: currencies,
+      default_currency: formSeamless.default_currency,
       business_contact: formSeamless.business_contact,
       billing_contact: formSeamless.billing_contact,
       technical_contact: formSeamless.technical_contact,
@@ -62,25 +103,55 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
       company_contact: formSeamless.company_contact,
       production_desktop_lobby_url: formSeamless.production_desktop_lobby_url,
       production_mobile_lobby_url: formSeamless.production_mobile_lobby_url,
-      production_test_accounts: formSeamless.production_test_accounts, 
+      test_account_productions: testAccountProductions, 
       production_wallet_endpoint: formSeamless.production_wallet_endpoint, 
       production_wallet_ip_port: formSeamless.production_wallet_ip_port,
       production_service_api_ip: formSeamless.production_service_api_ip,
       staging_desktop_lobby_url: formSeamless.staging_desktop_lobby_url,
       staging_mobile_lobby_url: formSeamless.staging_mobile_lobby_url,
-      staging_test_accounts: formSeamless.staging_test_accounts, 
+      test_account_stagings: testAccountStagings, 
       staging_wallet_endpoint: formSeamless.staging_wallet_endpoint, 
       staging_wallet_ip_port: formSeamless.staging_wallet_ip_port,
       staging_service_api_ip: formSeamless.staging_service_api_ip
     };
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/customer`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/customer/seamless`, 
+        payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
       });
-      console.log('response', response);
+      setFormSeamless({
+        merchant_english_name: '',
+        brand_name: '',
+        regulations: '',
+        market_jurisdiction: '',
+        licenses: '',
+        office_ips: '',
+        language_used: '',
+        currencies_used: '',
+        default_currency: '',
+        business_contact: '',
+        billing_contact: '',
+        technical_contact: '',
+        customer_contact: '',
+        maintainer_contact: '',
+        company_contact: '',
+        production_desktop_lobby_url: '',
+        production_mobile_lobby_url: '',
+        test_account_productions: '', 
+        production_wallet_endpoint: '', 
+        production_wallet_ip_port: '',
+        production_service_api_ip: '',
+        staging_desktop_lobby_url: '',
+        staging_mobile_lobby_url: '',
+        test_account_stagings: '', 
+        staging_wallet_endpoint: '', 
+        staging_wallet_ip_port: '',
+        staging_service_api_ip: ''
+      });
       navigate('/customer/add?wallet_type=seamless&step=5');
     } catch (err) {
       console.log('err', err);
@@ -92,7 +163,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
   useEffect(() => {
     const isComplete = formSeamless.production_desktop_lobby_url &&
       formSeamless.production_mobile_lobby_url &&
-      formSeamless.production_test_accounts &&
+      formSeamless.test_account_productions &&
       formSeamless.production_wallet_endpoint &&
       formSeamless.production_wallet_ip_port &&
       formSeamless.production_service_api_ip;
@@ -164,11 +235,11 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
                 onChange={(e) =>
                   setFormSeamless({
                     ...formSeamless,
-                    production_test_accounts: e.target.value,
+                    test_account_productions: e.target.value,
                   })
                 }
                 name="testAccounts"
-                value={formSeamless.production_test_accounts}
+                value={formSeamless.test_account_productions}
               />
 
               <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>

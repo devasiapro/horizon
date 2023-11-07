@@ -39,15 +39,13 @@ class CustomerSeamlessRequest(BaseModel):
     company_contact: str
     staging_desktop_lobby_url: str
     staging_mobile_lobby_url: str
-    staging_test_accounts: List[TestAccountRequest]
+    test_account_stagings: List[TestAccountRequest]
     staging_wallet_endpoint: str
     staging_wallet_ip_port: str
     staging_service_api_ip: str
     production_desktop_lobby_url: str
     production_mobile_lobby_url: str
-    production_test_accounts: List[TestAccountRequest]
+    test_account_productions: List[TestAccountRequest]
     production_wallet_endpoint: str
     production_wallet_ip_port: str
     production_service_api_ip: str
-
-    pass

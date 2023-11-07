@@ -15,11 +15,11 @@ import {
 } from "@chakra-ui/react";
 import { BsCheckCircleFill } from "react-icons/bs";
 
-export const CustomerAddTransferSubmitted = () => {
+export const CustomerAddSeamlessSubmitted = () => {
   const navigate = useNavigate();
 
   const goToDashboard = () => navigate("/");
-  const goToAddNew = () => navigate("/customer/add?wallet_type=transfer&step=1");
+  const goToAddNew = () => navigate("/customer/add?wallet_type=seamless&step=1");
 
   return (
     <React.Fragment>
@@ -51,7 +51,7 @@ export const CustomerAddTransferSubmitted = () => {
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <Text mb={4} textAlign={"center"} fontWeight={600}>
-              Transfer Customer successfully submitted.
+              Seamless Customer successfully submitted.
             </Text>
             <HStack>
               <Button onClick={goToDashboard} bg={"transparent"}>

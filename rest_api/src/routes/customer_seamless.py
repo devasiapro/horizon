@@ -116,7 +116,7 @@ def create_customer(
 
         customer_model.currencies.append(currency_model)
 
-    for test_account in request.staging_test_accounts:
+    for test_account in request.test_account_stagings:
         test_account_model = TestAccountStaging(
                 customer_id = customer_model.id,
                 username = test_account.username,
@@ -126,7 +126,7 @@ def create_customer(
         db.commit()
         db.refresh(test_account_model)
 
-    for test_account in request.production_test_accounts:
+    for test_account in request.test_account_productions:
         test_account_model = TestAccountProduction(
                 customer_id = customer_model.id,
                 username = test_account.username,
