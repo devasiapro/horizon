@@ -43,7 +43,7 @@ export const CustomerAddSeamlessStagingDetails = ({ step }) => {
   useEffect(() => {
     const isComplete = formSeamless.staging_desktop_lobby_url &&
       formSeamless.staging_mobile_lobby_url &&
-      formSeamless.staging_test_accounts &&
+      formSeamless.test_account_stagings &&
       formSeamless.staging_wallet_endpoint &&
       formSeamless.staging_wallet_ip_port &&
       formSeamless.staging_service_api_ip;
@@ -115,11 +115,11 @@ export const CustomerAddSeamlessStagingDetails = ({ step }) => {
                 onChange={(e) =>
                   setFormSeamless({
                     ...formSeamless,
-                    staging_test_accounts: e.target.value,
+                    test_account_stagings: e.target.value,
                   })
                 }
                 name="testAccounts"
-                value={formSeamless.staging_test_accounts}
+                value={formSeamless.test_account_stagings}
               />
 
               <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>

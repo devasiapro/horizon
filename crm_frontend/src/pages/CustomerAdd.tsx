@@ -4,6 +4,7 @@ import { CustomerAddSeamless } from './CustomerAddSeamless';
 import { CustomerAddSeamlessContacts } from './CustomerAddSeamlessContacts';
 import { CustomerAddSeamlessStagingDetails } from './CustomerAddSeamlessStagingDetails';
 import { CustomerAddSeamlessProductionDetails } from './CustomerAddSeamlessProductionDetails';
+import { CustomerAddSeamlessSubmitted } from './CustomerAddSeamlessSubmitted';
 import { CustomerAddTransfer } from './CustomerAddTransfer';
 import { CustomerAddTransferProductInfo } from './CustomerAddTransferProductInfo';
 import { CustomerAddTransferContacts } from './CustomerAddTransferContacts';
@@ -35,7 +36,7 @@ export const CustomerAdd = () => {
     brand_name: '',
     regulations: '',
     market_jurisdiction: '',
-    license: '',
+    licenses: '',
     office_ips: '',
     language_used: '',
     currencies_used: '',
@@ -46,15 +47,15 @@ export const CustomerAdd = () => {
     customer_contact: '',
     maintainer_contact: '',
     company_contact: '',
+    test_account_productions: '', 
+    test_account_stagings: '', 
     production_desktop_lobby_url: '',
     production_mobile_lobby_url: '',
-    production_test_accounts: '', 
     production_wallet_endpoint: '', 
     production_wallet_ip_port: '',
     production_service_api_ip: '',
     staging_desktop_lobby_url: '',
     staging_mobile_lobby_url: '',
-    staging_test_accounts: '', 
     staging_wallet_endpoint: '', 
     staging_wallet_ip_port: '',
     staging_service_api_ip: ''
@@ -71,6 +72,8 @@ export const CustomerAdd = () => {
       return <CustomerAddSeamlessStagingDetails step={step} />
     } else if (step === 4) {
       return <CustomerAddSeamlessProductionDetails step={step} />
+    } else if (step === 5) {
+      return <CustomerAddSeamlessSubmitted step={step} />
     }
     return <CustomerAddSeamless step={step} /> 
   };
