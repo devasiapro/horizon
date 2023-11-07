@@ -33,7 +33,6 @@ class WalletController extends Controller
                     ->player
                     ->where('casino_user_id', $request->get('user_id'))
                     ->firstOrFail();
-
                 if (isset($_POST['game_round_close'])) {
                     $hash = md5(
                         'request_balance' .
@@ -50,7 +49,7 @@ class WalletController extends Controller
                             config('torro.secret_key')
                     );
                 }
-
+                Log::info('This is the hash: ' . $hash);
                 if ($hash !== $request->get('hash')) {
                     Log::error('Torrospin callback: Invalid hash. ' . json_encode($request->all()));
                     return response()->json([
@@ -117,8 +116,6 @@ class WalletController extends Controller
                             config('torro.secret_key')
                     );
                 }
-
-
                 if ($hash !== $request->get('hash')) {
                     return response()->json([
                         'success' => false,
@@ -164,6 +161,7 @@ class WalletController extends Controller
                         $request->get('reason') .
                         config('torro.secret_key')
                 );
+                Log::info('This is the hash: ' . $hash);
 
                 if ($hash !== $request->get('hash')) {
                     return response()->json([
