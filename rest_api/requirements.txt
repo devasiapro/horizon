@@ -13,3 +13,4 @@ uvicorn
 fastapi
 passlib
 python-jose
+requests

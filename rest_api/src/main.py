@@ -9,7 +9,8 @@ from .routes import (
     kpi, 
     country_income, 
     product_income, 
-    customer
+    customer,
+    customer_seamless
 )
 
 app = FastAPI(
@@ -35,3 +36,4 @@ app.include_router(kpi.router)
 app.include_router(country_income.router)
 app.include_router(product_income.router)
 app.include_router(customer.router)
+app.include_router(customer_seamless.router)
