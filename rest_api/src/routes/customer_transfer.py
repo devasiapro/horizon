@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from database import database
 from src.schemas.CustomerRequest import CustomerTransferRequest, CustomerSeamlessRequest
@@ -33,6 +34,7 @@ def create_customer(
         maintainer_contact = request.maintainer_contact,
         company_contact = request.company_contact,
         brand_name = request.brand_name,
+        date_added = datetime.now()
     )
 
     for currency in request.currencies:

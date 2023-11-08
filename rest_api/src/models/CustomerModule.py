@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from database import database
@@ -37,7 +37,7 @@ class CustomerModule(database.Base):
     currencies = relationship(
         'Currency',
         secondary=customer_currency,
-        backref='customers'
+        backref='customers',
     )
     languages = relationship(
         'Language',
@@ -51,3 +51,6 @@ class CustomerModule(database.Base):
     office_ips = relationship('OfficeIp', back_populates = 'customer')
     test_account_stagings = relationship('TestAccountStaging', back_populates = 'customer')
     test_account_productions = relationship('TestAccountProduction', back_populates = 'customer')
+    date_added = Column(DateTime, nullable = False)
+    instance = Column(String(128), nullable = True)
+     

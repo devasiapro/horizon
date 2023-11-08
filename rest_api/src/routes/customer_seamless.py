@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from database import database
 from src.schemas.CustomerRequest import CustomerTransferRequest, CustomerSeamlessRequest
@@ -45,7 +46,8 @@ def create_customer(
         production_mobile_lobby_url = request.production_mobile_lobby_url,
         production_wallet_endpoint = request.production_wallet_endpoint,
         production_wallet_ip_port = request.production_wallet_ip_port,
-        production_service_api_ip = request.production_service_api_ip
+        production_service_api_ip = request.production_service_api_ip,
+        date_added = datetime.now()
     )
 
     db.add(customer_model)

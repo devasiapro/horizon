@@ -43,6 +43,8 @@ def upgrade() -> None:
         sa.Column('production_wallet_endpoint', sa.String(128), nullable=True), 
         sa.Column('production_wallet_ip_port', sa.String(128), nullable=True), 
         sa.Column('production_service_api_ip', sa.String(128), nullable=True), 
+        sa.Column('date_added', sa.DateTime(), nullable=False),
+        sa.Column('instance', sa.String(128), nullable=True)
     )
 
 
