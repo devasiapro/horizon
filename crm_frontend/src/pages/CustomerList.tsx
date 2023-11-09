@@ -161,7 +161,9 @@ export const CustomerList = () => {
               return (
                 <Tr key={customer.id}>
                   <Td>
-                    <Link onClick={() => navigate(`/customer/${customer.id}`)}>
+                    <Link onClick={() => navigate(
+                      `/customer/${customer.id}/edit?wallet_type=${customer.wallet_type}&step=1`
+                    )}>
                       <b>{customer.brand_name}</b>
                     </Link>
                   </Td>

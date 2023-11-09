@@ -81,7 +81,7 @@ export const CustomerAddTransferProductInfo = ({ step }) => {
                 name="domainWhitelist"
                 value={formTransfer.domain_whitelist}
               />
-              <FormHelperText ml={"15px"}>Seperate by comman</FormHelperText>
+              <FormHelperText ml={"15px"}>Seperate by comma</FormHelperText>
             </FormControl>
 
             <FormControl mb={3} variant={"horizon"}>
