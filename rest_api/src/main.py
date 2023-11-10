@@ -12,7 +12,10 @@ from .routes import (
     product_income, 
     customer,
     customer_seamless,
-    customer_transfer
+    customer_transfer,
+    contract_status,
+    customer_contract,
+    contract_file
 )
 
 app = FastAPI(
@@ -41,3 +44,6 @@ app.include_router(product_income.router)
 app.include_router(customer.router)
 app.include_router(customer_seamless.router)
 app.include_router(customer_transfer.router)
+app.include_router(contract_status.router)
+app.include_router(customer_contract.router)
+app.include_router(contract_file.router)

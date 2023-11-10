@@ -14,3 +14,4 @@ fastapi
 passlib
 python-jose
 requests
+python-multipart

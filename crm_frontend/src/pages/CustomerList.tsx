@@ -146,12 +146,6 @@ export const CustomerList = () => {
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Integeration
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
                   Contract
                 </Th>
               </Tr>
@@ -180,10 +174,14 @@ export const CustomerList = () => {
                     {isoFormatToHuman(customer.date_added)}
                   </Td>
                   <Td>
-                    -
-                  </Td>
-                  <Td>
-                    -
+                    <Button 
+                      mt={4}
+                      type="button"
+                      colorScheme="horizon"
+                      onClick={() => navigate(`/customer/${customer.id}/contract`)}
+                    >
+                      {customer.contract_status ? customer.contract_status.name : 'N/A'}
+                    </Button>
                   </Td>
                 </Tr>
               );

@@ -47,7 +47,8 @@ def create_customer(
         production_wallet_endpoint = request.production_wallet_endpoint,
         production_wallet_ip_port = request.production_wallet_ip_port,
         production_service_api_ip = request.production_service_api_ip,
-        date_added = datetime.now()
+        date_added = datetime.now(),
+        contract_status_id = 1
     )
 
     db.add(customer_model)

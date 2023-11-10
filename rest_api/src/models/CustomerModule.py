@@ -7,6 +7,7 @@ from database import database
 
 from src.models.Currency import Currency
 from src.models.Language import Language
+from src.models.ContractFile import ContractFile
 from src.models.customer_currency import customer_currency
 from src.models.customer_language import customer_language
 
@@ -53,4 +54,11 @@ class CustomerModule(database.Base):
     test_account_productions = relationship('TestAccountProduction', back_populates = 'customer')
     date_added = Column(DateTime, nullable = False)
     instance = Column(String(128), nullable = True)
-     
+    contract_status_id = Column(Integer, ForeignKey('contract_status.id'), nullable=False)
+    contract_status = relationship(
+            'ContractStatus', 
+            back_populates='customer_modules', 
+            lazy = False
+    )
+    contract_files = relationship('ContractFile', back_populates = 'customer') 
+    contract_label = Column(String(256), nullable = True)

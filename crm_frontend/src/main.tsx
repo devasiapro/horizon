@@ -17,6 +17,7 @@ import { CustomerAddSeamless } from './pages/CustomerAddSeamless';
 import { CustomerAddTransfer } from './pages/CustomerAddTransfer';
 import { CustomerEdit } from './pages/CustomerEdit';
 import { CustomerView } from './pages/CustomerView';
+import { CustomerContract } from './pages/CustomerContract';
 import { MyTheme } from "./theme/MyTheme";
 
 const router = createBrowserRouter([
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
         path: '/customer/:customerId/edit',
         element: <CustomerEdit />
       },
+      {
+        path: '/customer/:customerId/contract',
+        element: <CustomerContract />
+      }
     ]
   }
 ]);

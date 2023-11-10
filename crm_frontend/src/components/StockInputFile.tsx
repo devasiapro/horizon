@@ -6,7 +6,7 @@ import {
   Flex
 } from "@chakra-ui/react";
 
-export const StockInputFile = ({ onChangeCallback }) => {
+export const StockInputFile = ({ originalFilename, onChangeCallback }) => {
   const fileInputRef = useRef(null);
   const [fileName, setFileName] = useState('');
   
@@ -21,7 +21,7 @@ export const StockInputFile = ({ onChangeCallback }) => {
         <Button onClick={() => fileInputRef.current.click()} type="button" colorScheme="horizon">
           <AttachmentIcon boxSize={6} /> Upload File
         </Button>
-        <Text ml="20px" mt="10px">{fileName}</Text>
+        <Text ml="20px" mt="10px">{fileName ? fileName : originalFilename}</Text>
       </Flex>
       <input 
         ref={fileInputRef}

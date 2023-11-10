@@ -12,6 +12,7 @@ from src.models.Currency import Currency
 from src.models.Language import Language
 from src.models.IpWhitelist import IpWhitelist
 from src.models.DomainWhitelist import DomainWhitelist
+from src.models.ContractStatus import ContractStatus
 
 router = APIRouter(
     tags=['Customer'],
