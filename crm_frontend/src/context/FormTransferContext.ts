@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 export const FormTransferContext = createContext({
   formTransfer: {
+    id: 0,
     merchant_english_name: '',
     merchant_chinese_name: '',
     brand_name: '',
@@ -16,6 +17,7 @@ export const FormTransferContext = createContext({
     customer_contact: '',
     maintainer_contact: '',
     company_contact: '',
+    upload_file: '',
   },
   setFormTransfer: val => {} 
 });

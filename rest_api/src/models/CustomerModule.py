@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from database import database
 
 from src.models.Currency import Currency
 from src.models.Language import Language
+from src.models.ContractFile import ContractFile
 from src.models.customer_currency import customer_currency
 from src.models.customer_language import customer_language
 
@@ -37,7 +38,7 @@ class CustomerModule(database.Base):
     currencies = relationship(
         'Currency',
         secondary=customer_currency,
-        backref='customers'
+        backref='customers',
     )
     languages = relationship(
         'Language',
@@ -51,3 +52,13 @@ class CustomerModule(database.Base):
     office_ips = relationship('OfficeIp', back_populates = 'customer')
     test_account_stagings = relationship('TestAccountStaging', back_populates = 'customer')
     test_account_productions = relationship('TestAccountProduction', back_populates = 'customer')
+    date_added = Column(DateTime, nullable = False)
+    instance = Column(String(128), nullable = True)
+    contract_status_id = Column(Integer, ForeignKey('contract_status.id'), nullable=False)
+    contract_status = relationship(
+            'ContractStatus', 
+            back_populates='customer_modules', 
+            lazy = False
+    )
+    contract_files = relationship('ContractFile', back_populates = 'customer') 
+    contract_label = Column(String(256), nullable = True)

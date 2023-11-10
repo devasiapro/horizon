@@ -60,7 +60,7 @@ export const CustomerAddSeamlessStagingDetails = ({ step }) => {
             pb={{ base: 0, sm: 1, md: 2, lg: 5 }}
             color={"horizon.300"}
           >
-            <Heading size={["sm", "md", "lg"]}>Staging Details</Heading>
+            <Heading size={["sm", "md", "lg"]}>STAGING DETAILS</Heading>
           </CardHeader>
 
           <CardBody color={"horizon.300"}>

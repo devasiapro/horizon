@@ -1,5 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, false
+from sqlalchemy.orm import relationship
 from database import database
+
+from src.models.customer_currency import customer_currency
 
 class Currency(database.Base):
     __tablename__ = 'currency'

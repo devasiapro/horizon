@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 export const FormSeamlessContext = createContext({
   formSeamless: {
+    id: 0,
     merchant_english_name: '',
     brand_name: '',
     regulations: '',

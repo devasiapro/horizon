@@ -80,7 +80,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
     }; 
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/customer`, payload, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/customer/transfer`, payload, {
         headers: {
           Authorization: `Bearer ${token}`
         }

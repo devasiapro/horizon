@@ -9,6 +9,15 @@ import math
 from database import database
 from src.models.User import User
 from src.models.UserRole import UserRole
+from src.models.CustomerModule import CustomerModule 
+from src.models.IpWhitelist import IpWhitelist 
+from src.models.DomainWhitelist import DomainWhitelist 
+from src.models.Regulation import Regulation 
+from src.models.MarketJurisdiction import MarketJurisdiction 
+from src.models.OfficeIp import OfficeIp
+from src.models.TestAccountStaging import TestAccountStaging
+from src.models.TestAccountProduction import TestAccountProduction
+from src.models.ContractStatus import ContractStatus 
 
 db = database.Session()
 user_role = UserRole(
@@ -31,3 +40,16 @@ user = User(
 db.add(user)
 db.commit()
 db.refresh(user)
+
+contract_statuses = [
+    {'id': 1, 'name': 'Preparation'}, 
+    {'id': 2, 'name': 'Sent To Customer'},
+    {'id': 3, 'name': 'Clarifications With Customer'},
+    {'id': 4, 'name': 'Done'}
+]
+
+for status in contract_statuses:
+    contract_status = ContractStatus(id = status['id'],  name = status['name'])
+    db.add(contract_status)
+    db.commit()
+    db.refresh(contract_status)
