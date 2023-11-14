@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'; 
 import {
   Flex,
+  Spacer,
   Text,
   Button,
   Link,
@@ -14,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon } from '@chakra-ui/icons'
 
-export const Pagination = ({ setPage, page, pages, cb }) => {
+export const Pagination = ({ setPage, page, pages, cb, total }) => {
   const handleSubmit = (ev) => {
     ev.preventDefault();
     cb(page);
@@ -22,7 +23,7 @@ export const Pagination = ({ setPage, page, pages, cb }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Flex w="280px">
+      <Flex w="380px">
         <InputGroup size="md" mr="10px">
           <InputLeftAddon children='Page' />
           <Input 
@@ -44,8 +45,8 @@ export const Pagination = ({ setPage, page, pages, cb }) => {
             </Button>
           </InputRightElement>
         </InputGroup>
-        <Text pt="6px" w="90px">
-          of <b>{pages}</b>
+        <Text pt="6px" w="300px">
+          of <b>{pages}</b> - {total} items
         </Text>
       </Flex>
     </form>

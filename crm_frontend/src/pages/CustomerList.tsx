@@ -16,8 +16,14 @@ import {
   Link,
   Icon,
   SimpleGrid,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  CheckboxGroup,
+  Stack,
+  Checkbox
 } from "@chakra-ui/react";
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 import moment from 'moment';
 
@@ -27,9 +33,12 @@ import { useQuery } from '../hooks/useQuery';
 
 export const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
-  const [isInitialRun, setIsInitialRun] = useState(true);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+  const [walletTypeFilters, setWalletTypeFilters] = useState(['transfer', 'seamless']);
+
   const navigate = useNavigate();
   const useAuth = useAuthHook();
   const token = useAuth.getAuth().token;
@@ -39,21 +48,25 @@ export const CustomerList = () => {
     return moment(origDate).utc().format('MMM Do, YYYY');
   };
 
-  const onPageChange = async (newPage) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/customer?page=${page}`, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+  const fetchCustomers = async () => {
+    console.log('fetchCustomers');
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
-      setCustomers(response.data.items); 
-      setPageCount(response.data.pages);
-      const url = new URL(window.location.href);
-      url.searchParams.set('page', page);
-      window.history.pushState({}, '', url.toString());
+      }
+    );
+    console.log('response', response);
+    return response;
+  }
+
+  const onPageChange = async () => {
+    if (page <= 0) return;
+    try {
+      const response = await fetchCustomers();
+      processResponse(response);
     } catch (err) {
       console.log('err', err);
     } finally {
@@ -61,19 +74,38 @@ export const CustomerList = () => {
     }
   };
 
-  useEffect(() => {
-    setPage(query.get('page') ? parseInt(query.get('page')) : 1);
-    console.log('page', page);
-  }, []);
+  const filter = async (ev) => { 
+    ev.preventDefault();
+    const response = await fetchCustomers();
+    setPage(1);
+    processResponse(response);
+  };
+
+  const processResponse = (response) => {
+    setCustomers(response.data.items); 
+    setPageCount(response.data.pages);
+    setTotal(response.data.total);
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    url.searchParams.set('search', search);
+    url.searchParams.set('wallet_type', walletTypeFilters);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  const processWalletTypeFilters = (isChecked, walletType) => {
+    const newFilter = walletTypeFilters.filter(el => el !== walletType);
+    if (isChecked) {
+      newFilter.push(walletType);
+    }
+    setWalletTypeFilters(newFilter);
+  };
 
   useEffect(() => {
-      console.log('page', page);
-      if (page <= 0 || !isInitialRun) {
-        return;
-      }
-      setIsInitialRun(false);
-      onPageChange(page);
-  }, [page]);
+    setSearch(query.get('search') ? query.get('search') : '');
+    setWalletTypeFilters(query.get('wallet_type') ? query.get('wallet_type').split(',') : walletTypeFilters);
+    setPage(query.get('page') ? parseInt(query.get('page')) : 1);
+    onPageChange();
+  }, []);
 
   return (
     <Box p={{ base: 2, md: 4, lg: 6 }}>
@@ -100,7 +132,56 @@ export const CustomerList = () => {
         </Button>
       </Flex>
       <SimpleGrid>
-        <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} />
+        <Flex minWidth="max-content" alignItems="center" gap="2">
+          <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} total={total} />
+          <Spacer />
+          <Box>
+            <form onSubmit={(ev) => filter(ev)}>
+              <Flex minWidth="max-content" alignItems="center" gap="2">
+                <CheckboxGroup 
+                  colorScheme="green" 
+                  defaultValue={walletTypeFilters}
+                >
+                  <Stack direction={['row']}>
+                    <Checkbox 
+                      onChange={(ev) => processWalletTypeFilters(ev.target.checked, 'transfer')}
+                      value="transfer">
+                      Transfer
+                    </Checkbox>
+                    <Checkbox 
+                      onChange={(ev) => processWalletTypeFilters(ev.target.checked, 'seamless')}
+                      value="seamless">
+                      Seamless
+                    </Checkbox>
+                  </Stack>
+                </CheckboxGroup>
+                <InputGroup mb={"4px"}>
+                  <InputLeftElement pointerEvents={"none"}>
+                    <SearchIcon color={"gray.300"} />
+                  </InputLeftElement>
+                  <Input 
+                    value={search}
+                    onChange={(ev) => setSearch(ev.target.value)} 
+                    placeholder="Brand Name" 
+                    bg={"white"}
+                  />
+                </InputGroup>
+                <Button
+                  onClick={(ev) => filter(ev)}
+                  pl={"30px"}
+                  pr={"30px"}
+                  size="md"
+                  type="button"
+                  colorScheme="horizon"
+                >
+                  Search
+                </Button>
+              </Flex>
+            </form>
+          </Box>
+
+        </Flex>
+
         <TableContainer
           bg="white"
           mb="10px"
@@ -189,7 +270,7 @@ export const CustomerList = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} />
+        <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} total={total} />
       </SimpleGrid>
     </Box>
   );
