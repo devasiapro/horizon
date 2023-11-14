@@ -27,10 +27,35 @@ router = APIRouter(
 )
 
 @router.get('')
-def list_customer(page: int = 1, size = 20, db: Session = Depends(database.get_db)):
-    total = db.query(CustomerModule).count()
+def list_customer(
+        page: int = 1, 
+        search: str = '', 
+        wallet_type: str = 'transfer,seamless', 
+        size = 20, 
+        db: Session = Depends(database.get_db)
+    ):
+
+
+    if wallet_type == '':
+        wallet_type = 'transfer,seamless'
+
+    wallet_types = wallet_type.split(',') 
+    
+    total = (db
+        .query(CustomerModule)
+        .filter(CustomerModule.brand_name.like('%' + search + '%'))
+        .filter(CustomerModule.wallet_type.in_(wallet_types))
+        .count()
+    )
     offset = 20 * (page - 1)
-    customers = db.query(CustomerModule).offset(offset).limit(size).all()
+    customers = (db
+        .query(CustomerModule)
+        .filter(CustomerModule.brand_name.like('%' + search + '%'))
+        .filter(CustomerModule.wallet_type.in_(wallet_types))
+        .offset(offset)
+        .limit(size)
+        .all()
+    )
 
     for customer in customers:
         currencies = customer.currencies
