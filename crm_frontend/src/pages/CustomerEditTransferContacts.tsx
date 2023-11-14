@@ -50,6 +50,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
   };
 
   const onSubmit = async (ev) => {
+    ev.preventDefault();
     const token = useAuth.getAuth().token;
     const languages = formTransfer.languages ? cleanValues(formTransfer.languages.split(',')) : [];
     const currencies = formTransfer.currencies ? cleanValues(formTransfer.currencies.split(',')) : [];
@@ -59,7 +60,6 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
     const ipWhitelist = formTransfer.ip_whitelist ? cleanValues(formTransfer.ip_whitelist.split(',')) : [];
 
     const payload = {
-      wallet_type: 'transfer',
       merchant_english_name: formTransfer.merchant_english_name,
       merchant_chinese_name: formTransfer.merchant_chinese_name,
       brand_name: formTransfer.brand_name,
@@ -170,7 +170,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                   label={"Update"}
                   toolTipText={"Complete all fields in order to continue"} 
                   isEnabled={true}
-                  onClick={(e) => onSubmit()}
+                  onClick={(e) => onSubmit(e)}
                 />
               </Flex>
             </form>

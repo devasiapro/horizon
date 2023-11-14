@@ -7,6 +7,7 @@ from database import database
 
 from src.models.Currency import Currency
 from src.models.Language import Language
+from src.models.License import License
 from src.models.ContractFile import ContractFile
 from src.models.customer_currency import customer_currency
 from src.models.customer_language import customer_language
@@ -38,7 +39,6 @@ class CustomerModule(database.Base):
     currencies = relationship(
         'Currency',
         secondary=customer_currency,
-        backref='customers',
     )
     languages = relationship(
         'Language',
@@ -48,6 +48,7 @@ class CustomerModule(database.Base):
     ip_whitelist = relationship('IpWhitelist', back_populates = 'customer')
     domain_whitelist = relationship('DomainWhitelist', back_populates = 'customer')
     regulations = relationship('Regulation', back_populates = 'customer')
+    licenses = relationship('License', back_populates = 'customer')
     market_jurisdictions = relationship('MarketJurisdiction', back_populates = 'customer')
     office_ips = relationship('OfficeIp', back_populates = 'customer')
     test_account_stagings = relationship('TestAccountStaging', back_populates = 'customer')
@@ -62,3 +63,4 @@ class CustomerModule(database.Base):
     )
     contract_files = relationship('ContractFile', back_populates = 'customer') 
     contract_label = Column(String(256), nullable = True)
+    customer_currencies = relationship('CustomerCurrency', back_populates = 'customer')

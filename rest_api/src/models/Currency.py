@@ -9,3 +9,4 @@ class Currency(database.Base):
     id = Column(Integer, primary_key = True, index = True)
     name = Column(String(128), nullable = False)
     is_default = Column(Boolean, nullable = False, server_default = false())
+    customers = relationship('CustomerCurrency', back_populates = 'currency')
