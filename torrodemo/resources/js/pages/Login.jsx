@@ -7,10 +7,11 @@ import {
   Button,
   Divider,
   Container,
+  FormHelperText,
+  FormErrorMessage,
   FormControl,
   FormLabel,
-  Input,
-  FormHelperText
+  Input
 } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -23,6 +24,10 @@ export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [errors, setErrors] = useState({});
+  const [otherError, setOtherError] = useState('');
+  const [authError, setAuthError] = useState('');
 
   const auth = useContext(AuthContext);
   const authHook = useAuth();
@@ -30,6 +35,8 @@ export const Login = () => {
 
   const login = async () => {
     try {
+      setIsLoading(true);
+      setErrors({});
       await axios.get(`${import.meta.env.VITE_APP_URL}/sanctum/csrf-cookie`);
       const response = await axios.post(`${import.meta.env.VITE_APP_URL}/api/login`, {
         'username': username,
@@ -38,7 +45,21 @@ export const Login = () => {
       authHook.setAsLogged(response.data.player, response.data.token);
       navigate('/');
     } catch (err) {
-      console.log('err', err);
+      if (err.response.status === 422) {
+        setErrors(err.response.data.errors);
+      } else if (err.response.status === 401) {
+        setAuthError('Username or password is not correct.');
+      } else if (err.response.status === 500) {
+        setOtherError(
+          err.response.data && err.response.data.message ? 
+          err.response.data.message : 
+          'Internal error was encountered. Please report to the admins.'
+        );
+      } else {
+        setOtherError('Internal error was encountered. Please report to the admins.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,13 +77,27 @@ export const Login = () => {
         borderRadius="md" 
         borderWidth="2px"
       >
+        { otherError &&
+          <Box mb="20px" borderWidth="1px" padding="10px">
+            <FormControl isInvalid={otherError}>
+              <FormErrorMessage>{otherError}</FormErrorMessage> 
+            </FormControl>
+          </Box>
+        }
 
-        <FormControl>
+        <FormControl isInvalid={errors.username || authError}>
           <FormLabel>Username</FormLabel>
           <Input 
             type="text" 
             onChange={ e => setUsername(e.target.value) }
           />
+          { errors.username &&
+            <FormErrorMessage>{errors.username[0]}</FormErrorMessage>
+          }
+
+          { authError &&
+            <FormErrorMessage>{authError}</FormErrorMessage>
+          }
         </FormControl>
 
         <FormControl mt="20px">
@@ -76,6 +111,7 @@ export const Login = () => {
         <Divider mt="20px" mb="20px" />
 
         <Button 
+          isLoading={isLoading}
           onClick={() => login()}
           variant="outline" 
           colorScheme="green"

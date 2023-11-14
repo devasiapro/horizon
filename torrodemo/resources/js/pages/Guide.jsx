@@ -1,93 +1,46 @@
 import React from 'react';
-import { NavigationBar } from '../components/NavigationBar';
 import { 
-  Text,
-  Card,
-  Code,
-  Container,
-  CardBody,
-  CardHeader,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   Heading
 } from '@chakra-ui/react';
+
+import { NavigationBar } from '../components/NavigationBar';
 import { Footer } from '../components/Footer';
+import { Tutorial } from '../components/Tutorial';
+import { ApiReference } from '../components/ApiReference';
+import { CallbackUrlReference } from '../components/CallbackUrlReference';
+import { DeveloperReference } from '../components/DeveloperReference';
 
 export const Guide = () => {
-  const sampleCode = `
-// NodeJS sample implementation
-import axios from 'axios';
-import crypto from 'crypto';
-
-const API_KEY = 'API_KEY_FROM_ADMIN';
-const SECRET_KEY = 'SECRET_KEY_FROM_ADMIN';
- 
-const casinoUserId = 'CASINO44';
-const username = 'goldenplayor';
-const hash = crypto
-  .createHash('md5')
-  .update(casinoUserId + username + SECRET_KEY)
-  .digest('hex');
-
-const length = JSON.stringify({
-  'casino_user_id': casinoUserId,
-  'username': username,
-  'hash': hash
-}).length;
-
-const call = async () => {
-  try {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    const response = await axios.post('https://api.torrospins.com/api/add/user', {
-      'casino_user_id': casinoUserId,
-      'username': username,
-      'hash': hash,
-    }, { 
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': length,
-        'X-Api-Key': API_KEY
-      }, 
-    });
-    console.log('response', response.data);
-  } catch (err) {
-    console.log('err' ,err);
-  }
-};
-
-call();
-  `
   return (
     <div>
       <NavigationBar />
-      <Heading mt="40px" align="center" mb="40px" fontSize="2xl">
-        Torrospin Integration Guide
-      </Heading>
-
-      <Container maxW='container.md'>
-        <Card>
-          <CardHeader>
-            <Heading>Add User</Heading>
-          </CardHeader>
-          <CardBody>
-            <Code>
-              <pre>
-              {sampleCode}
-              </pre>
-            </Code>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Heading>Request Link</Heading>
-          </CardHeader>
-          <CardBody>
-            <Code>
-              <pre>
-              </pre>
-            </Code>
-          </CardBody>
-        </Card>
-      </Container>
+      <Tabs isFitted>
+        <TabList>
+          <Tab pt="20px" pb="20px">Tutorial</Tab>
+          <Tab pt="20px" pb="20px">API Reference</Tab>
+          <Tab pt="20px" pb="20px">Callback URL Reference</Tab>
+          <Tab pt="20px" pb="20px">Developer Reference</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Tutorial />
+          </TabPanel>
+          <TabPanel>
+            <ApiReference /> 
+          </TabPanel>
+          <TabPanel>
+            <CallbackUrlReference />
+          </TabPanel>
+          <TabPanel>
+            <DeveloperReference />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
       <Footer />
     </div>
   );

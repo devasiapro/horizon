@@ -47,4 +47,39 @@ def fetch_income_of_customers(
         .all()
     )
 
-    return game_sessions
+    customers = {}
+    for game_session in game_sessions:
+        if not game_session.player.operator.is_transfer:
+            customers[game_session.player.operator.brand] = {}
+        else:
+            customers[game_session.player.kiosk.brand] = {}
+ 
+    for game_session in game_sessions:
+        if not game_session.player.operator.is_transfer:
+            if game_session.date_played in customers[game_session.player.operator.brand]:
+                customers[game_session.player.operator.brand][game_session.date_played] = game_session.total_game_income + customers[game_session.player.operator.brand][game_session.date_played]
+            else:
+                customers[game_session.player.operator.brand][game_session.date_played] = game_session.total_game_income
+        else:
+            if game_session.date_played in customers[game_session.player.kiosk.brand]:
+                customers[game_session.player.kiosk.brand][game_session.date_played] = game_session.total_game_income + customers[game_session.player.kiosk.brand][game_session.date_played]
+            else:
+                customers[game_session.player.kiosk.brand][game_session.date_played] = game_session.total_game_income
+
+    sorted_customers = []
+    for customer, earnings in customers.items():
+        earning_list = [] 
+        total_earnings = 0 
+        for date, earning in earnings.items(): 
+            earning_list.append({ 
+                'date': date, 
+                'earning': earning 
+            }) 
+            total_earnings += earning 
+        sorted_customers.append({ 
+            'name': customer, 
+            'total_earnings': total_earnings, 
+            'daily_earnings': earning_list 
+        }) 
+        
+    return sorted_customers[0:14]

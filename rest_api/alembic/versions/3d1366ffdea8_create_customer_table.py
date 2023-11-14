@@ -26,9 +26,7 @@ def upgrade() -> None:
         sa.Column('operator_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['operator_id'], ['operator.id'], ondelete='cascade')
     )
-    pass
 
 
 def downgrade() -> None:
     op.drop_table('customer')
-    pass

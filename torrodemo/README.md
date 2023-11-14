@@ -21,6 +21,7 @@ docker run -it --rm -v `pwd`:/app composer install
 2. Run Docker using Sail
 ```
 ./vendor/bin/sail up
+./vendor/bin/sail artisan key:generate
 ```
 
 3. Create file ".env" based from ".env.example"

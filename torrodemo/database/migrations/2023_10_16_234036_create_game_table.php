@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 256);
             $table->string('thumbnail_url', 256);
             $table->string('launch_code', 256);
+            $table->string('game_type', 128)->description('slot, live');
             $table->timestamps();
         });
     }

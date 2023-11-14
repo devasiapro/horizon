@@ -11,3 +11,7 @@ openpyxl
 pydantic
 uvicorn
 fastapi
+passlib
+python-jose
+requests
+python-multipart

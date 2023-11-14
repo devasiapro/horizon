@@ -132,7 +132,9 @@ for index, game_session in enumerate(game_sessions):
         client_platform_id = client_platform_model.id,
         total_game_bet = game_session[instance.INDEX_TOTAL_GAME_BET],
         total_game_win = game_session[instance.INDEX_TOTAL_GAME_WIN],
-        total_game_income = game_session[instance.INDEX_TOTAL_INCOME]
+        total_game_income = game_session[instance.INDEX_TOTAL_INCOME],
+        rtp = None if math.isnan(game_session[instance.INDEX_RTP]) else game_session[instance.INDEX_RTP],
+        number_of_spins = game_session[instance.INDEX_GAMES]
     )
     db.add(game_session_model)
     db.commit()

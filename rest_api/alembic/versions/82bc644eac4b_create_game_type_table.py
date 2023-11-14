@@ -24,9 +24,7 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), primary_key=True),
         sa.Column('name', sa.String(64))
     )
-    pass
 
 
 def downgrade() -> None:
     op.drop_table('game_type')
-    pass
