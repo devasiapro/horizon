@@ -92,10 +92,9 @@ export const NavBar = () => {
                 mr={3}
               />
               <MenuList>
-                <MenuItem>
+                <MenuItem onClick={handleLogout}>
                   <Button
                     as={ReactRouterLink}
-                    onClick={handleLogout}
                     variant="link"
                   >
                     Logout
