@@ -19,6 +19,7 @@ import {
   Spacer,
   HStack,
   VStack,
+  Skeleton,
   StatArrow,
   Stat,
 } from "@chakra-ui/react";

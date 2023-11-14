@@ -127,7 +127,7 @@ def create_customer(
             db.commit()
             db.refresh(currency_model)
 
-        customer_model.customer_currencies.append(currency_model)
+        customer_model.currencies.append(currency_model)
 
     for test_account in request.test_account_stagings:
         test_account_model = TestAccountStaging(

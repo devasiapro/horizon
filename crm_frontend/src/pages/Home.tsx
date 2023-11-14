@@ -14,6 +14,8 @@ import {
   SimpleGrid,
   Spacer,
   VStack,
+  Skeleton,
+  useToast
 } from "@chakra-ui/react";
 import axios from 'axios';
 import moment from 'moment';
@@ -32,6 +34,9 @@ export const Home = () => {
     datasets: []
   });
   const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('customer');
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+
   const yesterday = moment().subtract(1, 'days');
   const weekBefore = moment().subtract(8, 'days');
 
@@ -95,22 +100,33 @@ export const Home = () => {
 
   const processIncomes = async () => {
     let responses;
-
-    if (selectedIncomeFilter === 'country') {
-      responses = await Promise.all([
-        fetchCountryIncomes(currentDateStart, currentDateEnd),
-        fetchCountryIncomes(previousDateStart, previousDateEnd),
-      ]);
-    } else if (selectedIncomeFilter === 'product') {
-      responses = await Promise.all([
-        fetchProductIncomes(currentDateStart, currentDateEnd),
-        fetchProductIncomes(previousDateStart, previousDateEnd),
-      ]);
-    } else {
-      responses = await Promise.all([
-        fetchCustomerIncomes(currentDateStart, currentDateEnd),
-        fetchCustomerIncomes(previousDateStart, previousDateEnd),
-      ]);
+    setIsLoading(true);
+    try {
+      if (selectedIncomeFilter === 'country') {
+        responses = await Promise.all([
+          fetchCountryIncomes(currentDateStart, currentDateEnd),
+          fetchCountryIncomes(previousDateStart, previousDateEnd),
+        ]);
+      } else if (selectedIncomeFilter === 'product') {
+        responses = await Promise.all([
+          fetchProductIncomes(currentDateStart, currentDateEnd),
+          fetchProductIncomes(previousDateStart, previousDateEnd),
+        ]);
+      } else {
+        responses = await Promise.all([
+          fetchCustomerIncomes(currentDateStart, currentDateEnd),
+          fetchCustomerIncomes(previousDateStart, previousDateEnd),
+        ]);
+      }
+    } catch (err) {
+      toast({
+        title: 'Error encountered',
+        description: 'An error was encountered while fetching the data. Please try to reload or report to the Admin.',
+        status: 'error',
+        isClosable: true 
+      });
+    } finally {
+      setIsLoading(false);
     }
 
     const incomeCurrents = responses[0].data;
@@ -189,6 +205,7 @@ export const Home = () => {
   }, 1000);
 
   useEffect(() => {
+    setCurrentDateTime(moment().format('MMM Do YYYY, h:mm:ss a'));
     processIncomes();
   }, []);
 
@@ -270,16 +287,20 @@ export const Home = () => {
             boxShadow="lg"
             borderRadius={"5px"}
           >
-            <IncomePerCustomer
-              filter={selectedIncomeFilter}
-              topData={topData}
-              yesterday={yesterday}
-              weekBefore={weekBefore}
-            />
+            <Skeleton isLoaded={!isLoading}>
+              <IncomePerCustomer
+                filter={selectedIncomeFilter}
+                topData={topData}
+                yesterday={yesterday}
+                weekBefore={weekBefore}
+              />
+            </Skeleton>
           </GridItem>
           <GridItem colSpan={{ base: 12, lg: 6 }}>
             <Box boxShadow="lg" mb={4}>
-              <PerformanceGraph performances={performances} />
+              <Skeleton isLoaded={!isLoading}>
+                <PerformanceGraph performances={performances} />
+              </Skeleton>
             </Box>
             <SimpleGrid columns={2} gap={4}>
               <EarningGamesContainer 
