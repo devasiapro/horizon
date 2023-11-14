@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { 
-  Box, 
-  Text, 
-  Button, 
+import {
+  Box,
+  Text,
+  Button,
   Spacer,
-  ButtonGroup, 
-  Divider, 
-  Flex 
+  ButtonGroup,
+  Divider,
+  Flex
 } from '@chakra-ui/react';
 
 import { AuthContext } from '../context/AuthContext';
@@ -49,9 +49,9 @@ export const NavigationBar = () => {
 
   return (
     <div>
-      <Flex 
-        padding="20px" 
-        minWidth="max-content" 
+      <Flex
+        padding="20px"
+        minWidth="max-content"
         alignItems="center"
       >
         <Button
@@ -59,50 +59,52 @@ export const NavigationBar = () => {
           onClick={() => navigate('/')}
         >
           Torrodemo
-        </Button> 
+        </Button>
         <Spacer />
         <ButtonGroup gap="4">
-            <>
-              { authContext.auth.isSignedIn &&
+          <>
+            {authContext.auth.isSignedIn &&
               <Text marginTop="10px">
                 Balance: {authContext.auth.player.currency} {authContext.auth.player.balance}
               </Text>
-              }
-              <Button 
-                onClick={() => navigate('/guide')}
-                variant="outline" 
-                colorScheme="green"
-              >
-                Guide
-              </Button>
-            </>
-          { !authContext.auth.isSignedIn &&
-            <>
-            <Button 
-              onClick={() => navigate('/login')}
+            }
+            { authContext.auth.isSignedIn &&
+              <Button
+              onClick={() => navigate('/guide')}
               variant="outline"
               colorScheme="green"
             >
-              Login
+              Guide
             </Button>
-            <Button 
-              onClick={() => navigate('/register')}
-              variant="outline" 
-              colorScheme="green"
-            >
-              Register   
-            </Button>
+            }
+          </>
+          {!authContext.auth.isSignedIn &&
+            <>
+              <Button
+                onClick={() => navigate('/login')}
+                variant="outline"
+                colorScheme="green"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => navigate('/register')}
+                variant="outline"
+                colorScheme="green"
+              >
+                Register
+              </Button>
             </>
           }
-          { authContext.auth.isSignedIn &&
+          {authContext.auth.isSignedIn &&
             <>
-            <Button 
-              onClick={() => logout()}
-              variant="outline" 
-              colorScheme="green"
-            >
-              Logout   
-            </Button>
+              <Button
+                onClick={() => logout()}
+                variant="outline"
+                colorScheme="green"
+              >
+                Logout
+              </Button>
             </>
           }
         </ButtonGroup>
