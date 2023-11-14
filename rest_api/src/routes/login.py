@@ -51,25 +51,17 @@ def login(
         db: Session = Depends(database.get_db)
     ) -> LoginResponse:
 
-    user = db.query(User).filter(
-        User.email == request.email
-    ).first()
+    user = db.query(User).filter(User.username == request.username).first()
 
-    if not user:
+    if not user or not pwd_context.verify(request.password, user.password):
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND, 
-            detail = 'Email or password not found'
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail = 'username or password not found'
         )
-
-    if not pwd_context.verify(request.password, user.password):
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND, 
-            detail = 'Email or password not found'
-        ) 
 
     access_token = generate_token(
         data = {
-            "sub": user.email
+            "sub": user.username
         }
     )
 

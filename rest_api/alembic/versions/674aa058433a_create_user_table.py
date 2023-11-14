@@ -19,13 +19,14 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.create_table(
         'user',
-        sa.Column('id', sa.Integer(), primary_key=True),
-        sa.Column('first_name', sa.String(64), nullable=False),
-        sa.Column('last_name', sa.String(64), nullable=False),
-        sa.Column('password', sa.String(256), nullable=False),
-        sa.Column('email', sa.String(64), nullable=False),
-        sa.Column('user_role_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['user_role_id'], ['user_role.id'], ondelete='cascade')
+        sa.Column('id', sa.Integer(), primary_key = True),
+        sa.Column('first_name', sa.String(64), nullable = False),
+        sa.Column('last_name', sa.String(64), nullable = False),
+        sa.Column('password', sa.String(256), nullable = False),
+        sa.Column('username', sa.String(256), nullable = False),
+        sa.Column('email', sa.String(64), nullable = True),
+        sa.Column('user_role_id', sa.Integer(), nullable = False),
+        sa.ForeignKeyConstraint(['user_role_id'], ['user_role.id'], ondelete = 'cascade')
     )
     pass
 

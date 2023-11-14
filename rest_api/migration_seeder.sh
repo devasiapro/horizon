@@ -1,4 +1,4 @@
-#python migration_seeder.py --file=/home/christopher/Downloads/Dataset_88Shared/2023-11-05.xlsx --instance=dragon88
+python migration_seeder.py --file=/home/christopher/Downloads/Dataset_88Shared/2023-11-05.xlsx --instance=dragon88
 python migration_seeder.py --file=/home/christopher/Downloads/Dataset_DragonShared/2023-11-05.xlsx --instance=dragon
 python migration_seeder.py --file=/home/christopher/Downloads/Dataset_88Shared/2023-11-06.xlsx --instance=dragon88
 python migration_seeder.py --file=/home/christopher/Downloads/Dataset_DragonShared/2023-11-06.xlsx --instance=dragon
