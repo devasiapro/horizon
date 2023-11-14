@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  FormControl,
   FormLabel,
+  FormControl,
+  FormErrorMessage,
   Image,
   Input,
   Alert,
@@ -17,33 +18,56 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
 import { useAuthHook } from '../hooks/useAuthHook';
+import { ErrorForm, ErrorFormDetail } from '../interfaces/ErrorForm';
 
 const horizonLogo = "https://sys-stg.horizon88.com/img/horizon-logo.png";
 const backgroundImage = "https://sys-stg.horizon88.com/img/login.jpg";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorFormMessages, setErrorFormMessages] = useState({
+    username: '',
+    password: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const authHook = useAuthHook();
   const navigate = useNavigate();
 
   const handleSubmit = async (event): void => {
-    event.preventDefault() 
+    event.preventDefault();
+    setErrorMessage('');
+    setErrorFormMessages({
+      username: '',
+      password: ''
+    });
+    setIsLoading(true);
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { 
-        email, password 
+      const response: AxiosResponse = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { 
+        username, password 
       });
       authHook.setAsLogged(response.data.user, response.data.token);
       navigate('/');
-    } catch (err) {
-      console.log('err', err);
+    } catch (err: AxiosError) {
+      if (err.response?.status === 401) {
+        setErrorMessage('Invalid username or password.');
+      } else if (err.response?.status === 422) {
+        const errorForms: ErrorForm = err.response.data;
+        errorForms.detail.forEach(errorForm => {
+          const temp = errorFormMessages;
+          temp[errorForm.loc[1]] = errorForm.msg
+          setErrorFormMessages(temp);
+        });
+      } else {
+        setErrorMessage('Error encountered: ' + JSON.stringify(err));
+      }
     } finally {
-
+      setIsLoading(false);
     }
   };
 
@@ -82,7 +106,13 @@ export const Login = () => {
 
         <Box>
           <form onSubmit={handleSubmit}>
-            <FormControl>
+            {errorMessage && (
+              <Alert status="error" aria-live="assertive" mt={3}>
+                <AlertIcon />
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
+            <FormControl mb={3} isInvalid={errorFormMessages.username}>
               <InputGroup mt={8}>
                 <InputLeftElement pointerEvents="none" ml={1}>
                   <EmailIcon color="horizon.300" />
@@ -91,11 +121,9 @@ export const Login = () => {
                   type="text"
                   id="username"
                   autoComplete="off"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  required
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
                   borderRadius={"20px"}
-                  mb={3}
                   placeholder="Username"
                   color={"horizon.300"}
                   fontWeight={800}
@@ -103,8 +131,9 @@ export const Login = () => {
                   focusBorderColor="horizon.300"
                 />
               </InputGroup>
+              <FormErrorMessage>{errorFormMessages.username}</FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl mb={3} isInvalid={errorFormMessages.password}>
               <InputGroup mt={3}>
                 <InputLeftElement pointerEvents="none" ml={1}>
                   <LockIcon color="horizon.300" />
@@ -115,9 +144,7 @@ export const Login = () => {
                   autoComplete="off"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
-                  required
                   borderRadius={"20px"}
-                  mb={3}
                   placeholder="Password"
                   color={"horizon.300"}
                   fontWeight={800}
@@ -125,14 +152,10 @@ export const Login = () => {
                   focusBorderColor="horizon.300"
                 />
               </InputGroup>
+              <FormErrorMessage>{errorFormMessages.password}</FormErrorMessage>
             </FormControl>
-            {errorMessage && (
-              <Alert status="error" ref={errRef} aria-live="assertive" mt={3}>
-                <AlertIcon />
-                <AlertDescription>{errorMessage}</AlertDescription>
-              </Alert>
-            )}
             <Button
+              isLoading={isLoading}
               type="submit"
               colorScheme="teal"
               my={2}

@@ -28,13 +28,13 @@ def auth(
     try:
         token = credentials.credentials
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload['sub']
+        username = payload['sub']
         user = db.query(User).filter(
-            User.email == email
+            User.username == username
         ).first()
     except JWTError:
         raise HTTPException(
-            status_code=401,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid authentication'
         )
 

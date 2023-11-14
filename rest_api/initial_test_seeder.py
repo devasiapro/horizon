@@ -18,6 +18,7 @@ from src.models.OfficeIp import OfficeIp
 from src.models.TestAccountStaging import TestAccountStaging
 from src.models.TestAccountProduction import TestAccountProduction
 from src.models.ContractStatus import ContractStatus 
+from src.models.CustomerCurrency import CustomerCurrency 
 
 db = database.Session()
 user_role = UserRole(
@@ -34,6 +35,7 @@ user = User(
     last_name = "Mantis",
     password = pwd_context.hash("testpassword"),
     email = "razer@mantis.com",
+    username = "razer",
     user_role_id = user_role.id
 )
 
