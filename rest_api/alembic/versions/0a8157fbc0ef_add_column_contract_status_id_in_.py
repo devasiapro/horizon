@@ -32,4 +32,5 @@ def upgrade() -> None:
     )
 
 def downgrade() -> None:
+    op.drop_constraint('contract_status_id', 'customer_module', type_='foreignkey')
     op.drop_column('customer_module', 'contract_status_id')

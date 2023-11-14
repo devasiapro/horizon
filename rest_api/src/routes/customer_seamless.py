@@ -12,6 +12,7 @@ from src.models.Language import Language
 from src.models.IpWhitelist import IpWhitelist
 from src.models.DomainWhitelist import DomainWhitelist
 from src.models.Regulation import Regulation
+from src.models.License import License 
 from src.models.MarketJurisdiction import MarketJurisdiction
 from src.models.OfficeIp import OfficeIp
 from src.models.TestAccountStaging import TestAccountStaging
@@ -63,6 +64,15 @@ def create_customer(
         db.add(regulation_model)
         db.commit()
         db.refresh(regulation_model)
+
+    for license in request.licenses:
+        license_model = License(
+            name = license,
+            customer_id = customer_model.id
+        )
+        db.add(license_model)
+        db.commit()
+        db.refresh(license_model)
 
     for market_jurisdiction in request.market_jurisdiction:
         market_jurisdiction_model = MarketJurisdiction(
@@ -117,7 +127,7 @@ def create_customer(
             db.commit()
             db.refresh(currency_model)
 
-        customer_model.currencies.append(currency_model)
+        customer_model.customer_currencies.append(currency_model)
 
     for test_account in request.test_account_stagings:
         test_account_model = TestAccountStaging(
