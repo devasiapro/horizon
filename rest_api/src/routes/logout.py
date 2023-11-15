@@ -18,7 +18,7 @@ ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
 security = HTTPBearer()
 
-@router.post('/')
+@router.post('')
 def logout():
     return {
         "message": "OK"

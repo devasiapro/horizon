@@ -1,8 +1,8 @@
-import interface ErrorFormDetail {
-  loc = ['body', 'username'],
-  msg: string
-}
+export interface ErrorFormDetail {
+  loc: [];
+  msg: string;
+};
 
-import interface ErrorForm {
-  detail: ErrorFormDetail[]
-}
+export interface ErrorForm {
+  detail: ErrorFormDetail[];
+};

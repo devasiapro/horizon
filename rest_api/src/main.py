@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi_pagination import Page, add_pagination, paginate
 from .routes import (
     game_earning, 
     customer_income, 
@@ -21,7 +20,6 @@ from .routes import (
 app = FastAPI(
     title = "Horizon REST API"
 )
-add_pagination(app)
 
 origins = ["*"]
 
