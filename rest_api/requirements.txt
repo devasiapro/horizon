@@ -15,3 +15,4 @@ passlib
 python-jose
 requests
 python-multipart
+gunicorn
