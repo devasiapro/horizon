@@ -18,26 +18,22 @@ ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
 security = HTTPBearer()
 
-@router.post('/')
+@router.post('')
 def auth(
     response: Response,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(database.get_db)
 ) -> LoginResponse:
-
     try:
         token = credentials.credentials
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload['sub']
-        user = db.query(User).filter(
-            User.username == username
-        ).first()
+        user = db.query(User).filter(User.username == username).first()
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid authentication'
         )
-
     return {
         "token": token, 
         "token_type": "bearer",
