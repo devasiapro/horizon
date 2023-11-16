@@ -154,7 +154,6 @@ export const CustomerEditSeamlessGeneral = ({ customerId, step }) => {
                         setFormSeamless({...formSeamless, brand_name: e.target.value})
                       }}
                       value={formSeamless.brand_name}
-                      value={formSeamless.brand_name}
                     />
                   </Show>
                 </SimpleGrid>
