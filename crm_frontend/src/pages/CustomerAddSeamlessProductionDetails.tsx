@@ -27,10 +27,19 @@ import { useNavigate } from 'react-router-dom';
 import { CustomerAddSeamlessStep } from '../components/CustomerAddSeamlessStep';
 import { FormSeamlessContext } from '../context/FormSeamlessContext';
 import { useAuthHook } from "../hooks/useAuthHook";
+import { StockInputText } from '../components/StockInputText';
+import { StockFormButton } from '../components/StockFormButton';
 
 export const CustomerAddSeamlessProductionDetails = ({ step }) => {
   const {formSeamless, setFormSeamless} = useContext(FormSeamlessContext);
   const [isFormComplete, setIsFormComplete] = useState(true);
+  const [errors, setErrors] = useState({
+    productionDesktopLobbyUrl: '',
+    productionMobileLobbyUrl: '',
+    testAccounts: '',
+    walletEndpoint: '',
+    walletIpPort: ''
+  });
 
   const useAuth = useAuthHook();
   const navigate = useNavigate();
@@ -47,6 +56,50 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
+    let isError = false;
+    let tempErrors = {
+      productionDesktopLobbyUrl: '',
+      productionMobileLobbyUrl: '',
+      testAccounts: '',
+      walletEndpoint: '',
+      walletIpPort: '',
+      serviceApiIp: ''
+    };
+
+    if (!formSeamless.production_desktop_lobby_url) {
+      tempErrors = {...tempErrors, productionDesktopLobbyUrl: 'Desktop Lobby URL is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_mobile_lobby_url) {
+      tempErrors = {...tempErrors, productionMobileLobbyUrl: 'Mobile Lobby URL is required.'};
+      isError = true;
+    }
+  
+    if (!formSeamless.test_account_productions) {
+      tempErrors = {...tempErrors, testAccounts: 'Test Accounts is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_wallet_endpoint) {
+      tempErrors = {...tempErrors, walletEndpoint: 'Wallet Endpoint is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_wallet_ip_port) {
+      tempErrors = {...tempErrors, walletIpPort: 'Wallet IP and Port is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_service_api_ip) {
+      tempErrors = {...tempErrors, serviceApiIp: 'Service API and API is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (isError) {
+      return;
+    }
 
     const token = useAuth.getAuth().token;
     const regulations = formSeamless.regulations ? 
@@ -62,8 +115,8 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
     const languages = formSeamless.language_used ? 
       cleanValues(formSeamless.language_used.split(',')) : 
       [];
-    const currencies = formSeamless.currencies ? 
-      cleanValues(formSeamless.currencies.split(',')) : 
+    const currencies = formSeamless.currencies_used ? 
+      cleanValues(formSeamless.currencies_used.split(',')) : 
       [];
 
     const testAccountStagings = formSeamless.test_account_stagings.split(',').map(accounts => {
@@ -181,122 +234,96 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>PRODUCTION DETAILS</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
 
           <CardBody color={"horizon.300"}>
             <form>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Desktop Lobby / Portral URL
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Desktop Lobby / Portal URL *"} 
+                formName={"desktopLobbyUrl"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    production_desktop_lobby_url: e.target.value,
+                    ...formSeamless, 
+                    production_desktop_lobby_url: e.target.value
                   })
-                }
-                name="desktopURL"
+                }}
+                errorMessage={errors.productionDesktopLobbyUrl}
                 value={formSeamless.production_desktop_lobby_url}
+                placeholder={"e.g. https://desktop.com/lobby"}
+                helperText={""}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Mobile Lobby / Portral URL
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Mobile Lobby / Portal URL *"} 
+                formName={"desktopLobbyUrl"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    production_mobile_lobby_url: e.target.value,
+                    ...formSeamless, 
+                    production_mobile_lobby_url: e.target.value
                   })
-                }
-                name="mobileURL"
+                }}
+                errorMessage={errors.productionMobileLobbyUrl}
                 value={formSeamless.production_mobile_lobby_url}
+                placeholder={"e.g. https://mobile.com/lobby"}
+                helperText={""}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Test Accounts
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Test Accounts *"} 
+                formName={"testAccounts"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    test_account_productions: e.target.value,
+                    ...formSeamless, 
+                    test_account_productions: e.target.value
                   })
-                }
-                name="testAccounts"
+                }}
+                errorMessage={errors.testAccounts}
                 value={formSeamless.test_account_productions}
+                placeholder={"e.g. user/mypassword, user2/otherpassword"}
+                helperText={"Seperated by slash (username/password) and comma"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Wallet Endpoint
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Wallet Endpoint *"} 
+                formName={"walletEndpoint"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    production_wallet_endpoint: e.target.value,
+                    ...formSeamless, 
+                    production_wallet_endpoint: e.target.value
                   })
-                }
-                name="walletEndpoint"
+                }}
+                errorMessage={errors.walletEndpoint}
                 value={formSeamless.production_wallet_endpoint}
+                placeholder={"e.g. https://casino.com/wallet"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Wallet IP and Port
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Wallet IP and Port *"} 
+                formName={"walletIpPort"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    production_wallet_ip_port: e.target.value,
+                    ...formSeamless, 
+                    production_wallet_ip_port: e.target.value
                   })
-                }
-                name="walletIpPort"
+                }}
+                errorMessage={errors.walletIpPort}
                 value={formSeamless.production_wallet_ip_port}
+                placeholder={"e.g. 123.231.324.123:80"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Service API IP  
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Service API IP *"} 
+                formName={"serviceApiIp"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    production_service_api_ip: e.target.value,
+                    ...formSeamless, 
+                    production_service_api_ip: e.target.value
                   })
-                }
-                name="serviceApiIp"
+                }}
+                errorMessage={errors.serviceApiIp}
                 value={formSeamless.production_service_api_ip}
+                placeholder={"e.g. 421.232.211.111"}
               />
 
               <Flex>
@@ -320,7 +347,6 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
                     type="button"
                     colorScheme="horizon"
                     onClick={(e) => onSubmit(e)}
-                    isDisabled={!isFormComplete}
                   >
                     Submit
                   </Button>

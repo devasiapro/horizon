@@ -21,7 +21,8 @@ import {
   FormHelperText,
   FormLabel,
   Tooltip,
-  Button
+  Button,
+  useToast
 } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -34,8 +35,15 @@ import { StockFormButton } from '../components/StockFormButton';
 
 export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
   const { formSeamless, setFormSeamless } = useContext(FormSeamlessContext);
-  const [ isFormComplete, setIsFormComplete ] = useState(false);
+  const [errors, setErrors] = useState({
+    productionDesktopLobbyUrl: '',
+    productionMobileLobbyUrl: '',
+    testAccounts: '',
+    walletEndpoint: '',
+    walletIpPort: ''
+  });
 
+  const toast = useToast();
   const useAuth = useAuthHook();
   const navigate = useNavigate();
 
@@ -51,7 +59,51 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    console.log(formSeamless.test_account_stagings);
+    let isError = false;
+    let tempErrors = {
+      productionDesktopLobbyUrl: '',
+      productionMobileLobbyUrl: '',
+      testAccounts: '',
+      walletEndpoint: '',
+      walletIpPort: '',
+      serviceApiIp: ''
+    };
+
+    if (!formSeamless.production_desktop_lobby_url) {
+      tempErrors = {...tempErrors, productionDesktopLobbyUrl: 'Desktop Lobby URL is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_mobile_lobby_url) {
+      tempErrors = {...tempErrors, productionMobileLobbyUrl: 'Mobile Lobby URL is required.'};
+      isError = true;
+    }
+  
+    if (!formSeamless.test_account_productions) {
+      tempErrors = {...tempErrors, testAccounts: 'Test Accounts is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_wallet_endpoint) {
+      tempErrors = {...tempErrors, walletEndpoint: 'Wallet Endpoint is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_wallet_ip_port) {
+      tempErrors = {...tempErrors, walletIpPort: 'Wallet IP and Port is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.production_service_api_ip) {
+      tempErrors = {...tempErrors, serviceApiIp: 'Service API and API is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (isError) {
+      return;
+    }
+
     const token = useAuth.getAuth().token;
 
     const testAccountStagings = formSeamless.test_account_stagings.split(',').map(accounts => {
@@ -108,6 +160,14 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
             Authorization: `Bearer ${token}`
           }
         });
+      toast({
+        title: 'Update successful',
+        description: 'Customer Seamless update was successful',
+        status: 'success',
+        duration: 60000,
+        isClosable: true,
+        position: 'top'
+      });
     } catch (err) {
       console.log('err', err);
     } finally {
@@ -115,26 +175,6 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
     } 
   };
 
-  useEffect(() => {
-    const isComplete = formSeamless.production_desktop_lobby_url &&
-      formSeamless.production_mobile_lobby_url &&
-      formSeamless.test_account_productions &&
-      formSeamless.production_wallet_endpoint &&
-      formSeamless.production_wallet_ip_port &&
-      formSeamless.production_service_api_ip;
-    setIsFormComplete(isComplete);
-  }, []);
-
-  useEffect(() => {
-    const isComplete = formSeamless.production_desktop_lobby_url &&
-      formSeamless.production_mobile_lobby_url &&
-      formSeamless.test_account_productions &&
-      formSeamless.production_wallet_endpoint &&
-      formSeamless.production_wallet_ip_port &&
-      formSeamless.production_service_api_ip;
-    setIsFormComplete(isComplete);
-  }, [ formSeamless ]);
-  
   return (
     <React.Fragment>
       <CustomerEditSeamlessStep step={step} />
@@ -145,11 +185,12 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>EDIT PRODUCTION DETAILS</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form onSubmit={(ev) => onSubmit(ev)}>
               <StockInputText 
-                label={"Desktop Lobby/Portal URL"} 
+                label={"Desktop Lobby/Portal URL *"} 
                 formName={"desktopLobby"}
                 onChange={(e) => {
                   setFormSeamless({
@@ -157,10 +198,14 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                     production_desktop_lobby_url: e.target.value
                   })
                 }}
+                errorMessage={errors.productionDesktopLobbyUrl}
                 value={formSeamless.production_desktop_lobby_url}
+                placeholder={"e.g. https://desktop.com/lobby"}
+                helperText={""}
               />
+
               <StockInputText 
-                label={"Mobile Lobby/Portal URL"} 
+                label={"Mobile Lobby/Portal URL *"} 
                 formName={"mobileLobby"}
                 onChange={(e) => {
                   setFormSeamless({
@@ -168,18 +213,24 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                     production_mobile_lobby_url: e.target.value
                   })
                 }}
+                errorMessage={errors.productionMobileLobbyUrl}
                 value={formSeamless.production_mobile_lobby_url}
+                placeholder={"e.g. https://mobile.com/lobby"}
+                helperText={""}
               />
               <StockInputText 
-                label={"Test Accounts"} 
-                formName={"testAccountStagings"}
+                label={"Test Accounts *"} 
+                formName={"testAccounts"}
                 onChange={(e) => {
                   setFormSeamless({
                     ...formSeamless, 
                     test_account_productions: e.target.value
                   })
                 }}
+                errorMessage={errors.testAccounts}
                 value={formSeamless.test_account_productions}
+                placeholder={"e.g. user/mypassword, user2/otherpassword"}
+                helperText={"Seperated by slash (username/password) and comma"}
               />
               <StockInputText 
                 label={"Wallet Endpoint"} 
@@ -193,7 +244,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                 value={formSeamless.production_wallet_endpoint}
               />
               <StockInputText 
-                label={"Wallet IP and Port"} 
+                label={"Wallet IP and Port *"} 
                 formName={"productionWalletIPPort"}
                 onChange={(e) => {
                   setFormSeamless({
@@ -201,10 +252,12 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                     production_wallet_ip_port: e.target.value
                   })
                 }}
-                value={formSeamless.production_wallet_ip_port}
+                errorMessage={errors.walletEndpoint}
+                value={formSeamless.production_wallet_endpoint}
+                placeholder={"e.g. https://casino.com/wallet"}
               />
               <StockInputText 
-                label={"Service API IP"} 
+                label={"Service API IP *"} 
                 formName={"productionServiceApiIp"}
                 onChange={(e) => {
                   setFormSeamless({
@@ -212,7 +265,9 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                     production_service_api_ip: e.target.value
                   })
                 }}
+                errorMessage={errors.serviceApiIp}
                 value={formSeamless.production_service_api_ip}
+                placeholder={"e.g. 421.232.211.111"}
               />
               <Flex>
                 <StockFormButton 
@@ -224,7 +279,6 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                 <StockFormButton 
                   label={"Update"}
                   toolTipText={"Complete all fields in order to continue"} 
-                  isEnabled={true}
                   onClick={(ev) => onSubmit(ev)}
                 />
               </Flex>

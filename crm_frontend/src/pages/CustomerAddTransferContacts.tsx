@@ -32,11 +32,21 @@ import { useNavigate } from 'react-router-dom';
 
 import { FormTransferContext } from '../context/FormTransferContext';
 import { CustomerAddTransferStep } from '../components/CustomerAddTransferStep';
+import { StockInputText } from '../components/StockInputText';
+import { StockFormButton } from '../components/StockFormButton';
 import { useAuthHook } from "../hooks/useAuthHook";
 
 export const CustomerAddTransferContacts = ({ step }) => {
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    businessContact: '',
+    billingContact: '',
+    technicalContact: '',
+    customerContact: '',
+    maintainerContact: '',
+    companyContact: ''
+  });
 
   const useAuth = useAuthHook();
   const navigate = useNavigate();
@@ -80,12 +90,14 @@ export const CustomerAddTransferContacts = ({ step }) => {
     }; 
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/customer/transfer`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/customer/transfer`, 
+        payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
-      console.log('response', response);
+      );
       if (response.status === 200) {
         setFormTransfer({
           merchant_english_name: '',
@@ -112,16 +124,6 @@ export const CustomerAddTransferContacts = ({ step }) => {
     }
   };
 
-  useEffect(() => {
-    const isComplete = formTransfer.business_contact && 
-      formTransfer.billing_contact &&
-      formTransfer.technical_contact &&
-      formTransfer.customer_contact &&
-      formTransfer.maintainer_contact &&
-      formTransfer.company_contact;
-    setIsFormComplete(isComplete);
-  }, [formTransfer]);
-
   return (
     <React.Fragment>
 
@@ -134,117 +136,100 @@ export const CustomerAddTransferContacts = ({ step }) => {
           color={"horizon.300"}
         >
           <Heading size={["sm", "md", "lg"]}>CONTACTS</Heading>
+          <Text fontSize="sm">Required *</Text>
         </CardHeader>
         <CardBody color={"horizon.300"}>
           <form>
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Business Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+            <StockInputText 
+              label={"Business Contact"} 
+              formName={"businessContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  business_contact: e.target.value,
+                  ...formTransfer, 
+                  business_contact: e.target.value
                 })
-              }
-              name="businessContact"
+              }}
+              errorMessage={errors.businessContact}
               value={formTransfer.business_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Billing Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+
+            <StockInputText 
+              label={"Billing Contact"} 
+              formName={"billingContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  billing_contact: e.target.value,
+                  ...formTransfer, 
+                  billing_contact: e.target.value
                 })
-              }
-              name="billingContact"
+              }}
+              errorMessage={errors.billingContact}
               value={formTransfer.billing_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Technical Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+
+            <StockInputText 
+              label={"Technical Contact"} 
+              formName={"technicalContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  technical_contact: e.target.value,
+                  ...formTransfer, 
+                  technical_contact: e.target.value
                 })
-              }
-              name="technicalContact"
+              }}
+              errorMessage={errors.technicalContact}
               value={formTransfer.technical_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Customer Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+
+            <StockInputText 
+              label={"Customer Contact"} 
+              formName={"customerContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  customer_contact: e.target.value,
+                  ...formTransfer, 
+                  customer_contact: e.target.value
                 })
-              }
-              name="customerContact"
+              }}
+              errorMessage={errors.customerContact}
               value={formTransfer.customer_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Maintainer Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+
+            <StockInputText 
+              label={"Maintainer Contact"} 
+              formName={"maintainerContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  maintainer_contact: e.target.value,
+                  ...formTransfer, 
+                  maintainer_contact: e.target.value
                 })
-              }
-              name="maintainerContact"
+              }}
+              errorMessage={errors.maintainerContact}
               value={formTransfer.maintainer_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
-            <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-              Company Contact
-            </FormLabel>
-            <Input
-              size={["sm", "md"]}
-              type="text"
-              mb={3}
-              borderRadius={"8px"}
-              bg={"horizon.150"}
-              onChange={(e) =>
+
+            <StockInputText 
+              label={"Company Contact"} 
+              formName={"companyContact"}
+              onChange={(e) => {
                 setFormTransfer({
-                  ...formTransfer,
-                  company_contact: e.target.value,
+                  ...formTransfer, 
+                  company_contact: e.target.value
                 })
-              }
-              name="companyContact"
+              }}
+              errorMessage={errors.companyContact}
               value={formTransfer.company_contact}
+              placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+              helperText={"Contact can be phone number, email or apps like Skype username"}
             />
+
             <Flex>
               <Button
                 mt={4}
@@ -268,7 +253,6 @@ export const CustomerAddTransferContacts = ({ step }) => {
                   type="submit"
                   colorScheme="horizon"
                   onClick={(e) => onSubmit(e)}
-                  isDisabled={!isFormComplete}
                 >
                   Submit
                 </Button>

@@ -31,10 +31,15 @@ import { useNavigate } from 'react-router-dom';
 
 import { FormTransferContext } from '../context/FormTransferContext';
 import { CustomerAddTransferStep } from '../components/CustomerAddTransferStep';
+import { StockInputText } from '../components/StockInputText';
 
 export const CustomerAddTransferProductInfo = ({ step }) => {
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    domainWhitelist: '',
+    ipWhitelist: ''
+  });
 
   const navigate = useNavigate();
 
@@ -43,7 +48,26 @@ export const CustomerAddTransferProductInfo = ({ step }) => {
   };
 
   const onClickNext = () => {
-    navigate('/customer/add?wallet_type=transfer&step=3');
+    let isError = false;
+    let tempErrors = {
+      domainWhitelist: '',
+      ipWhitelist: ''
+    };
+
+    if (!formTransfer.domain_whitelist) {
+      tempErrors = {...tempErrors, domainWhitelist: 'Domain Whitelist is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.ip_whitelist) {
+      tempErrors = {...tempErrors, ipWhitelist: 'IP Whitelist is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (!isError) {
+      navigate('/customer/add?wallet_type=transfer&step=3');
+    }
   };
 
   useEffect(() => {
@@ -63,44 +87,40 @@ export const CustomerAddTransferProductInfo = ({ step }) => {
           color={"horizon.300"}
         >
           <Heading size={["sm", "md", "lg"]}>PRODUCT INFORMATION</Heading>
+          <Text fontSize="sm">Required *</Text>
         </CardHeader>
         <CardBody color={"horizon.300"}>
           <form>
-            <FormControl mb={3} variant={"horizon"}>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Domain Whitelist
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, domain_whitelist: e.target.value})
-                }}
-                name="domainWhitelist"
-                value={formTransfer.domain_whitelist}
-              />
-              <FormHelperText ml={"15px"}>Seperate by comma</FormHelperText>
-            </FormControl>
+            <StockInputText 
+              label={"Domain Whitelist *"} 
+              formName={"domainWhitelist"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  domain_whitelist: e.target.value
+                })
+              }}
+              errorMessage={errors.domainWhitelist}
+              helperText={'Seperate by comma'}
+              value={formTransfer.domain_whitelist}
+              placeholder={"e.g. www.domain.com, www.domain2.com"}
+            />
 
-            <FormControl mb={3} variant={"horizon"}>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                IP Whitelist
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, ip_whitelist: e.target.value})
-                }}
-                name="ipWhitelist"
-                value={formTransfer.ip_whitelist}
-              />
-              <FormHelperText ml={"15px"}>Seperate by comman</FormHelperText>
-            </FormControl>
+            <StockInputText 
+              label={"IP Whitelist *"} 
+              formName={"ipWhitelist"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  ip_whitelist: e.target.value
+                })
+              }}
+              errorMessage={errors.ipWhitelist}
+              helperText={'Seperate by comma'}
+              value={formTransfer.ip_whitelist}
+              placeholder={"e.g. 123.421.321.233, 231.231.432.123"}
+            />
+
             <Flex>
               <Button
                 mt={4}
@@ -126,7 +146,6 @@ export const CustomerAddTransferProductInfo = ({ step }) => {
                   onClick={(e) => {
                     onClickNext();
                   }}
-                  isDisabled={!isFormComplete}
                 >
                   Next
                 </Button>

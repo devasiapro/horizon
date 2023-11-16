@@ -31,32 +31,51 @@ import { StockFormButton } from '../components/StockFormButton';
 export const CustomerEditTransferGeneral = ({ customerId, step }) => {
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    merchantEnglishName: '',
+    merchantChineseName: '',
+    brandName: '',
+    languagesUsed: '',
+    currenciesUsed: ''
+  });
 
   const navigate = useNavigate();
 
   const onClickNext = () => {
-    navigate(`/customer/${customerId}/edit?wallet_type=transfer&step=2`);
+    let isError = false;
+    let tempErrors = {
+      merchantEnglishName: '',
+      merchantChineseName: '',
+      brandName: '',
+      languagesUsed: '',
+      currenciesUsed: ''
+    };
+
+    if (!formTransfer.merchant_english_name) {
+      tempErrors = {...tempErrors, merchantEnglishName: 'Merchant English Name is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.brand_name) {
+      tempErrors = {...tempErrors, brandName: 'Brand Name is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.languages) {
+      tempErrors = {...tempErrors, languagesUsed: 'Language is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.currencies) {
+      tempErrors = {...tempErrors, currenciesUsed: 'Currency is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (!isError) {
+      navigate(`/customer/${customerId}/edit?wallet_type=transfer&step=2`);
+    }
   };
-
-  useEffect(() => {
-    const isComplete = formTransfer.merchant_english_name &&
-      formTransfer.merchant_chinese_name &&
-      formTransfer.brand_name &&
-      formTransfer.languages &&
-      formTransfer.currencies &&
-      formTransfer.prefix;
-    setIsFormComplete(isComplete);
-  }, []);
-
-  useEffect(() => {
-    const isComplete = formTransfer.merchant_english_name &&
-      formTransfer.merchant_chinese_name &&
-      formTransfer.brand_name &&
-      formTransfer.languages &&
-      formTransfer.currencies &&
-      formTransfer.prefix;
-    setIsFormComplete(isComplete);
-  }, [formTransfer]);
 
   return (
     <React.Fragment>
@@ -68,6 +87,7 @@ export const CustomerEditTransferGeneral = ({ customerId, step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>EDIT GENERAL INFORMATION</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
@@ -75,11 +95,12 @@ export const CustomerEditTransferGeneral = ({ customerId, step }) => {
                 <SimpleGrid columns={2} spacing={5}>
                   <Box>
                     <StockInputText 
-                      label={"Merchant English Name"} 
+                      label={"Merchant English Name *"} 
                       formName={"merchantName"}
                       onChange={(e) => {
                         setFormTransfer({...formTransfer, merchant_english_name: e.target.value})
                       }}
+                      errorMessage={errors.merchantEnglishName}
                       value={formTransfer.merchant_english_name}
                     />
                   </Box>
@@ -90,36 +111,42 @@ export const CustomerEditTransferGeneral = ({ customerId, step }) => {
                       onChange={(e) => {
                         setFormTransfer({...formTransfer, merchant_chinese_name: e.target.value})
                       }}
+                      errorMessage={errors.merchantChineseName}
                       value={formTransfer.merchant_chinese_name}
                     />
                   </Box>
                 </SimpleGrid>
               </Show>
               <StockInputText 
-                label={"Brand Name"} 
+                label={"Brand Name *"} 
                 formName={"brandName"}
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, brand_name: e.target.value})
                 }}
+                errorMessage={errors.brandName}
                 value={formTransfer.brand_name}
               />
               <StockInputText 
-                label={"Languages Used"} 
-                formName={"languages"}
+                label={"Languages Used *"} 
+                formName={"languagesUsed"}
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, languages: e.target.value})
                 }}
                 value={formTransfer.languages}
+                errorMessage={errors.languagesUsed}
                 helperText={"separate by comma"}
+                placeholder={"e.g. English, Chinese"}
               />
               <StockInputText 
-                label={"Currencies"} 
+                label={"Currencies *"} 
                 formName={"currencies"}
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, currencies: e.target.value})
                 }}
-                value={formTransfer.currencies}
                 helperText={"separate by comma"}
+                errorMessage={errors.currenciesUsed}
+                value={formTransfer.currencies}
+                placeholder={"e.g. USD, YEN"}
               />
               <StockInputText 
                 label={"Prefix"} 
@@ -131,7 +158,6 @@ export const CustomerEditTransferGeneral = ({ customerId, step }) => {
               />
               <StockFormButton 
                 toolTipText={"Complete all fields in order to continue"} 
-                isEnabled={isFormComplete}
                 onClick={(e) => onClickNext()}
               />
             </form>

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 import math
 
@@ -52,6 +53,7 @@ def list_customer(
         .query(CustomerModule)
         .filter(CustomerModule.brand_name.like('%' + search + '%'))
         .filter(CustomerModule.wallet_type.in_(wallet_types))
+        .order_by(desc(CustomerModule.date_added))
         .offset(offset)
         .limit(size)
         .all()

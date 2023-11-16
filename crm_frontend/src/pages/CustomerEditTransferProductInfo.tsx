@@ -33,6 +33,10 @@ import { StockFormButton } from '../components/StockFormButton';
 export const CustomerEditTransferProductInfo = ({ customerId, step }) => {
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    domainWhitelist: '',
+    ipWhitelist: ''
+  });
 
   const navigate = useNavigate();
 
@@ -41,7 +45,26 @@ export const CustomerEditTransferProductInfo = ({ customerId, step }) => {
   };
 
   const onClickNext = () => {
-    navigate(`/customer/${customerId}/edit?wallet_type=transfer&step=3`);
+    let isError = false;
+    let tempErrors = {
+      domainWhitelist: '',
+      ipWhitelist: ''
+    };
+
+    if (!formTransfer.domain_whitelist) {
+      tempErrors = {...tempErrors, domainWhitelist: 'Domain Whitelist is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.ip_whitelist) {
+      tempErrors = {...tempErrors, ipWhitelist: 'IP Whitelist is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (!isError) {
+      navigate(`/customer/${customerId}/edit?wallet_type=transfer&step=3`);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +94,8 @@ export const CustomerEditTransferProductInfo = ({ customerId, step }) => {
                 }}
                 value={formTransfer.domain_whitelist}
                 helperText={"separate by comma"}
+                errorMessage={errors.domainWhitelist}
+                placeholder={"e.g. www.domain.com, www.domain2.com"}
               />
               <StockInputText 
                 label={"IP Whitelist"} 
@@ -80,6 +105,8 @@ export const CustomerEditTransferProductInfo = ({ customerId, step }) => {
                 }}
                 value={formTransfer.ip_whitelist}
                 helperText={"separate by comma"}
+                errorMessage={errors.ipWhitelist}
+                placeholder={"e.g. 123.421.321.233, 231.231.432.123"}
               />
               <Flex>
                 <StockFormButton label={"Previous"} onClick={(e) => onClickPrevious()}/>
@@ -87,7 +114,6 @@ export const CustomerEditTransferProductInfo = ({ customerId, step }) => {
                 <StockFormButton 
                   label={"Next"}
                   toolTipText={"Complete all fields in order to continue"} 
-                  isEnabled={isFormComplete}
                   onClick={(e) => onClickNext()}
                 />
               </Flex>
