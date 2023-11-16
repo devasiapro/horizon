@@ -32,7 +32,14 @@ import { StockFormButton } from '../components/StockFormButton';
 
 export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
   const { formSeamless, setFormSeamless } = useContext(FormSeamlessContext);
-  const [ isFormComplete, setIsFormComplete ] = useState(false);
+  const [ errors, setErrors ] = useState({
+    businessContact: '',
+    billingContact: '',
+    technicalContact: '',
+    customerContact: '',
+    maintainerContact: '',
+    companyContact: ''
+  });
 
   const navigate = useNavigate();
 
@@ -44,26 +51,6 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
     navigate(`/customer/${customerId}/edit?wallet_type=seamless&step=1`);
   };
 
-  useEffect(() => {
-    const isComplete = formSeamless.business_contact &&
-      formSeamless.billing_contact &&
-      formSeamless.technical_contact &&
-      formSeamless.customer_contact &&
-      formSeamless.maintainer_contact &&
-      formSeamless.company_contact;
-    setIsFormComplete(isComplete);
-  }, []);
-
-  useEffect(() => {
-    const isComplete = formSeamless.business_contact &&
-      formSeamless.billing_contact &&
-      formSeamless.technical_contact &&
-      formSeamless.customer_contact &&
-      formSeamless.maintainer_contact &&
-      formSeamless.company_contact;
-    setIsFormComplete(isComplete);
-  }, [formSeamless]);
-
   return (
     <React.Fragment>
       <CustomerEditSeamlessStep step={step} />
@@ -74,6 +61,7 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>EDIT CONTACTS</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
@@ -84,6 +72,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, business_contact: e.target.value})
                 }}
                 value={formSeamless.business_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Billing Contact"} 
@@ -92,6 +82,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, billing_contact: e.target.value})
                 }}
                 value={formSeamless.billing_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Technical Contact"} 
@@ -100,6 +92,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, technical_contact: e.target.value})
                 }}
                 value={formSeamless.technical_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Customer Contact"} 
@@ -108,6 +102,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, customer_contact: e.target.value})
                 }}
                 value={formSeamless.customer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Maintainer Contact"} 
@@ -116,6 +112,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, maintainer_contact: e.target.value})
                 }}
                 value={formSeamless.maintainer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Company Contact"} 
@@ -124,6 +122,8 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                   setFormSeamless({...formSeamless, company_contact: e.target.value})
                 }}
                 value={formSeamless.company_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <Flex>
                 <StockFormButton 
@@ -135,7 +135,6 @@ export const CustomerEditSeamlessContacts = ({ customerId, step }) => {
                 <StockFormButton 
                   toolTipText={"Complete all fields in order to continue"} 
                   label={"Next"}
-                  isEnabled={isFormComplete}
                   onClick={(e) => onClickNext()}
                 />
               </Flex>

@@ -21,7 +21,8 @@ import {
   FormHelperText,
   FormLabel,
   Tooltip,
-  Button
+  Button,
+  useToast
 } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -35,7 +36,16 @@ import { StockFormButton } from '../components/StockFormButton';
 export const CustomerEditTransferContacts = ({ customerId, step }) => { 
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    businessContact: '',
+    billingContact: '',
+    technicalContact: '',
+    customerContact: '',
+    maintainerContact: '',
+    companyContact: ''
+  });
 
+  const toast = useToast();
   const useAuth = useAuthHook();
   const navigate = useNavigate();
 
@@ -83,23 +93,19 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
             Authorization: `Bearer ${token}`
           }
         }); 
-      console.log('response', response);
+      toast({
+        title: 'Update successful',
+        description: 'Customer Transfer update was successful',
+        status: 'success',
+        duration: 60000,
+        isClosable: true,
+        position: 'top'
+      });
     } catch (err) {
       console.log('err', err);
     } finally {
-
     }
   };
-
-  useEffect(() => {
-    const isComplete = formTransfer.business_contact && 
-      formTransfer.billing_contact &&
-      formTransfer.technical_contact &&
-      formTransfer.customer_contact &&
-      formTransfer.maintainer_contact &&
-      formTransfer.company_contact;
-    setIsFormComplete(isComplete);
-  }, [formTransfer]);
 
   return (
     <React.Fragment>
@@ -112,6 +118,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>EDIT CONTACTS</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form onSubmit={onSubmit}>
@@ -121,7 +128,10 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, business_contact: e.target.value})
                 }}
+                errorMessage={errors.businessContact}
                 value={formTransfer.business_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Billing Contact"} 
@@ -129,7 +139,10 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, billing_contact: e.target.value})
                 }}
+                errorMessage={errors.billingContact}
                 value={formTransfer.billing_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Technical Contact"} 
@@ -137,7 +150,9 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, technical_contact: e.target.value})
                 }}
-                value={formTransfer.technical_contact}
+                errorMessage={errors.technicalContact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Customer Contact"} 
@@ -145,7 +160,10 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, customer_contact: e.target.value})
                 }}
+                errorMessage={errors.customerContact}
                 value={formTransfer.customer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Maintainer Contact"} 
@@ -153,7 +171,10 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, maintainer_contact: e.target.value})
                 }}
+                errorMessage={errors.maintainerContact}
                 value={formTransfer.maintainer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <StockInputText 
                 label={"Company Contact"} 
@@ -161,7 +182,10 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormTransfer({...formTransfer, company_contact: e.target.value})
                 }}
+                errorMessage={errors.companyContact}
                 value={formTransfer.company_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
               <Flex>
                 <StockFormButton label={"Previous"} onClick={(e) => onClickPrevious()}/>
@@ -169,7 +193,6 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 <StockFormButton 
                   label={"Update"}
                   toolTipText={"Complete all fields in order to continue"} 
-                  isEnabled={true}
                   onClick={(e) => onSubmit(e)}
                 />
               </Flex>

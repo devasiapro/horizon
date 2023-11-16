@@ -24,11 +24,21 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { CustomerAddSeamlessStep } from '../components/CustomerAddSeamlessStep';
+import { StockInputText } from '../components/StockInputText';
+import { StockFormButton } from '../components/StockFormButton';
 import { FormSeamlessContext } from '../context/FormSeamlessContext';
 
 export const CustomerAddSeamlessContacts = ({ step }) => {
   const {formSeamless, setFormSeamless} = useContext(FormSeamlessContext);
-  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [ isFormComplete, setIsFormComplete ] = useState(false);
+  const [ errors, setErrors ] = useState({
+    businessContact: '',
+    billingContact: '',
+    technicalContact: '',
+    customerContact: '',
+    maintainerContact: '',
+    companyContact: ''
+  });
 
   const navigate = useNavigate();
 
@@ -36,19 +46,9 @@ export const CustomerAddSeamlessContacts = ({ step }) => {
     navigate('/customer/add?wallet_type=seamless&step=1');
   };
 
-  const onClickNext = () => {
+  const onClickNext = () => { 
     navigate('/customer/add?wallet_type=seamless&step=3');
   };
-
-  useEffect(() => {
-    const isComplete = formSeamless.business_contact &&
-      formSeamless.billing_contact &&
-      formSeamless.technical_contact &&
-      formSeamless.customer_contact &&
-      formSeamless.maintainer_contact &&
-      formSeamless.company_contact;
-    setIsFormComplete(isComplete);
-  }, [formSeamless]);
 
   return (
     <React.Fragment>
@@ -60,123 +60,101 @@ export const CustomerAddSeamlessContacts = ({ step }) => {
             pb={{ base: 0, sm: 1, md: 2, lg: 5 }}
             color={"horizon.300"}
           >
-            <Heading size={["sm", "md", "lg"]}>GENERAL INFORMATION</Heading>
+            <Heading size={["sm", "md", "lg"]}>Contacts</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Business Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Business Contact"} 
+                formName={"businessContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    business_contact: e.target.value,
+                    ...formSeamless, 
+                    business_contact: e.target.value
                   })
-                }
-                name="businessContact"
+                }}
+                errorMessage={errors.businessContact}
                 value={formSeamless.business_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Billing Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Billing Contact"} 
+                formName={"billingContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    billing_contact: e.target.value,
+                    ...formSeamless, 
+                    billing_contact: e.target.value
                   })
-                }
-                name="billingContact"
+                }}
+                errorMessage={errors.billingContact}
                 value={formSeamless.billing_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Technical Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Technical Contact"} 
+                formName={"technicalContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    technical_contact: e.target.value,
+                    ...formSeamless, 
+                    technical_contact: e.target.value
                   })
-                }
-                name="technicalContact"
+                }}
+                errorMessage={errors.technicalContact}
                 value={formSeamless.technical_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Customer Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Customer Contact"} 
+                formName={"customerContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    customer_contact: e.target.value,
+                    ...formSeamless, 
+                    customer_contact: e.target.value
                   })
-                }
-                name="technicalContact"
+                }}
+                errorMessage={errors.customerContact}
                 value={formSeamless.customer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Maintainer Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Maintainer Contact"} 
+                formName={"maintainerContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    maintainer_contact: e.target.value,
+                    ...formSeamless, 
+                    maintainer_contact: e.target.value
                   })
-                }
-                name="technicalContact"
+                }}
+                errorMessage={errors.maintainerContact}
                 value={formSeamless.maintainer_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
 
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Company Contact
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                borderRadius={"20px"}
-                bg={"horizon.150"}
-                onChange={(e) =>
+              <StockInputText 
+                label={"Company Contact"} 
+                formName={"companyContact"}
+                onChange={(e) => {
                   setFormSeamless({
-                    ...formSeamless,
-                    company_contact: e.target.value,
+                    ...formSeamless, 
+                    company_contact: e.target.value
                   })
-                }
-                name="technicalContact"
+                }}
+                errorMessage={errors.companyContact}
                 value={formSeamless.company_contact}
+                placeholder={"e.g. 63-256-1231, contact@mail.com, skypename"}
+                helperText={"Contact can be phone number, email or apps like Skype username"}
               />
+
               <Flex>
                 <Button
                   mt={4}
@@ -202,7 +180,6 @@ export const CustomerAddSeamlessContacts = ({ step }) => {
                     onClick={(e) => {
                       onClickNext();
                     }}
-                    isDisabled={!isFormComplete}
                   >
                     Next
                   </Button>
