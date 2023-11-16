@@ -25,26 +25,57 @@ import { useNavigate } from 'react-router-dom';
 
 import { CustomerAddTransferStep } from '../components/CustomerAddTransferStep';
 import { FormTransferContext } from '../context/FormTransferContext';
+import { StockInputText } from '../components/StockInputText';
+import { StockFormButton } from '../components/StockFormButton';
 
 export const CustomerAddTransfer = ({ step }) => {
   const {formTransfer, setFormTransfer} = useContext(FormTransferContext);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    merchantEnglishName: '',
+    merchantChineseName: '',
+    brandName: '',
+    languagesUsed: '',
+    currenciesUsed: ''
+  });
 
   const navigate = useNavigate();
 
   const onClickNext = () => {
-    navigate('/customer/add?wallet_type=transfer&step=2');
-  };
+    let isError = false;
+    let tempErrors = {
+      merchantEnglishName: '',
+      merchantChineseName: '',
+      brandName: '',
+      languagesUsed: '',
+      currenciesUsed: ''
+    };
 
-  useEffect(() => {
-    const isComplete = formTransfer.merchant_english_name &&
-      formTransfer.merchant_chinese_name &&
-      formTransfer.brand_name &&
-      formTransfer.languages &&
-      formTransfer.currencies &&
-      formTransfer.prefix;
-    setIsFormComplete(isComplete);
-  }, [formTransfer]);
+    if (!formTransfer.merchant_english_name) {
+      tempErrors = {...tempErrors, merchantEnglishName: 'Merchant English Name is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.brand_name) {
+      tempErrors = {...tempErrors, brandName: 'Brand Name is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.languages) {
+      tempErrors = {...tempErrors, languagesUsed: 'Language is required.'};
+      isError = true;
+    }
+
+    if (!formTransfer.currencies) {
+      tempErrors = {...tempErrors, currenciesUsed: 'Currency is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (!isError) {
+      navigate('/customer/add?wallet_type=transfer&step=2');
+    }
+  };
 
   return (
     <React.Fragment>
@@ -58,118 +89,92 @@ export const CustomerAddTransfer = ({ step }) => {
           color={"horizon.300"}
         >
           <Heading size={["sm", "md", "lg"]}>GENERAL INFORMATION</Heading>
+          <Text fontSize="sm">Required *</Text>
         </CardHeader>
         <CardBody color={"horizon.300"}>
           <form>
             <Show above="md">
               <SimpleGrid columns={2} spacing={5}>
                 <Box>
-                  <FormControl variant={"horizon"}>
-                    <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                      Merchant English Name
-                    </FormLabel>
-                    <Input
-                      size={["sm", "md"]}
-                      type="text"
-                      mb={3}
-                      borderRadius={"8px"}
-                      bg={"horizon.150"}
-                      name="merchantName"
-                      onChange={(e) => {
-                        setFormTransfer({...formTransfer, merchant_english_name: e.target.value})
-                      }}
-                      value={formTransfer.merchant_english_name}
-                    />
-                  </FormControl>
+                  <StockInputText 
+                    label={"Merchant English Name *"} 
+                    formName={"merchantEnglishName"}
+                    onChange={(e) => {
+                      setFormTransfer({
+                        ...formTransfer, 
+                        merchant_english_name: e.target.value
+                      })
+                    }}
+                    errorMessage={errors.merchantEnglishName}
+                    value={formTransfer.merchant_english_name}
+                  />
                 </Box>
                 <Box>
-                  <FormControl>
-                    <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                      Merchant Chinese Name
-                    </FormLabel>
-                    <Input
-                      size={["sm", "md"]}
-                      type="text"
-                      mb={3}
-                      onChange={(e) => {
-                        setFormTransfer({...formTransfer, merchant_chinese_name: e.target.value})
-                      }}
-                      borderRadius={"8px"}
-                      bg={"horizon.150"}
-                      name="merchantChineseName"
-                      value={formTransfer.merchant_chinese_name}
-                    />
-                  </FormControl>
+                  <StockInputText 
+                    label={"Merchant Chinese Name"} 
+                    formName={"merchantChineseName"}
+                    onChange={(e) => {
+                      setFormTransfer({
+                        ...formTransfer, 
+                        merchant_chinese_name: e.target.value
+                      })
+                    }}
+                    errorMessage={errors.merchantChineseName}
+                    value={formTransfer.merchant_chinese_name}
+                  />
                 </Box>
               </SimpleGrid>
             </Show>
-            <FormControl>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Brand Name
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                mb={3}
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, brand_name: e.target.value})
-                }}
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                name="brandName"
-                value={formTransfer.brand_name}
-              />
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Languages Used
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, languages: e.target.value})
-                }}
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                name="languages"
-                value={formTransfer.languages}
-              />
-              <FormHelperText ml={"15px"}>seperate by comma</FormHelperText>
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Currencies Used
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, currencies: e.target.value})
-                }}
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                name="currrencies"
-                value={formTransfer.currencies}
-              />
-              <FormHelperText ml={"15px"}>seperate by comma</FormHelperText>
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                Prefix
-              </FormLabel>
-              <Input
-                size={["sm", "md"]}
-                type="text"
-                onChange={(e) => {
-                  setFormTransfer({...formTransfer, prefix: e.target.value})
-                }}
-                borderRadius={"8px"}
-                bg={"horizon.150"}
-                name="currrencies"
-                value={formTransfer.prefix}
-              />
-            </FormControl>
+            <StockInputText 
+              label={"Brand Name *"} 
+              formName={"brandName"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  brand_name: e.target.value
+                })
+              }}
+              errorMessage={errors.brandName}
+              value={formTransfer.brand_name}
+            />
+            <StockInputText 
+              label={"Languages Used *"} 
+              formName={"languagesUsed"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  languages: e.target.value
+                })
+              }}
+              errorMessage={errors.languagesUsed}
+              value={formTransfer.languages}
+              placeholder={"e.g. English, Chinese"}
+            />
+            <StockInputText 
+              label={"Currencies Used *"} 
+              formName={"currenciesUsed"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  currencies: e.target.value
+                })
+              }}
+              errorMessage={errors.currenciesUsed}
+              value={formTransfer.currencies}
+              placeholder={"e.g. USD, YEN"}
+            />
+            <StockInputText 
+              label={"Prefix"} 
+              formName={"prefix"}
+              onChange={(e) => {
+                setFormTransfer({
+                  ...formTransfer, 
+                  prefix: e.target.value
+                })
+              }}
+              errorMessage={errors.prefix}
+              value={formTransfer.prefix}
+            />
             <Tooltip
               hasArrow
               label="Complete all fields in order to continue"
@@ -181,7 +186,6 @@ export const CustomerAddTransfer = ({ step }) => {
                 type="button"
                 colorScheme="horizon"
                 onClick={(e) => onClickNext()}
-                isDisabled={!isFormComplete}
               >
                 Next
               </Button>

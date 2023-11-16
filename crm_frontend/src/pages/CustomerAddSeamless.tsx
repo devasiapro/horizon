@@ -25,29 +25,96 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CustomerAddSeamlessStep } from '../components/CustomerAddSeamlessStep';
 import { FormSeamlessContext } from '../context/FormSeamlessContext';
+import { StockInputText } from '../components/StockInputText';
+import { StockFormButton } from '../components/StockFormButton';
 
 export const CustomerAddSeamless = ({ step }) => {
   const {formSeamless, setFormSeamless} = useContext(FormSeamlessContext);
-  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [errors, setErrors] = useState({
+    merchantEnglishName: '',
+    brandName: '',
+    regulations: '',
+    marketJurisdictions: '',
+    licenses: '',
+    officeIps: '',
+    langaugesUsed: '',
+    currenciesUsed: '',
+    defaultCurrency: ''
+  });
 
   const navigate = useNavigate();
 
   const onClickNext = () => {
-    navigate('/customer/add?wallet_type=seamless&step=2');
-  };
+    let isError = false;
+    let tempErrors = {
+      merchantEnglishName: '',
+      brandName: '',
+      regulations: '',
+      marketJurisdictions: '',
+      licenses: '',
+      officeIps: '',
+      langaugesUsed: '',
+      currenciesUsed: '',
+      defaultCurrency: ''
+    };
+    if (!formSeamless.merchant_english_name) {
+      tempErrors = {...tempErrors, merchantEnglishName: 'Merchant English Name is required.'};
+      isError = true;
+    }
 
-  useEffect(() => {
-    const isComplete = formSeamless.merchant_english_name &&
-      formSeamless.brand_name &&
-      formSeamless.regulations &&
-      formSeamless.market_jurisdiction &&
-      formSeamless.licenses &&
-      formSeamless.office_ips &&
-      formSeamless.language_used &&
-      formSeamless.currencies_used &&
-      formSeamless.default_currency;
-    setIsFormComplete(isComplete);
-  }, [formSeamless]);
+    if (!formSeamless.brand_name) {
+      tempErrors = {...tempErrors, brandName: 'Brand Name is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.regulations) {
+      tempErrors = {...tempErrors, regulations: 'Regulation is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.market_jurisdiction) {
+      tempErrors = {...tempErrors, marketJurisdictions: 'Market Jurisdictions is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.license) {
+      tempErrors = {...tempErrors, licenses: 'Licenses is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.office_ips) {
+      tempErrors = {...tempErrors, officeIps: 'Office IPs is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.language_used) {
+      tempErrors = {...tempErrors, languagesUsed: 'Languages is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.currencies_used) {
+      tempErrors = {...tempErrors, currenciesUsed: 'Currencies is required.'};
+      isError = true;
+    }
+
+    if (!formSeamless.currencies_used.includes(formSeamless.default_currency)) {
+      tempErrors = {
+        ...tempErrors, 
+        defaultCurrency: 'Default Currency must be included in Currencies Used.'
+      };
+      isError = true;
+    }
+
+    if (!formSeamless.default_currency) {
+      tempErrors = {...tempErrors, defaultCurrency: 'Default Currency is required.'};
+      isError = true;
+    }
+
+    setErrors(tempErrors);
+    if (!isError) {
+      navigate('/customer/add?wallet_type=seamless&step=2');
+    }
+  };
 
   return (
     <React.Fragment>
@@ -60,200 +127,115 @@ export const CustomerAddSeamless = ({ step }) => {
             color={"horizon.300"}
           >
             <Heading size={["sm", "md", "lg"]}>GENERAL INFORMATION</Heading>
+            <Text fontSize="sm">Required *</Text>
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
               <Show above="md">
                 <SimpleGrid columns={2} spacing={5}>
                   <Show>
-                    <FormControl>
-                      <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                        Merchant English Name
-                      </FormLabel>
-                      <Input
-                        size={["sm", "md"]}
-                        type="text"
-                        mb={3}
-                        onChange={(e) => {
-                          setFormSeamless({
-                            ...formSeamless, 
-                            merchant_english_name: e.target.value
-                          })
-                        }}
-                        borderRadius={"8px"}
-                        bg={"horizon.150"}
-                        name="licenseeName"
-                        value={formSeamless.merchant_english_name}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                        Brand Name 
-                      </FormLabel>
-                      <Input
-                        size={["sm", "md"]}
-                        type="text"
-                        mb={3}
-                        onChange={(e) => {
-                          setFormSeamless({
-                            ...formSeamless, 
-                            brand_name: e.target.value
-                          })
-                        }}
-                        borderRadius={"8px"}
-                        bg={"horizon.150"}
-                        name="licenseeName"
-                        value={formSeamless.brand_name}
-                      />
-                    </FormControl>
+                    <StockInputText 
+                      label={"Merchant English Name *"} 
+                      formName={"merchantEnglishName"}
+                      onChange={(e) => {
+                        setFormSeamless({...formSeamless, merchant_english_name: e.target.value})
+                      }}
+                      errorMessage={errors.merchantEnglishName}
+                      value={formSeamless.merchant_english_name}
+                    />
+
+                    <StockInputText 
+                      label={"Brand Name *"} 
+                      formName={"brandName"}
+                      onChange={(e) => {
+                        setFormSeamless({...formSeamless, brand_name: e.target.value})
+                      }}
+                      errorMessage={errors.brandName}
+                      value={formSeamless.brand_name}
+                    />
                   </Show>
                 </SimpleGrid>
               </Show>
-              <FormControl>
-                <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                  Regulations
-                </FormLabel>
-                <Input
-                  size={["sm", "md"]}
-                  type="text"
-                  mb={3}
-                  onChange={(e) =>
-                    setFormSeamless({
-                      ...formSeamless,
-                      regulations: e.target.value,
-                    })
-                  }
-                  borderRadius={"8px"}
-                  bg={"horizon.150"}
-                  name="regulations"
-                  value={formSeamless.regulations}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                  Market Jurisdiction
-                </FormLabel>
-                <Input
-                  size={["sm", "md"]}
-                  type="text"
-                  mb={3}
-                  onChange={(e) =>
-                    setFormSeamless({
-                      ...formSeamless,
-                      market_jurisdiction: e.target.value,
-                    })
-                  }
-                  borderRadius={"8px"}
-                  bg={"horizon.150"}
-                  name="marketJurisdiction"
-                  value={formSeamless.market_jurisdiction}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                  License
-                </FormLabel>
-                <Input
-                  size={["sm", "md"]}
-                  type="text"
-                  mb={3}
-                  onChange={(e) =>
-                    setFormSeamless({
-                      ...formSeamless,
-                      licenses: e.target.value,
-                    })
-                  }
-                  borderRadius={"8px"}
-                  bg={"horizon.150"}
-                  name="license"
-                  value={formSeamless.licenses}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                  Office IPs
-                </FormLabel>
-                <Input
-                  size={["sm", "md"]}
-                  type="text"
-                  mb={3}
-                  onChange={(e) =>
-                    setFormSeamless({
-                      ...formSeamless,
-                      office_ips: e.target.value,
-                    })
-                  }
-                  borderRadius={"8px"}
-                  bg={"horizon.150"}
-                  name="officeIps"
-                  value={formSeamless.office_ips}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                  Language Used
-                </FormLabel>
-                <Input
-                  size={["sm", "md"]}
-                  type="text"
-                  mb={3}
-                  onChange={(e) =>
-                    setFormSeamless({
-                      ...formSeamless,
-                      language_used: e.target.value,
-                    })
-                  }
-                  borderRadius={"8px"}
-                  bg={"horizon.150"}
-                  name="languageUsed"
-                  value={formSeamless.language_used}
-                />
-              </FormControl>
+              <StockInputText 
+                label={"Regulations *"} 
+                formName={"regulations"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, regulations: e.target.value})
+                }}
+                errorMessage={errors.regulations}
+                value={formSeamless.regulations}
+                helperText={"Seperate by comma"}
+              />
+
+              <StockInputText 
+                label={"Market Jurisdictions *"} 
+                formName={"marketJurisdictions"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, market_jurisdiction: e.target.value})
+                }}
+                errorMessage={errors.marketJurisdictions}
+                value={formSeamless.market_jurisdiction}
+                helperText={"Seperate by comma"}
+              />
+
+              <StockInputText 
+                label={"Licenses *"} 
+                formName={"licenses"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, license: e.target.value})
+                }}
+                errorMessage={errors.license}
+                value={formSeamless.license}
+                helperText={"Seperate by comma"}
+              />
+
+              <StockInputText 
+                label={"Office IPs *"} 
+                formName={"officeIps"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, office_ips: e.target.value})
+                }}
+                errorMessage={errors.officeIps}
+                value={formSeamless.office_ips}
+                helperText={"Seperate by comma"}
+              />
+
+              <StockInputText 
+                label={"Languages Used *"} 
+                formName={"languagesUsed"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, language_used: e.target.value})
+                }}
+                errorMessage={errors.languagesUsed}
+                value={formSeamless.language_used}
+                helperText={"Seperate by comma"}
+              />
+
               <Show above="md">
                 <SimpleGrid columns={2} spacing={5}>
                   <Box>
-                    <FormControl>
-                      <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                        Currencies Used
-                      </FormLabel>
-                      <Input
-                        size={["sm", "md"]}
-                        type="text"
-                        mb={3}
-                        onChange={(e) =>
-                          setFormSeamless({
-                            ...formSeamless,
-                            currencies_used: e.target.value,
-                          })
-                        }
-                        borderRadius={"8px"}
-                        bg={"horizon.150"}
-                        name="currencies"
-                        value={formSeamless.currencies_used}
-                      />
-                    </FormControl>
+                    <StockInputText 
+                      label={"Currencies Used *"} 
+                      formName={"currenciesUsed"}
+                      onChange={(e) => {
+                        setFormSeamless({...formSeamless, currencies_used: e.target.value})
+                      }}
+                      errorMessage={errors.currenciesUsed}
+                      value={formSeamless.currencies_used}
+                      helperText={"Seperate by comma"}
+                    />
                   </Box>
                   <Box>
-                    <FormControl>
-                      <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>
-                        Default Currency
-                      </FormLabel>
-                      <Input
-                        size={["sm", "md"]}
-                        type="text"
-                        mb={3}
-                        onChange={(e) =>
-                          setFormSeamless({
-                            ...formSeamless,
-                            default_currency: e.target.value,
-                          })
-                        }
-                        borderRadius={"8px"}
-                        bg={"horizon.150"}
-                        name="defaultCurrency"
-                        value={formSeamless.default_currency}
-                      />
-                    </FormControl>
+                    <StockInputText 
+                      label={"Default Currency *"} 
+                      formName={"defaultCurrency"}
+                      onChange={(e) => {
+                        setFormSeamless({...formSeamless, default_currency: e.target.value})
+                      }}
+                      errorMessage={errors.defaultCurrency}
+                      value={formSeamless.default_currency}
+                      helperText={"Seperate by comma"}
+                    />
                   </Box>
                 </SimpleGrid>
                 <Flex>
@@ -268,7 +250,6 @@ export const CustomerAddSeamless = ({ step }) => {
                       type="button"
                       colorScheme="horizon"
                       onClick={(e) => onClickNext()}
-                      isDisabled={!isFormComplete}
                     >
                       Next
                     </Button>
