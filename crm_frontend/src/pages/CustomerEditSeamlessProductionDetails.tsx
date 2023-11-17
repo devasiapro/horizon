@@ -42,6 +42,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
     walletEndpoint: '',
     walletIpPort: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
   const useAuth = useAuthHook();
@@ -129,7 +130,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
       brand_name: formSeamless.brand_name,
       regulations: formSeamless.regulations ? cleanValues(formSeamless.regulations.split(',')) : [],
       market_jurisdiction: formSeamless.market_jurisdiction ? cleanValues(formSeamless.market_jurisdiction.split(',')) : [],
-      licenses: formSeamless.licenses ? cleanValues(formSeamless.licenses.split(',')) : [],
+      licenses: formSeamless.license ? cleanValues(formSeamless.license.split(',')) : [],
       office_ips: formSeamless.office_ips ? cleanValues(formSeamless.office_ips.split(',')) : [],
       languages_used: formSeamless.language_used ? cleanValues(formSeamless.language_used.split(',')) : [],
       currencies_used: formSeamless.currencies_used ? cleanValues(formSeamless.currencies_used.split(',')) : [],
@@ -154,6 +155,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
       production_service_api_ip: formSeamless.staging_service_api_ip
     };
     try {
+      setIsLoading(true);
       const response = await axios
         .put(`${import.meta.env.VITE_API_URL}/customer/${customerId}/seamless`, payload, {
           headers: {
@@ -171,7 +173,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
     } catch (err) {
       console.log('err', err);
     } finally {
-
+      setIsLoading(false);
     } 
   };
 
@@ -277,6 +279,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
                 />
                 <Spacer />
                 <StockFormButton 
+                  isLoading={isLoading}
                   label={"Update"}
                   toolTipText={"Complete all fields in order to continue"} 
                   onClick={(ev) => onSubmit(ev)}

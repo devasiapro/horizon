@@ -40,6 +40,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
     walletEndpoint: '',
     walletIpPort: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const useAuth = useAuthHook();
   const navigate = useNavigate();
@@ -169,6 +170,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
     };
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/customer/seamless`, 
         payload, {
@@ -209,7 +211,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
     } catch (err) {
       console.log('err', err);
     } finally {
-
+      setIsLoading(false);
     }
   };
 
@@ -343,6 +345,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
                   isDisabled={isFormComplete}
                 >
                   <Button
+                    isLoading={isLoading}
                     mt={4}
                     type="button"
                     colorScheme="horizon"

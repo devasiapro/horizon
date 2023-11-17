@@ -184,7 +184,7 @@ export const CustomerEditSeamlessGeneral = ({ customerId, step }) => {
                 onChange={(e) => {
                   setFormSeamless({...formSeamless, license: e.target.value})
                 }}
-                errorMessage={errors.license}
+                errorMessage={errors.licenses}
                 value={formSeamless.license}
                 helperText={"Seperate by comma"}
               />

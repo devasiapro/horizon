@@ -4,7 +4,12 @@ import {
   Button
 } from "@chakra-ui/react";
 
-export const StockFormButton = ({ toolTipText = null, label = "Next", isEnabled = true, onClick }) => {
+export const StockFormButton = ({ 
+  toolTipText = null, 
+  label = "Next", 
+  isEnabled = true, 
+  isLoading = false,
+  onClick }) => {
   if (toolTipText) {
     return (
       <Tooltip
@@ -14,6 +19,7 @@ export const StockFormButton = ({ toolTipText = null, label = "Next", isEnabled 
         isDisabled={isEnabled}
       >
         <Button
+          isLoading={isLoading}
           mt={4}
           type="button"
           colorScheme="horizon"

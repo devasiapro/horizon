@@ -7,6 +7,7 @@ import {
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import { AuthContext } from './context/AuthContext';
+import { IsGlobalLoadingContext } from './context/IsGlobalLoadingContext';
 import { Layout } from './pages/Layout';
 import { ProtectedRoute } from './pages/ProtectedRoute';
 import { Home } from './pages/Home';
@@ -64,10 +65,14 @@ const App = () => {
     token: null
   });
 
+  const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+
   return (
     <ChakraProvider theme={MyTheme}>
       <AuthContext.Provider value={{ auth, setAuth }}>
-        <RouterProvider router={router} />
+        <IsGlobalLoadingContext.Provider value={{ isGlobalLoading, setIsGlobalLoading }}>
+          <RouterProvider router={router} />
+        </IsGlobalLoadingContext.Provider>
       </AuthContext.Provider>
     </ChakraProvider>
   );

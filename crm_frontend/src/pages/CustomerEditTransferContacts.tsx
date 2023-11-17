@@ -44,6 +44,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
     maintainerContact: '',
     companyContact: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
   const useAuth = useAuthHook();
@@ -87,6 +88,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
     };
 
     try {
+      setIsLoading(true);
       const response = await axios
         .put(`${import.meta.env.VITE_API_URL}/customer/${customerId}/transfer`, payload, {
           headers: {
@@ -104,6 +106,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
     } catch (err) {
       console.log('err', err);
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -191,6 +194,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
                 <StockFormButton label={"Previous"} onClick={(e) => onClickPrevious()}/>
                 <Spacer />
                 <StockFormButton 
+                  isLoading={isLoading}
                   label={"Update"}
                   toolTipText={"Complete all fields in order to continue"} 
                   onClick={(e) => onSubmit(e)}

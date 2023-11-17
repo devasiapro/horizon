@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from "react-router-dom"
 import axios from 'axios';
 
 import { useQuery } from '../hooks/useQuery';
 import { useAuthHook } from '../hooks/useAuthHook';
+import { IsGlobalLoadingContext } from '../context/IsGlobalLoadingContext';
 import { FormTransferContext } from '../context/FormTransferContext';
 import { FormSeamlessContext } from '../context/FormSeamlessContext';
 import { CustomerEditSeamlessGeneral } from '../pages/CustomerEditSeamlessGeneral';
@@ -22,6 +23,7 @@ export const CustomerEdit = () => {
   const params = useParams();
   const useAuth = useAuthHook();
   const token = useAuth.getAuth().token;
+  const isGlobalLoading = useContext(IsGlobalLoadingContext);
 
   const customerId = params.customerId;
 
@@ -162,6 +164,7 @@ export const CustomerEdit = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        isGlobalLoading.setIsGlobalLoading(true);
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/customer/${customerId}`, {
               headers: {
@@ -178,7 +181,7 @@ export const CustomerEdit = () => {
       } catch (err) {
         console.log('err', err); 
       } finally {
-
+        isGlobalLoading.setIsGlobalLoading(false);
       }
     };
     init();     

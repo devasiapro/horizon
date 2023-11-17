@@ -47,6 +47,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
     maintainerContact: '',
     companyContact: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const useAuth = useAuthHook();
   const navigate = useNavigate();
@@ -90,6 +91,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
     }; 
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/customer/transfer`, 
         payload, {
@@ -114,13 +116,13 @@ export const CustomerAddTransferContacts = ({ step }) => {
           customer_contact: '',
           maintainer_contact: '',
           company_contact: '',
-        });    
+        });
         navigate('/customer/add?wallet_type=transfer&step=4'); 
       }
     } catch (err) {
       console.log('err', err);
     } finally {
-
+      setIsLoading(false);
     }
   };
 
@@ -238,6 +240,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
                 onClick={(e) => {
                   onClickPrevious();
                 }}
+                isLoading={isLoading}
               >
                 Previous
               </Button>
@@ -249,6 +252,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
                 isDisabled={isFormComplete}
               >
                 <Button
+                  isLoading={isLoading}
                   mt={4}
                   type="submit"
                   colorScheme="horizon"
