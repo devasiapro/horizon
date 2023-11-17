@@ -21,7 +21,9 @@ import {
   InputLeftElement,
   CheckboxGroup,
   Stack,
-  Checkbox
+  Checkbox,
+  Skeleton,
+  SkeletonText
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios';
@@ -37,6 +39,7 @@ export const CustomerList = () => {
   const [pageCount, setPageCount] = useState(0);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [walletTypeFilters, setWalletTypeFilters] = useState(['transfer', 'seamless']);
 
   const navigate = useNavigate();
@@ -49,17 +52,22 @@ export const CustomerList = () => {
   };
 
   const fetchCustomers = async () => {
-    console.log('fetchCustomers');
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}`, 
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
-    );
-    console.log('response', response);
-    return response;
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const onPageChange = async () => {
@@ -104,6 +112,7 @@ export const CustomerList = () => {
     setSearch(query.get('search') ? query.get('search') : '');
     setWalletTypeFilters(query.get('wallet_type') ? query.get('wallet_type').split(',') : walletTypeFilters);
     setPage(query.get('page') ? parseInt(query.get('page')) : 1);
+    setIsLoading(true);
     onPageChange();
   }, []);
 
@@ -182,6 +191,7 @@ export const CustomerList = () => {
 
         </Flex>
 
+        <Skeleton isLoaded={!isLoading}>
         <TableContainer
           bg="white"
           mb="10px"
@@ -190,7 +200,7 @@ export const CustomerList = () => {
           shadow={2}
           overflowX="auto"
         >
-          <Table>
+          <Table minH={"700px"}>
             <Thead bg={"horizon.300"}>
               <Tr>
                 <Th
@@ -270,6 +280,7 @@ export const CustomerList = () => {
             </Tbody>
           </Table>
         </TableContainer>
+        </Skeleton>
         <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} total={total} />
       </SimpleGrid>
     </Box>
