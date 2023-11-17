@@ -33,6 +33,7 @@ def list_customer(
         search: str = '', 
         wallet_type: str = 'transfer,seamless', 
         size = 20, 
+        integration_status: int = 0,
         db: Session = Depends(database.get_db)
     ):
 
@@ -42,22 +43,33 @@ def list_customer(
 
     wallet_types = wallet_type.split(',') 
     
-    total = (db
+    query = (db
         .query(CustomerModule)
         .filter(CustomerModule.brand_name.like('%' + search + '%'))
         .filter(CustomerModule.wallet_type.in_(wallet_types))
-        .count()
     )
+
+    if integration_status > 0:
+        query = query.filter(CustomerModule.integration_status_id == integration_status)
+
+    total = query.count()
     offset = 20 * (page - 1)
-    customers = (db
+    query = (db
         .query(CustomerModule)
         .filter(CustomerModule.brand_name.like('%' + search + '%'))
         .filter(CustomerModule.wallet_type.in_(wallet_types))
+    )
+
+    if integration_status > 0:
+        query = query.filter(CustomerModule.integration_status_id == integration_status)
+
+    query = (query
         .order_by(desc(CustomerModule.date_added))
         .offset(offset)
         .limit(size)
-        .all()
     )
+
+    customers = query.all()
 
     for customer in customers:
         currencies = customer.currencies

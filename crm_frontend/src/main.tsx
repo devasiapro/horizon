@@ -19,6 +19,7 @@ import { CustomerAddTransfer } from './pages/CustomerAddTransfer';
 import { CustomerEdit } from './pages/CustomerEdit';
 import { CustomerView } from './pages/CustomerView';
 import { CustomerContract } from './pages/CustomerContract';
+import { CustomerIntegration } from './pages/CustomerIntegration';
 import { MyTheme } from "./theme/MyTheme";
 
 const router = createBrowserRouter([
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: '/customer/:customerId/contract',
         element: <CustomerContract />
+      },
+      {
+        path: '/customer/:customerId/integration',
+        element: <CustomerIntegration />
       }
     ]
   }

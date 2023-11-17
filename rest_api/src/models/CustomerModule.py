@@ -9,6 +9,7 @@ from src.models.Currency import Currency
 from src.models.Language import Language
 from src.models.License import License
 from src.models.ContractFile import ContractFile
+from src.models.IntegrationStatus import IntegrationStatus
 from src.models.customer_currency import customer_currency
 from src.models.customer_language import customer_language
 
@@ -60,6 +61,12 @@ class CustomerModule(database.Base):
             'ContractStatus', 
             back_populates='customer_modules', 
             lazy = False
+    )
+    integration_status_id = Column(Integer, ForeignKey('integration_status.id'), nullable = False)
+    integration_status = relationship(
+        'IntegrationStatus',
+        back_populates = 'customer_modules',
+        lazy = False
     )
     contract_files = relationship('ContractFile', back_populates = 'customer') 
     contract_label = Column(String(256), nullable = True)

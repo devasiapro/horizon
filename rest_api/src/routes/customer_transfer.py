@@ -35,7 +35,8 @@ def create_customer(
         company_contact = request.company_contact,
         brand_name = request.brand_name,
         date_added = datetime.now(),
-        contract_status_id = 1
+        contract_status_id = 1,
+        integration_status_id = 1
     )
 
     for currency in request.currencies:

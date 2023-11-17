@@ -23,7 +23,10 @@ import {
   Stack,
   Checkbox,
   Skeleton,
-  SkeletonText
+  SkeletonText,
+  Select,
+  FormControl,
+  FormLabel
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios';
@@ -41,6 +44,8 @@ export const CustomerList = () => {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [walletTypeFilters, setWalletTypeFilters] = useState(['transfer', 'seamless']);
+  const [integrationStatuses, setIntegrationStatuses] = useState([]);
+  const [selectedIntegrationStatus, setSelectedIntegrationStatus] = useState(0);
 
   const navigate = useNavigate();
   const useAuth = useAuthHook();
@@ -53,9 +58,8 @@ export const CustomerList = () => {
 
   const fetchCustomers = async () => {
     try {
-      setIsLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}`, 
+        `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}&integration_status=${selectedIntegrationStatus}`, 
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -66,9 +70,27 @@ export const CustomerList = () => {
     } catch (err) {
       throw err;
     } finally {
-      setIsLoading(false);
     }
-  }
+  };
+
+  const fetchIntegrationStatuses = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/integration-status`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      ); 
+      console.log('response', response.data);
+      setIntegrationStatuses(response.data); 
+    } catch (err) {
+      console.log('err', err);
+    } finally {
+
+    } 
+  };
 
   const onPageChange = async () => {
     if (page <= 0) return;
@@ -97,6 +119,7 @@ export const CustomerList = () => {
     url.searchParams.set('page', page);
     url.searchParams.set('search', search);
     url.searchParams.set('wallet_type', walletTypeFilters);
+    url.searchParams.set('integration_status', selectedIntegrationStatus);
     window.history.pushState({}, '', url.toString());
   };
 
@@ -109,11 +132,25 @@ export const CustomerList = () => {
   };
 
   useEffect(() => {
-    setSearch(query.get('search') ? query.get('search') : '');
-    setWalletTypeFilters(query.get('wallet_type') ? query.get('wallet_type').split(',') : walletTypeFilters);
-    setPage(query.get('page') ? parseInt(query.get('page')) : 1);
-    setIsLoading(true);
-    onPageChange();
+    const init = async () => {
+      try {
+        setIsLoading(true);
+        setSearch(query.get('search') ? query.get('search') : '');
+        setWalletTypeFilters(
+          query.get('wallet_type') ? query.get('wallet_type').split(',') : walletTypeFilters
+        );
+        setPage(query.get('page') ? parseInt(query.get('page')) : 1);
+        setIsLoading(true);
+
+        await Promise.all([fetchIntegrationStatuses(), onPageChange()]);
+      } catch (err) {
+
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    init();
   }, []);
 
   return (
@@ -164,6 +201,22 @@ export const CustomerList = () => {
                     </Checkbox>
                   </Stack>
                 </CheckboxGroup>
+                <FormControl mb={3} variant={"horizon"} mr="10px" mt="8px">
+                  <Select 
+                    value={selectedIntegrationStatus} 
+                    onChange={(ev) => setSelectedIntegrationStatus(ev.target.value)} 
+                    bg="white"
+                  >
+                    <option key={0} value={0}>Integration Status (Show All)</option>
+                    {integrationStatuses.map(integrationStatus => {
+                      return (
+                        <option key={integrationStatus.id} value={integrationStatus.id}>
+                          {integrationStatus.name}
+                        </option>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
                 <InputGroup mb={"4px"}>
                   <InputLeftElement pointerEvents={"none"}>
                     <SearchIcon color={"gray.300"} />
@@ -237,7 +290,13 @@ export const CustomerList = () => {
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Contract
+                  Integration Status
+                </Th>
+                <Th
+                  color={"white"}
+                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
+                >
+                  Contract Status
                 </Th>
               </Tr>
             </Thead>
@@ -263,6 +322,16 @@ export const CustomerList = () => {
                   </Td>
                   <Td>
                     {isoFormatToHuman(customer.date_added)}
+                  </Td>
+                  <Td>
+                    <Button 
+                      mt={4}
+                      type="button"
+                      colorScheme="horizon"
+                      onClick={() => navigate(`/customer/${customer.id}/integration`)}
+                    >
+                      {customer.integration_status ? customer.integration_status.name : 'N/A'}
+                    </Button>
                   </Td>
                   <Td>
                     <Button 

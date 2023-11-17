@@ -19,6 +19,7 @@ from src.models.TestAccountStaging import TestAccountStaging
 from src.models.TestAccountProduction import TestAccountProduction
 from src.models.ContractStatus import ContractStatus 
 from src.models.CustomerCurrency import CustomerCurrency 
+from src.models.IntegrationStatus import IntegrationStatus
 
 db = database.Session()
 user_role = UserRole(
@@ -55,3 +56,16 @@ for status in contract_statuses:
     db.add(contract_status)
     db.commit()
     db.refresh(contract_status)
+
+integration_statuses = [
+    {'id': 1, 'name': 'To Do'},
+    {'id': 2, 'name': 'Staging'},
+    {'id': 3, 'name': 'Production'},
+    {'id': 4, 'name': 'Live'}
+]
+
+for status in integration_statuses:
+    integration_status = IntegrationStatus(id = status['id'], name = status['name'])
+    db.add(integration_status)
+    db.commit()
+    db.refresh(integration_status)

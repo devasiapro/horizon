@@ -6,7 +6,7 @@ from database import database
 from src.models.ContractStatus import ContractStatus
 
 router = APIRouter(
-    tags = ['Customer Status'],
+    tags = ['Contract Status'],
     prefix = '/contract-status'
 )
 

@@ -6,7 +6,7 @@ fake = Faker()
 
 for i in range(200):
     if random.randint(0, 1) == 1:
-        url = "https://crm-api.horizon88.com/customer/seamless"
+        url = "http://localhost:8888/customer/seamless"
         company = fake.company()
         default_currency = fake.currency_code()
         payload = {
@@ -44,7 +44,7 @@ for i in range(200):
 
         response = requests.post(url, json=payload);
     else:
-        url = "https://crm-api.horizon88.com/customer/transfer"
+        url = "http://localhost:8888/customer/transfer"
         company = fake.company()
         default_currency = fake.currency_code()
         payload = {
