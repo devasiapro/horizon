@@ -136,6 +136,7 @@ def edit_customer_transfer(
     customer.maintainer_contact = request.maintainer_contact
     customer.company_contact = request.company_contact
     customer.brand_name = request.brand_name
+    customer.instance = request.instance
 
     customer.currencies.clear() 
     db.commit()
@@ -211,6 +212,7 @@ def edit_customer_seamless(
     customer.production_wallet_endpoint = request.production_wallet_endpoint
     customer.production_wallet_ip_port = request.production_wallet_ip_port
     customer.production_service_api_ip = request.production_service_api_ip
+    customer.instance = request.instance
 
     db.query(Regulation).filter(Regulation.customer_id == customer_id).delete()
     db.commit()

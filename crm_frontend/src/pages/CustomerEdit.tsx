@@ -52,6 +52,7 @@ export const CustomerEdit = () => {
     customer_contact: '',
     maintainer_contact: '',
     company_contact: '',
+    instance: ''
   });
   const [formSeamless, setFormSeamless] = useState({
     id: 0,
@@ -81,7 +82,8 @@ export const CustomerEdit = () => {
     staging_mobile_lobby_url: '',
     staging_wallet_endpoint: '', 
     staging_wallet_ip_port: '',
-    staging_service_api_ip: ''
+    staging_service_api_ip: '',
+    instance: ''
   });
 
   const customerEditSeamlessRender = (step) => {
@@ -138,7 +140,8 @@ export const CustomerEdit = () => {
       test_account_productions: testAccountsArrayToString(customer.test_account_productions),
       production_wallet_endpoint: customer.production_wallet_endpoint,
       production_wallet_ip_port: customer.production_wallet_ip_port,
-      production_service_api_ip: customer.production_service_api_ip
+      production_service_api_ip: customer.production_service_api_ip,
+      instance: customer.instance
     });
   };
 
@@ -157,7 +160,8 @@ export const CustomerEdit = () => {
       technical_contact: customer.technical_contact,
       customer_contact: customer.customer_contact,
       maintainer_contact: customer.maintainer_contact,
-      company_contact: customer.company_contact
+      company_contact: customer.company_contact,
+      instance: customer.instance
     });
   };
 

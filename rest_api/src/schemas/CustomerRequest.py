@@ -20,6 +20,7 @@ class CustomerTransferRequest(BaseModel):
     merchant_english_name: str
     prefix: str
     technical_contact: str
+    instance: str
 
 class CustomerSeamlessRequest(BaseModel):
     merchant_english_name: str
@@ -49,3 +50,4 @@ class CustomerSeamlessRequest(BaseModel):
     production_wallet_endpoint: str
     production_wallet_ip_port: str
     production_service_api_ip: str
+    instance: str

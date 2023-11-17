@@ -133,6 +133,15 @@ export const CustomerEditSeamlessGeneral = ({ customerId, step }) => {
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
+              <StockInputText 
+                label={"Instance"} 
+                formName={"instance"}
+                onChange={(e) => {
+                  setFormSeamless({...formSeamless, instance: e.target.value})
+                }}
+                errorMessage={errors.instance}
+                value={formSeamless.instance}
+              />
               <Show above="md">
                 <SimpleGrid columns={2} spacing={5}>
                   <Show>

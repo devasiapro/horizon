@@ -85,6 +85,7 @@ export const CustomerEditTransferContacts = ({ customerId, step }) => {
       customer_contact: formTransfer.customer_contact,
       maintainer_contact: formTransfer.maintainer_contact,
       company_contact: formTransfer.company_contact,
+      instance: formTransfer.instance
     };
 
     try {

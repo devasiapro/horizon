@@ -91,6 +91,15 @@ export const CustomerEditTransferGeneral = ({ customerId, step }) => {
           </CardHeader>
           <CardBody color={"horizon.300"}>
             <form>
+              <StockInputText 
+                label={"Instance"} 
+                formName={"instance"}
+                onChange={(e) => {
+                  setFormTransfer({...formTransfer, instance: e.target.value})
+                }}
+                errorMessage={errors.instance}
+                value={formTransfer.instance}
+              />
               <Show above="md">
                 <SimpleGrid columns={2} spacing={5}>
                   <Box>

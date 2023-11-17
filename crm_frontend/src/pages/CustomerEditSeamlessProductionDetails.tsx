@@ -152,7 +152,8 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
       test_account_productions: testAccountProductions,
       production_wallet_endpoint: formSeamless.staging_wallet_endpoint,
       production_wallet_ip_port: formSeamless.staging_wallet_ip_port,
-      production_service_api_ip: formSeamless.staging_service_api_ip
+      production_service_api_ip: formSeamless.staging_service_api_ip,
+      instance: formSeamless.instance
     };
     try {
       setIsLoading(true);
