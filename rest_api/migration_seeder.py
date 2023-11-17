@@ -28,7 +28,7 @@ file = args.file
 instance_type = args.instance
 
 db = database.Session()
-game_sessions = numpy.array(pandas.read_excel(file, skiprows=3))
+game_sessions = numpy.array(pandas.read_excel(file, skiprows=3, usecols=[0, 59]))
 for index, game_session in enumerate(game_sessions):
     print(f"Game session # {index}")
     factory = InstanceFactory()

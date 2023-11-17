@@ -239,21 +239,14 @@ export const CustomerAddSeamless = ({ step }) => {
                   </Box>
                 </SimpleGrid>
                 <Flex>
-                  <Tooltip
-                    hasArrow
-                    label="Complete all fields in order to submit"
-                    borderRadius={"20px"}
-                    isDisabled={isFormComplete}
+                  <Button
+                    mt={4}
+                    type="button"
+                    colorScheme="horizon"
+                    onClick={(e) => onClickNext()}
                   >
-                    <Button
-                      mt={4}
-                      type="button"
-                      colorScheme="horizon"
-                      onClick={(e) => onClickNext()}
-                    >
-                      Next
-                    </Button>
-                  </Tooltip>
+                    Next
+                  </Button>
                 </Flex>
               </Show>
             </form>

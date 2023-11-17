@@ -16,3 +16,4 @@ python-jose
 requests
 python-multipart
 gunicorn
+faker
