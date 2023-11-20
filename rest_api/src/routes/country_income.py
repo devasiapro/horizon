@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -29,10 +30,13 @@ router = APIRouter(
     prefix='/country-income'
 )
 
+security = HTTPBearer()
+
 @router.get('')
 def fetch_income_of_countries(
         date_from: str, 
         date_to: str,
+        credentials: HTTPAuthorizationCredentials = Depends(security),
         db: Session = Depends(database.get_db)
     ): 
 

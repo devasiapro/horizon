@@ -1,4 +1,6 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import Depends, Response, FastAPI, APIRouter, status, HTTPException
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -28,9 +30,12 @@ router = APIRouter(
     prefix='/game-earning'
 )
 
+security = HTTPBearer()
+
 @router.get('')
 def fetch_game_earnings(
         request: Request = Depends(Request),
+        credentials: HTTPAuthorizationCredentials = Depends(security),
         db: Session = Depends(database.get_db)
     ):
 

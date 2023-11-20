@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, File, UploadFile, Form
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
@@ -16,9 +17,12 @@ router = APIRouter(
     prefix = '/contract-file'
 )
 
+security = HTTPBearer()
+
 @router.get('/{contract_file_id}/download')
 def download_contract_file(
         contract_file_id: int,
+        credentials: HTTPAuthorizationCredentials = Depends(security),
         db: Session = Depends(database.get_db)
 ):
     contract_file = (

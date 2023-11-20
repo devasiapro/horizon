@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -29,11 +30,14 @@ router = APIRouter(
     prefix='/kpi'
 )
 
+security = HTTPBearer()
+
 @router.get('')
 def fetch_kpi(
         date_from: str, 
         date_to: str,
-        db: Session = Depends(database.get_db)
+        db: Session = Depends(database.get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security),
     ): 
 
     kpi = {

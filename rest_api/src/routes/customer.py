@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import desc
@@ -27,6 +28,8 @@ router = APIRouter(
     prefix='/customer'
 )
 
+security = HTTPBearer()
+
 @router.get('')
 def list_customer(
         page: int = 1, 
@@ -34,7 +37,8 @@ def list_customer(
         wallet_type: str = 'transfer,seamless', 
         size = 20, 
         integration_status: int = 0,
-        db: Session = Depends(database.get_db)
+        db: Session = Depends(database.get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security)
     ):
 
 
