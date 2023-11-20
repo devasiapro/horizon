@@ -28,6 +28,12 @@ commands or steps will be performed inside that folder unless specified otherwis
 
 - This is performed in a Linux or Unix based OS. Windows is to follow...
 
+## Branching Guide
+
+- In your local, create a branch name with the following naming convention: id-name-in-dash-followed-by-descriptive. e.g. scrum-42-bug-fix-for-login
+- After development and local testing, push to Github then pull request to "staging" branch.
+- Once tested in "staging" branch and is OK for deployment, make another pull request of your local ticket to the "production" branch to be deployed.
+
 ## Production Deployment
 
 To Follow
