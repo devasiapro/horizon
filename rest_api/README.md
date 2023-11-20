@@ -24,6 +24,9 @@ cd rest_api
 
 2. Initialize Virtualenv
 ```
+sudo apt update
+sudo apt install python3-pip
+pip install virtualenv
 python venv env
 ```
 
@@ -189,7 +192,7 @@ sudo systemctl restart nginx
 ```
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d crm-api.horizon88.com
-sudo sytemctl restart nginx
+sudo systemctl restart nginx
 ```
 
 13. Run db migrations
