@@ -8,12 +8,15 @@ import axios from 'axios';
 
 import { Slot, Live } from "./../assets/logo/icons";
 import { EarningGames } from './EarningGames';
+import { useAuthHook } from '../hooks/useAuthHook';
 
 export const EarningGamesContainer = ({ dateTo, dateFrom }) => {
   const [gameSlots, setGameSlots] = useState([]);
   const [gameLives, setGameLives] = useState([]);  
   const [isLoading, setIsLoading] = useState(false);
 
+  const useAuth = useAuthHook();
+  const token = useAuth.getAuth().token;
   const toast = useToast();
 
   const fetchGameEarning = async (dateTo, dateFrom, gameType, order, count) => {
@@ -24,6 +27,9 @@ export const EarningGamesContainer = ({ dateTo, dateFrom }) => {
         game_type: gameType,
         order: order,
         count: count, 
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     });
     return response;

@@ -59,8 +59,14 @@ export const CustomerList = () => {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/customer?page=${page}&search=${search}&wallet_type=${walletTypeFilters}&integration_status=${selectedIntegrationStatus}`, 
+        `${import.meta.env.VITE_API_URL}/customer`, 
         {
+          params: {
+            page: page,
+            search: search,
+            wallet_type: walletTypeFilters,
+            integration_status: selectedIntegrationStatus
+          },
           headers: {
             Authorization: `Bearer ${token}`
           }

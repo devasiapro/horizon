@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, File, UploadFile, Form
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 import shutil
@@ -13,11 +14,14 @@ router = APIRouter(
     prefix = '/customer/{customer_id}/integration'
 )
 
+security = HTTPBearer()
+
 @router.put('')
 def update_customer_integration(
         request: CustomerIntegrationRequest,
         customer_id: int,
-        db: Session = Depends(database.get_db)
+        db: Session = Depends(database.get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security),
     ):
     
     customer = (db

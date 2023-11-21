@@ -19,7 +19,7 @@ ALGORITHM = os.environ.get("JWT_ALGORITHM")
 security = HTTPBearer()
 
 @router.post('')
-def logout():
+def logout(credentials: HTTPAuthorizationCredentials = Depends(security)):
     return {
         "message": "OK"
     }

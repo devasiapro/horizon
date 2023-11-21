@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, File, UploadFile, Form
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 import shutil
@@ -15,8 +16,14 @@ router = APIRouter(
     prefix = '/customer/{customer_id}/contract'
 )
 
+security = HTTPBearer()
+
 @router.get('')
-def fetch_customer_contract(customer_id: int, db: Session = Depends(database.get_db)):
+def fetch_customer_contract(
+        customer_id: int, 
+        db: Session = Depends(database.get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+    ):
     customer = (db
         .query(CustomerModule)
         .filter(CustomerModule.id == customer_id)
@@ -34,7 +41,8 @@ def update_customer_contract(
         contract_file: UploadFile,
         contract_status_id: int = Form(None),
         contract_label: str = Form(None),
-        db: Session = Depends(database.get_db)
+        db: Session = Depends(database.get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security)
     ):
     upload_dir = os.path.join(os.getcwd(), 'uploads')
 
