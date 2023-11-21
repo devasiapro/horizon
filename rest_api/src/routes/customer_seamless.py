@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.params import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -23,9 +24,12 @@ router = APIRouter(
     prefix='/customer/seamless'
 )
 
+security = HTTPBearer()
+
 @router.post('')
 def create_customer(
         request: CustomerSeamlessRequest,
+        credentials: HTTPAuthorizationCredentials = Depends(security),
         db: Session = Depends(database.get_db)
     ):
     customer_model = CustomerModule(

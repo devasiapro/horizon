@@ -16,6 +16,7 @@ import {
   Player,
 } from "../assets/logo/icons";
 import { KPICard } from './KPICard';
+import { useAuthHook } from '../hooks/useAuthHook';
 
 export const KPIContainer = ({
   currentDateStart,
@@ -39,6 +40,8 @@ export const KPIContainer = ({
     number_of_spins: 0 
   });
   const [isLoading,setIsLoading] = useState(false);
+  const useAuth = useAuthHook();
+  const token = useAuth.getAuth().token;
   const toast = useToast();
 
   const fetchKpi = async (dateFrom, dateTo) => {
@@ -47,6 +50,9 @@ export const KPIContainer = ({
         params: {
           date_from: dateFrom,
           date_to: dateTo
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       });
       return response;
