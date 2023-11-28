@@ -9,7 +9,7 @@ import { GameSession } from '../game-session/game-session.entity';
 
 @Injectable()
 export class DragonSharedSeederService {
-  private gameSessions: DragonSharedResponseDto[];
+  private gameSessions: DragonSharedResponseDto[] = [];
 
   public constructor(
     private customerService: CustomerService,
@@ -22,6 +22,9 @@ export class DragonSharedSeederService {
   }
 
   public async process(): Promise<void> {
+    if (this.gameSessions.length <= 0) {
+      return;
+    }
     for (let i = 0; i < this.gameSessions.length; i++) {
       const gameSession = this.gameSessions[i];
 
