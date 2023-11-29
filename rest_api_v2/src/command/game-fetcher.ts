@@ -1,4 +1,4 @@
-import { Command, CommandRunner } from 'nest-commander';
+import { Command, CommandRunner, Option } from 'nest-commander';
 import { FormData } from 'formdata-node';
 import { FormDataEncoder } from "form-data-encoder";
 import axios from 'axios';
@@ -9,6 +9,12 @@ import { flyingDragonReportBy, dragonSharedReportBy } from './report-by';
 import { DragonSharedResponseDto } from './dto/dragon-shared-response.dto';
 import { FlyingDragonResponseDto } from './dto/flying-dragon-response.dto';
 import { DragonSharedSeederService } from './dragon-shared-seeder.service';
+import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
+
+interface CommandOptions {
+  startdate: string;
+  enddate: string;
+}
 
 @Command({
   name: 'game-fetcher',
@@ -18,23 +24,45 @@ import { DragonSharedSeederService } from './dragon-shared-seeder.service';
 })
 export class GameFetcher extends CommandRunner { 
 
-  public constructor(private dragonSharedSeeder: DragonSharedSeederService) {
+  public constructor(
+    private dragonSharedSeeder: DragonSharedSeederService,
+    private flyingDragonSeeder: FlyingDragonSeederService
+  ) {
     super(); 
   } 
 
-  public async run(inputs: string[], options?: Record<string, any>): Promise<void> {
-    //await this.run88Shared();
-    await this.runDragonShared();
-    return;
+  @Option({
+    flags: '-s, --startdate [startdate]',
+    description: 'Start date.'
+  })
+  public parseStartDate(val: string): string {
+    return val;
   }
 
-  private async run88Shared(): Promise<void> {
-    const url = 'https://admin.88shared.com/reportviewer/api/report/execute/export';
+  @Option({
+    flags: '-e, --enddate [enddate]',
+    description: 'End date.'
+  })
+  public parseEndDate(val: string): string {
+    return val;
+  }
+
+  public async run(inputs: string[], options?: CommandOptions): Promise<void> {
+    const startDate = options.startdate;
+    const endDate = options.enddate;
+
+    await this.run88Shared(startDate, endDate);
+    await this.runDragonShared(startDate, endDate);
+    process.exit();
+  }
+
+  private async run88Shared(startDate: string, endDate: string): Promise<void> {
+    const url = process.env.FLYING_DRAGON_URL
     const filters = {
       casino: ["3811"],
       daterange: {
-        startdate: "2023-11-20",
-        enddate: "2023-11-21"
+        startdate: startDate,
+        enddate: endDate
       },
       currency: flyingDragonCurrencies,
       sdin: "2",
@@ -44,9 +72,9 @@ export class GameFetcher extends CommandRunner {
 
     const formData = new FormData();
     formData.append('reportId', 'Reporting___Game_statistics');
-    formData.append('configurationCode', '230671');
+    formData.append('configurationCode', process.env.FLYING_DRAGON_CONFIGURATION_CODE);
     formData.append('format', 'json');
-    formData.append('apikey', 'AK-2-Dv7dryci5qBjqOr0eXLgF30DQ55-JBwWN9crxmc-LL');
+    formData.append('apikey', process.env.FLYING_DRAGON_API_KEY);
     formData.append('filters', JSON.stringify(filters));
     formData.append('outputs', flyingDragonOutputs);
 
@@ -55,19 +83,20 @@ export class GameFetcher extends CommandRunner {
     try {
       const response: { data: { data: FlyingDragonResponseDto[] } } = await axios.post(url, formData, { headers });
       const gameSessions = response.data.data;
-      console.log(gameSessions);
+      this.flyingDragonSeeder.setGameSessions(gameSessions);
+      await this.flyingDragonSeeder.process();
     } catch (err) {
       console.log(err);
     }
   }
 
-  private async runDragonShared(): Promise<void> {
-    const url = 'https://admin.dragonshared.com/reportviewer/api/report/execute/export';
+  private async runDragonShared(startDate: string, endDate: string): Promise<void> {
+    const url = process.env.DRAGON_SHARED_URL
     const filters = {
       casino: ["4500", "4501", "4502", "4508"],
       daterange: {
-        startdate: "2023-11-20",
-        enddate: "2023-11-21"
+        startdate: startDate,
+        enddate: endDate
       },
       currency: dragonSharedCurrencies,
       sdin: "2",
@@ -77,9 +106,9 @@ export class GameFetcher extends CommandRunner {
 
     const formData = new FormData();
     formData.append('reportId', 'Reporting___Game_statistics');
-    formData.append('configurationCode', '231191');
+    formData.append('configurationCode', process.env.DRAGON_SHARED_CONFIGURATION_CODE);
     formData.append('format', 'json');
-    formData.append('apikey', 'AK-2-TiPRgh-vLfmTo6JIe7wOgX8wXuqhTnDBKrCyyKs-LL');
+    formData.append('apikey', process.env.DRAGON_SHARED_API_KEY);
     formData.append('filters', JSON.stringify(filters));
     formData.append('outputs', dragonSharedOutputs);
 
@@ -90,7 +119,6 @@ export class GameFetcher extends CommandRunner {
         url, formData, { headers }
       );
       const gameSessions = response.data.data;
-      console.log(gameSessions);
       this.dragonSharedSeeder.setGameSessions(gameSessions);
       await this.dragonSharedSeeder.process();
     } catch (err) {

@@ -6,6 +6,7 @@ import {
   OneToMany 
 } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
+import { Kiosk } from '../kiosk/kiosk.entity';
 
 @Entity()
 export class Instance {
@@ -18,4 +19,7 @@ export class Instance {
 
   @OneToMany(() => Customer, (customer) => customer.instance)
   customers: Customer[]
+
+  @OneToMany(() => Kiosk, (kiosk) => kiosk.instance)
+  kiosks: Kiosk[]
 }

@@ -185,7 +185,14 @@ export const CustomerList = () => {
       </Flex>
       <SimpleGrid>
         <Flex minWidth="max-content" alignItems="center" gap="2">
-          <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} total={total} />
+          <Pagination 
+            itemLabel={"customers"}
+            cb={onPageChange} 
+            setPage={setPage} 
+            page={page} 
+            pages={pageCount} 
+            total={total} 
+          />
           <Spacer />
           <Box>
             <form onSubmit={(ev) => filter(ev)}>
@@ -259,7 +266,7 @@ export const CustomerList = () => {
           shadow={2}
           overflowX="auto"
         >
-          <Table minH={"700px"}>
+          <Table size={"sm"} minH={"700px"}>
             <Thead bg={"horizon.300"}>
               <Tr>
                 <Th
@@ -303,6 +310,12 @@ export const CustomerList = () => {
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
                   Contract Status
+                </Th>
+                <Th
+                  color={"white"}
+                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
+                >
+                  Edit
                 </Th>
               </Tr>
             </Thead>
@@ -349,6 +362,17 @@ export const CustomerList = () => {
                       {customer.contract_status ? customer.contract_status.name : 'N/A'}
                     </Button>
                   </Td>
+                  <Td>
+                    <Button 
+                      mt={4}
+                      type="button"
+                      colorScheme="horizon"
+                      onClick={() => navigate(
+                        `/customer/${customer.id}/edit?wallet_type=${customer.wallet_type}&step=1`
+                      )}>
+                      Edit
+                    </Button>
+                  </Td>
                 </Tr>
               );
             })}
@@ -356,7 +380,14 @@ export const CustomerList = () => {
           </Table>
         </TableContainer>
         </Skeleton>
-        <Pagination cb={onPageChange} setPage={setPage} page={page} pages={pageCount} total={total} />
+        <Pagination 
+          itemLabel={"customers"}
+          cb={onPageChange} 
+          setPage={setPage} 
+          page={page} 
+          pages={pageCount} 
+          total={total} 
+        />
       </SimpleGrid>
     </Box>
   );
