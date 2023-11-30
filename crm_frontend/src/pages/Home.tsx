@@ -36,6 +36,8 @@ export const Home = () => {
   const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('customer');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const useAuth = useAuthHook();
+  const token = useAuth.getAuth().token;
 
   const yesterday = moment().subtract(1, 'days');
   const weekBefore = moment().subtract(8, 'days');
@@ -50,6 +52,9 @@ export const Home = () => {
       params: {
         date_from: dateFrom,
         date_to: dateTo,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     });
     return response;

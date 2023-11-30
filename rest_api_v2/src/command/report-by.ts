@@ -1,0 +1,2 @@
+export const flyingDragonReportBy = "currencycode,company,casino,date1,week1,month1,playercurrency,language,clienttype,clientplatform,country,tlentity,gametype,gamename,playercode,kiosk,playerusername";
+export const dragonSharedReportBy = "playercode,company,casino,date1,week1,month1,playercurrency,currencycode,language,clienttype,clientplatform,country,kiosk,tlentity,gametype,gamename,playerusername";
