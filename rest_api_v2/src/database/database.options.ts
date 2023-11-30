@@ -1,5 +1,9 @@
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+config({ path: resolve(__dirname, '../../.env') });
 
 export const dataSource = new DataSource({
   type: 'mysql',

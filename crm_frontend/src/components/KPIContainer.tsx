@@ -46,7 +46,7 @@ export const KPIContainer = ({
 
   const fetchKpi = async (dateFrom, dateTo) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/kpi`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/kpi`, {
         params: {
           date_from: dateFrom,
           date_to: dateTo

@@ -15,6 +15,9 @@ import { CurrencyService } from './currency/currency.service';
 import { CurrencyModule } from './currency/currency.module';
 import { PlayerModule } from './player/player.module';
 import { KioskModule } from './kiosk/kiosk.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -29,7 +32,10 @@ import { KioskModule } from './kiosk/kiosk.module';
     CurrencyModule, 
     PlayerModule, 
     KioskModule,
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
+    AuthModule,
+    UserModule,
+    ReportModule
   ],
   controllers: [AppController],
   providers: [AppService],
