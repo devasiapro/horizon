@@ -97,41 +97,10 @@ class WalletController extends Controller
                     ->where('launch_code', '=', $request->get('game_name'))
                     ->firstOrFail();
 
-                // TODO: Stop hard coding this because the order of parameters are changing or
-                // unreliable. Create a function to automatically extract values and hash.
-                $gameRoundClose = $request->has('game_round_close') ? $request->get('game_round_close') : '';
-                $hash = md5(
-                    $request->get('action') .
-                        $request->get('user_id') .
-                        $request->get('bet') .
-                        $request->get('win') .
-                        $request->get('is_jackpot') .
-                        $request->get('game_name') .
-                        $request->get('transaction_id') .
-                        $request->get('session_id') .
-                        $request->get('round_id') .
-                        $request->get('token') .
-                        $gameRoundClose . 
-                        config('torro.secret_key')
-                );
-
-                Log::info(
-                    $request->get('action') .
-                        $request->get('user_id') .
-                        $request->get('bet') .
-                        $request->get('win') .
-                        $request->get('is_jackpot') .
-                        $request->get('game_name') .
-                        $request->get('transaction_id') .
-                        $request->get('session_id') .
-                        $request->get('round_id') .
-                        $request->get('token') .
-                        $gameRoundClose . 
-                        config('torro.secret_key')
-                );
+                $stringified = $this->stringifyPayload($request->all());
+                $hash = md5($stringified . config('torro.secret_key'));
+                Log::info($stringified . config('torro.secret_key'));
                 $data = request()->getContent();
-                Log::info('This is the update_balance: ' . $data);
-                Log::info('This is the hash: ' . $hash);
 
                 if ($hash !== $request->get('hash')) {
                     return response()->json([
@@ -165,19 +134,8 @@ class WalletController extends Controller
                     ->where('casino_user_id', $request->get('user_id'))
                     ->firstOrFail();
 
-                // TODO: Stop hard coding this because the order of parameters are changing or
-                // unreliable. Create a function to automatically extract values and hash.
-                $hash = md5(
-                    $request->get('action') .
-                        $request->get('user_id') .
-                        $request->get('refund') .
-                        $request->get('game_name') .
-                        $request->get('transaction_id') .
-                        $request->get('token') .
-                        $request->get('session_id') .
-                        $request->get('reason') .
-                        config('torro.secret_key')
-                );
+                $stringified = $this->stringifyPayload($request->all());
+                $hash = md5($stringified . config('torro.secret_key'));
                 Log::info('This is the hash: ' . $hash);
 
                 if ($hash !== $request->get('hash')) {
