@@ -39,17 +39,16 @@ export const NavBar = () => {
       const cookie = new Cookies();
       const token = cookie.get('token');
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/logout`, {}, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      useAuth.logout();
-      navigate('/login');
     } catch (err) {
       console.log('err', err);
     } finally {
-
+      useAuth.logout();
+      navigate('/login');
     }
   };
 

@@ -48,7 +48,7 @@ export const Home = () => {
   const previousDateEnd = weekBefore.format('YYYY-MM-DD');
 
   const fetchCustomerIncomes = async (dateFrom, dateTo) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/customer-income`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/customer-income`, {
       params: {
         date_from: dateFrom,
         date_to: dateTo,
@@ -61,7 +61,7 @@ export const Home = () => {
   };
 
   const fetchCountryIncomes = async (dateFrom, dateTo) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/country-income`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/country-income`, {
       params: {
         date_from: dateFrom,
         date_to: dateTo,

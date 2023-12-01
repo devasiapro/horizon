@@ -11,12 +11,21 @@ import { LanguageModule } from '../language/language.module';
 import { CountryModule } from '../country/country.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { KioskModule } from '../kiosk/kiosk.module';
+import { UserModule } from '../user/user.module';
 import { GameFetcher } from './game-fetcher';
+import { Seeder } from './seeder';
+import { UserGenerator } from './user-generator';
 import { DragonSharedSeederService } from './dragon-shared-seeder.service';
 import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
 
 @Module({
-  providers: [DragonSharedSeederService, GameFetcher, FlyingDragonSeederService],
+  providers: [
+    DragonSharedSeederService, 
+    GameFetcher, 
+    Seeder, 
+    UserGenerator, 
+    FlyingDragonSeederService
+  ],
   imports: [
     CustomerModule, 
     InstanceModule, 
@@ -28,6 +37,7 @@ import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
     LanguageModule,
     PlayerModule,
     KioskModule,
+    UserModule,
     ConfigModule.forRoot()
   ]
 })
