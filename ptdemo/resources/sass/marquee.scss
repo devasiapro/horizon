@@ -1,0 +1,32 @@
+.marquee-container {
+  height: 50px;
+  overflow: hidden;
+  line-height: 30px;
+  background: rgba(217, 217, 217, 0.25);
+  font-family: 'Gotham';
+
+  .marquee {
+    margin-top: 10px;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    animation: marquee 40s linear infinite;
+  }
+
+  .marquee2 {
+    margin-top: 10px;
+    animation-delay: -15s;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -100%
+  }
+}
