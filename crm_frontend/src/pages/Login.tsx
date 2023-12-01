@@ -48,9 +48,8 @@ export const Login = () => {
     });
     setIsLoading(true);
     try {
-      const response: AxiosResponse = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { 
-        username, password 
-      });
+      const url = `${import.meta.env.VITE_API_URL}/auth/login`;
+      const response: AxiosResponse = await axios.post(url, { username, password });
       authHook.setAsLogged(response.data.user, response.data.token);
       navigate('/');
     } catch (err: AxiosError) {

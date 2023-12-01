@@ -36,6 +36,8 @@ export const Home = () => {
   const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('customer');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const useAuth = useAuthHook();
+  const token = useAuth.getAuth().token;
 
   const yesterday = moment().subtract(1, 'days');
   const weekBefore = moment().subtract(8, 'days');
@@ -46,17 +48,20 @@ export const Home = () => {
   const previousDateEnd = weekBefore.format('YYYY-MM-DD');
 
   const fetchCustomerIncomes = async (dateFrom, dateTo) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/customer-income`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/customer-income`, {
       params: {
         date_from: dateFrom,
         date_to: dateTo,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     });
     return response;
   };
 
   const fetchCountryIncomes = async (dateFrom, dateTo) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/country-income`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/country-income`, {
       params: {
         date_from: dateFrom,
         date_to: dateTo,

@@ -10,6 +10,7 @@ for i in range(200):
         company = fake.company()
         default_currency = fake.currency_code()
         payload = {
+            "instance": "fyingdragon",
             "merchant_english_name": company,
             "brand_name": company,
             "regulations": [fake.company_suffix(), fake.company_suffix()],
@@ -48,6 +49,7 @@ for i in range(200):
         company = fake.company()
         default_currency = fake.currency_code()
         payload = {
+            "instance": "fyingdragona",
             "wallet_type": 'transfer',
             "merchant_english_name": company,
             "merchant_chinese_name": fake.company(),
@@ -65,5 +67,5 @@ for i in range(200):
             "company_contact": fake.ascii_company_email(),
         }
         response = requests.post(url, json=payload);
-
+        print(response.json())
     print(i)

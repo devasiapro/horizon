@@ -20,7 +20,7 @@ export const EarningGamesContainer = ({ dateTo, dateFrom }) => {
   const toast = useToast();
 
   const fetchGameEarning = async (dateTo, dateFrom, gameType, order, count) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/game-earning`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/game-earning`, {
       params: {
         date_to: dateTo,
         date_from: dateFrom,

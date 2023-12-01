@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon } from '@chakra-ui/icons'
 
-export const Pagination = ({ setPage, page, pages, cb, total }) => {
+export const Pagination = ({ setPage, page, pages, cb, total, itemLabel = 'items' }) => {
   const handleSubmit = (ev) => {
     ev.preventDefault();
     cb(page);
@@ -46,7 +46,7 @@ export const Pagination = ({ setPage, page, pages, cb, total }) => {
           </InputRightElement>
         </InputGroup>
         <Text pt="6px" w="300px">
-          of <b>{pages}</b> - {total} items
+          of <b>{pages}</b> - {total} {itemLabel}
         </Text>
       </Flex>
     </form>
