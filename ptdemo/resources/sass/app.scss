@@ -32,10 +32,39 @@ body {
 }
 
 .container-games {
-  background: url(/images/games-bg.jpeg), lightgray 50% / cover no-repeat;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/images/games-bg.jpeg);
+  background-repeat: no-repeat;
 }
 
 .filter-games {
   background-color: #141415;   
   border-radius: 20px;
+}
+
+.logo-color {
+  color: #B49430;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  font-style: normal;
+}
+
+.placeholder-dark::placeholder {
+  color: black !important;
+  opacity: 1;
+}
+
+.rounded-modal {
+  border-radius: 34px;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
 }
