@@ -33,6 +33,11 @@ export class KioskCreate1701170728901 implements MigrationInterface {
               name: 'top_level_entity_id',
               type: 'int',
               isNullable: true
+            },
+            {
+              name: 'customer_id',
+              type: 'int',
+              isNullable: true
             }
           ]
         }),
@@ -55,6 +60,16 @@ export class KioskCreate1701170728901 implements MigrationInterface {
           columnNames: ['instance_id'],
           referencedColumnNames: ['id'],
           referencedTableName: 'instance',
+          onDelete: 'CASCADE'
+        })
+      );
+
+      await queryRunner.createForeignKey(
+        'kiosk',
+        new TableForeignKey({
+          columnNames: ['customer_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'customer',
           onDelete: 'CASCADE'
         })
       );

@@ -28,11 +28,13 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
             {
               name: 'instance_id',
               type: 'int',
+              isNullable: true,
             },
             {
-              name: 'company_id',
+              name: 'parent_id',
               type: 'int',
-            }
+              isNullable: true,
+            },
           ],
         }),
         true
@@ -51,10 +53,10 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
       await queryRunner.createForeignKey(
         'customer',
         new TableForeignKey({
-          columnNames: ['company_id'],
+          columnNames: ['parent_id'],
           referencedColumnNames: ['id'],
-          referencedTableName: 'company',
-          onDelete: 'CASCADE'
+          referencedTableName: 'customer',
+          onDelete: 'CASCADE',  
         })
       );
     }

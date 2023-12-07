@@ -5,14 +5,14 @@ import {
     TableIndex,
     TableColumn,
     TableForeignKey,
-} from "typeorm"
+} from 'typeorm';
 
-export class InstanceCreate1701145624187 implements MigrationInterface {
+export class CompanyCreate1701145624185 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.createTable(
-        new Table ({
-          name: 'instance',
+        new Table({
+          name: 'company',
           columns: [
             {
               name: 'id',
@@ -27,12 +27,12 @@ export class InstanceCreate1701145624187 implements MigrationInterface {
             },
           ],
         }),
-        true,
+        true
       )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.dropTable('instance');
+      await queryRunner.dropTable('company');
     }
 
 }

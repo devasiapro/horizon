@@ -23,7 +23,12 @@ export class GameSessionCreate1701170728916 implements MigrationInterface {
             },
             {
               name: 'kiosk_id',
-              type: 'int'
+              type: 'int',
+              isNullable: true
+            },
+            {
+              name: 'instance_id',
+              type: 'int',
             },
             {
               name: 'player_code',
@@ -291,6 +296,16 @@ export class GameSessionCreate1701170728916 implements MigrationInterface {
           columnNames: ['language'],
           referencedColumnNames: ['language'],
           referencedTableName: 'language',
+          onDelete: 'CASCADE'
+        })
+      );
+
+      await queryRunner.createForeignKey(
+        'game_session',
+        new TableForeignKey({
+          columnNames: ['instance_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'instance',
           onDelete: 'CASCADE'
         })
       );
