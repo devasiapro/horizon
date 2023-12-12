@@ -12,8 +12,10 @@ import { CountryModule } from '../country/country.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { KioskModule } from '../kiosk/kiosk.module';
 import { UserModule } from '../user/user.module';
+import { WalletTypeModule } from '../wallet-type/wallet-type.module';
 import { GameFetcher } from './game-fetcher';
 import { Seeder } from './seeder';
+import { Initializer } from './initializer';
 import { UserGenerator } from './user-generator';
 import { DragonSharedSeederService } from './dragon-shared-seeder.service';
 import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
@@ -24,6 +26,7 @@ import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
     GameFetcher, 
     Seeder, 
     UserGenerator, 
+    Initializer,
     FlyingDragonSeederService
   ],
   imports: [
@@ -38,6 +41,7 @@ import { FlyingDragonSeederService } from './flying-dragon-seeder.service';
     PlayerModule,
     KioskModule,
     UserModule,
+    WalletTypeModule,
     ConfigModule.forRoot()
   ]
 })

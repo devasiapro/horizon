@@ -61,22 +61,6 @@ export class DragonSharedSeederService {
     for (let i = 0; i < this.gameSessions.length; i++) {
       const gameSession = this.gameSessions[i];
 
-
-      let instanceName = gameSession.casino;
-      if (instanceName === 'torrospin') {
-        instanceName = gameSession.username.split('_')[1];
-      }
-
-      let instance = await this
-        .instanceService
-        .findByName(instanceName);
-
-      if (!instance) {
-        instance = new Instance();
-      } 
-      instance.name = instanceName;
-      instance = await this.instanceService.store(instance);
-
       let company = await this
         .companyService
         .findByName(gameSession.company);
@@ -88,46 +72,25 @@ export class DragonSharedSeederService {
       company.name = gameSession.company;
       company = await this.companyService.store(company);
 
-      let customer = await this
-        .customerService
-        .findByBrandName(gameSession.casino);
-
-      if (!customer) {
-        customer = new Customer();
-        customer.brandName = gameSession.casino;
+      let instanceName = gameSession.casino;
+      /** STUB: set to torrospin for now.
+      if (instanceName === 'torrospin') {
+        instanceName = gameSession.username.split('_')[1];
       }
-      customer.instance = instance;
-      customer.company = company;
-      customer = await this.customerService.store(customer);  
+      **/
 
-      let topLevelEntity: TopLevelEntity;
-
-      if (gameSession.tlentity) {
-        topLevelEntity = await this
-          .topLevelEntityService
-          .findByName(gameSession.tlentity)
-    
-        if (!topLevelEntity) {
-          topLevelEntity = new TopLevelEntity();
-          topLevelEntity.name = gameSession.tlentity;
-        }
-
-        topLevelEntity = await this.topLevelEntityService.store(topLevelEntity);
-      }
-
-      let kiosk = await this
-        .kioskService
+      let instance = await this
+        .instanceService
         .findByName(instanceName);
 
-      if (!kiosk) {
-        kiosk = new Kiosk(); 
-        kiosk.name = instanceName;
-      }
-      kiosk.instance = instance;
-      if (gameSession.tlentity) {
-        kiosk.topLevelEntity = topLevelEntity;
-      }
-      kiosk = await this.kioskService.store(kiosk);
+      if (!instance) {
+        instance = new Instance();
+      } 
+      instance.name = instanceName;
+      instance.company = company;
+      instance = await this.instanceService.store(instance);
+
+      let topLevelEntity: TopLevelEntity;
 
       let clientType = await this
         .clientTypeService
@@ -222,7 +185,7 @@ export class DragonSharedSeederService {
       player = await this.playerService.store(player);
 
       const gameSessionModel = new GameSession();
-      gameSessionModel.kiosk = kiosk;
+      gameSessionModel.instance = instance;
       gameSessionModel.player = player;
       gameSessionModel.currency = currency;
       gameSessionModel.language = language;

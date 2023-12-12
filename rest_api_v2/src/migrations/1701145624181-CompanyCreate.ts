@@ -1,25 +1,25 @@
-import { 
-  MigrationInterface, 
-  QueryRunner, 
-  Table,
-  TableIndex,
-  TableColumn,
-  TableForeignKey
-} from "typeorm"
+import {
+    MigrationInterface,
+    QueryRunner,
+    Table,
+    TableIndex,
+    TableColumn,
+    TableForeignKey,
+} from 'typeorm';
 
-export class TopLevelEntityCreate1701170728900 implements MigrationInterface {
+export class CompanyCreate1701145624181 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.createTable(
         new Table({
-          name: 'top_level_entity',
+          name: 'company',
           columns: [
             {
               name: 'id',
               type: 'int',
               isPrimary: true,
               isGenerated: true,
-              generationStrategy: 'increment'
+              generationStrategy: 'increment',
             },
             {
               name: 'name',
@@ -28,10 +28,11 @@ export class TopLevelEntityCreate1701170728900 implements MigrationInterface {
           ],
         }),
         true
-      );
+      )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.dropTable('top_level_entity');
+      await queryRunner.dropTable('company');
     }
+
 }

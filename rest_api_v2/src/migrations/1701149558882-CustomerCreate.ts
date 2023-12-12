@@ -26,12 +26,21 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
               type: 'varchar(256)', 
             },
             {
+              name: 'wallet_type_id',
+              type: 'int',
+            },
+            {
+              name: 'parent_id',
+              type: 'int',
+              isNullable: true,
+            },
+            {
               name: 'instance_id',
               type: 'int',
               isNullable: true,
             },
             {
-              name: 'parent_id',
+              name: 'kiosk_id',
               type: 'int',
               isNullable: true,
             },
@@ -43,9 +52,9 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
       await queryRunner.createForeignKey(
         'customer',
         new TableForeignKey({
-          columnNames: ['instance_id'],
+          columnNames: ['wallet_type_id'],
           referencedColumnNames: ['id'],
-          referencedTableName: 'instance',
+          referencedTableName: 'wallet_type',
           onDelete: 'CASCADE',  
         })
       );
@@ -56,6 +65,26 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
           columnNames: ['parent_id'],
           referencedColumnNames: ['id'],
           referencedTableName: 'customer',
+          onDelete: 'CASCADE',  
+        })
+      );
+      
+      await queryRunner.createForeignKey(
+        'customer',
+        new TableForeignKey({
+          columnNames: ['kiosk_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'kiosk',
+          onDelete: 'CASCADE',  
+        })
+      );
+
+      await queryRunner.createForeignKey(
+        'customer',
+        new TableForeignKey({
+          columnNames: ['instance_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'instance',
           onDelete: 'CASCADE',  
         })
       );

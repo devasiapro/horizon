@@ -29,6 +29,7 @@ export class GameSessionCreate1701170728916 implements MigrationInterface {
             {
               name: 'instance_id',
               type: 'int',
+              isNullable: true
             },
             {
               name: 'player_code',

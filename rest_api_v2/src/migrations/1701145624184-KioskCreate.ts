@@ -7,7 +7,7 @@ import {
   TableForeignKey
 } from "typeorm"
 
-export class KioskCreate1701170728901 implements MigrationInterface {
+export class KioskCreate1701145624184 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.createTable(
@@ -34,11 +34,6 @@ export class KioskCreate1701170728901 implements MigrationInterface {
               type: 'int',
               isNullable: true
             },
-            {
-              name: 'customer_id',
-              type: 'int',
-              isNullable: true
-            }
           ]
         }),
         true
@@ -60,16 +55,6 @@ export class KioskCreate1701170728901 implements MigrationInterface {
           columnNames: ['instance_id'],
           referencedColumnNames: ['id'],
           referencedTableName: 'instance',
-          onDelete: 'CASCADE'
-        })
-      );
-
-      await queryRunner.createForeignKey(
-        'kiosk',
-        new TableForeignKey({
-          columnNames: ['customer_id'],
-          referencedColumnNames: ['id'],
-          referencedTableName: 'customer',
           onDelete: 'CASCADE'
         })
       );
