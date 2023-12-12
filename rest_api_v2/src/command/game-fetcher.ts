@@ -51,8 +51,10 @@ export class GameFetcher extends CommandRunner {
     const startDate = options.startdate;
     const endDate = options.enddate;
 
-    await this.run88Shared(startDate, endDate);
-    await this.runDragonShared(startDate, endDate);
+    console.log(startDate, endDate);
+
+    await this.run88Shared(startDate, endDate); //  Transfer
+    await this.runDragonShared(startDate, endDate); // Seamless
     process.exit();
   }
 
@@ -81,8 +83,10 @@ export class GameFetcher extends CommandRunner {
     const { headers } = new FormDataEncoder(formData)
 
     try {
-      const response: { data: { data: FlyingDragonResponseDto[] } } = await axios.post(url, formData, { headers });
+      const response: { data: { data: FlyingDragonResponseDto[] } } = await axios
+                                                                .post(url, formData, { headers });
       const gameSessions = response.data.data;
+      console.log('gameSesions', gameSessions);
       this.flyingDragonSeeder.setGameSessions(gameSessions);
       await this.flyingDragonSeeder.process();
     } catch (err) {
@@ -119,6 +123,7 @@ export class GameFetcher extends CommandRunner {
         url, formData, { headers }
       );
       const gameSessions = response.data.data;
+      console.log('gameSesions', gameSessions);
       this.dragonSharedSeeder.setGameSessions(gameSessions);
       await this.dragonSharedSeeder.process();
     } catch (err) {

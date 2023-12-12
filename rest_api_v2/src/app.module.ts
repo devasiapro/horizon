@@ -18,6 +18,7 @@ import { KioskModule } from './kiosk/kiosk.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
+import { WalletTypeModule } from './wallet-type/wallet-type.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { ReportModule } from './report/report.module';
     ConfigModule.forRoot(),
     AuthModule,
     UserModule,
-    ReportModule
+    ReportModule,
+    WalletTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],

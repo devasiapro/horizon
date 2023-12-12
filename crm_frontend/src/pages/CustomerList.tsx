@@ -118,6 +118,7 @@ export const CustomerList = () => {
   };
 
   const processResponse = (response) => {
+    console.log('response.data.items', response.data.items);
     setCustomers(response.data.items); 
     setPageCount(response.data.pages);
     setTotal(response.data.total);
@@ -148,7 +149,7 @@ export const CustomerList = () => {
         setPage(query.get('page') ? parseInt(query.get('page')) : 1);
         setIsLoading(true);
 
-        await Promise.all([fetchIntegrationStatuses(), onPageChange()]);
+        await Promise.all([onPageChange()]);
       } catch (err) {
 
       } finally {
@@ -214,22 +215,6 @@ export const CustomerList = () => {
                     </Checkbox>
                   </Stack>
                 </CheckboxGroup>
-                <FormControl mb={3} variant={"horizon"} mr="10px" mt="8px">
-                  <Select 
-                    value={selectedIntegrationStatus} 
-                    onChange={(ev) => setSelectedIntegrationStatus(ev.target.value)} 
-                    bg="white"
-                  >
-                    <option key={0} value={0}>Integration Status (Show All)</option>
-                    {integrationStatuses.map(integrationStatus => {
-                      return (
-                        <option key={integrationStatus.id} value={integrationStatus.id}>
-                          {integrationStatus.name}
-                        </option>
-                      )
-                    })}
-                  </Select>
-                </FormControl>
                 <InputGroup mb={"4px"}>
                   <InputLeftElement pointerEvents={"none"}>
                     <SearchIcon color={"gray.300"} />
@@ -303,12 +288,6 @@ export const CustomerList = () => {
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Integration Status
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
                   Contract Status
                 </Th>
                 <Th
@@ -327,7 +306,7 @@ export const CustomerList = () => {
                     <Link onClick={() => navigate(
                       `/customer/${customer.id}/edit?wallet_type=${customer.wallet_type}&step=1`
                     )}>
-                      <b>{customer.brand_name}</b>
+                      <b>{customer.brandName}</b>
                     </Link>
                   </Td>
                   <Td>
@@ -337,20 +316,9 @@ export const CustomerList = () => {
                     {customer.wallet_type}
                   </Td>
                   <Td>
-                    {customer.currencies.map(currency => currency.name).toString()}
                   </Td>
                   <Td>
                     {isoFormatToHuman(customer.date_added)}
-                  </Td>
-                  <Td>
-                    <Button 
-                      mt={4}
-                      type="button"
-                      colorScheme="horizon"
-                      onClick={() => navigate(`/customer/${customer.id}/integration`)}
-                    >
-                      {customer.integration_status ? customer.integration_status.name : 'N/A'}
-                    </Button>
                   </Td>
                   <Td>
                     <Button 

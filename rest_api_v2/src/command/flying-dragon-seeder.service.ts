@@ -61,16 +61,6 @@ export class FlyingDragonSeederService {
     for (let i = 0; i < this.gameSessions.length; i++) {
       const gameSession = this.gameSessions[i];
 
-      let instance = await this
-        .instanceService
-        .findByName(gameSession.casino);
-
-      if (!instance) {
-        instance = new Instance();
-      } 
-      instance.name = gameSession.casino;
-      instance = await this.instanceService.store(instance);
-
       let company = await this
         .companyService
         .findByName(gameSession.company);
@@ -82,17 +72,17 @@ export class FlyingDragonSeederService {
       company.name = gameSession.company;
       company = await this.companyService.store(company);
 
-      let customer = await this
-        .customerService
-        .findByBrandName(gameSession.casino);
+      let instance = await this
+        .instanceService
+        .findByName(gameSession.casino);
 
-      if (!customer) {
-        customer = new Customer();
-        customer.brandName = gameSession.casino;
-      }
-      customer.instance = instance;
-      customer.company = company;
-      customer = await this.customerService.store(customer);  
+      if (!instance) {
+        instance = new Instance();
+      } 
+
+      instance.name = gameSession.casino;
+      instance.company = company;
+      instance = await this.instanceService.store(instance);
 
       let topLevelEntity: TopLevelEntity;
 
@@ -216,6 +206,7 @@ export class FlyingDragonSeederService {
       player = await this.playerService.store(player);
 
       const gameSessionModel = new GameSession();
+      gameSessionModel.instance = instance;
       gameSessionModel.kiosk = kiosk;
       gameSessionModel.player = player;
       gameSessionModel.currency = currency;

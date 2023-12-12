@@ -3,10 +3,13 @@ import {
   Entity, 
   Column, 
   PrimaryGeneratedColumn, 
-  OneToMany 
+  OneToMany,
+  ManyToOne
 } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
+import { GameSession } from '../game-session/game-session.entity';
 import { Kiosk } from '../kiosk/kiosk.entity';
+import { Company } from '../company/company.entity';
 
 @Entity()
 export class Instance {
@@ -22,4 +25,10 @@ export class Instance {
 
   @OneToMany(() => Kiosk, (kiosk) => kiosk.instance)
   kiosks: Kiosk[]
+
+  @OneToMany(() => GameSession, (gameSession) => gameSession.kiosk)
+  gameSessions: GameSession[]
+
+  @ManyToOne(() => Company, (company) => company.instances)
+  company: Company
 }

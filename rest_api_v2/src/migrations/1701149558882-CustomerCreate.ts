@@ -26,16 +26,57 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
               type: 'varchar(256)', 
             },
             {
-              name: 'instance_id',
+              name: 'wallet_type_id',
               type: 'int',
             },
             {
-              name: 'company_id',
+              name: 'parent_id',
               type: 'int',
-            }
+              isNullable: true,
+            },
+            {
+              name: 'instance_id',
+              type: 'int',
+              isNullable: true,
+            },
+            {
+              name: 'kiosk_id',
+              type: 'int',
+              isNullable: true,
+            },
           ],
         }),
         true
+      );
+
+      await queryRunner.createForeignKey(
+        'customer',
+        new TableForeignKey({
+          columnNames: ['wallet_type_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'wallet_type',
+          onDelete: 'CASCADE',  
+        })
+      );
+
+      await queryRunner.createForeignKey(
+        'customer',
+        new TableForeignKey({
+          columnNames: ['parent_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'customer',
+          onDelete: 'CASCADE',  
+        })
+      );
+      
+      await queryRunner.createForeignKey(
+        'customer',
+        new TableForeignKey({
+          columnNames: ['kiosk_id'],
+          referencedColumnNames: ['id'],
+          referencedTableName: 'kiosk',
+          onDelete: 'CASCADE',  
+        })
       );
 
       await queryRunner.createForeignKey(
@@ -45,16 +86,6 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
           referencedColumnNames: ['id'],
           referencedTableName: 'instance',
           onDelete: 'CASCADE',  
-        })
-      );
-
-      await queryRunner.createForeignKey(
-        'customer',
-        new TableForeignKey({
-          columnNames: ['company_id'],
-          referencedColumnNames: ['id'],
-          referencedTableName: 'company',
-          onDelete: 'CASCADE'
         })
       );
     }
