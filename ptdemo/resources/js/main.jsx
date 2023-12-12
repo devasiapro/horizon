@@ -8,7 +8,10 @@ import { GamesContainer } from './components/GamesContainer';
 import { LoginModal } from './components/LoginModal';
 
 const App = () => {
-
+  const [user, setUser] = useState({
+    username: '',
+    password: ''
+  });
   const [isShowModal, setIsShowModal] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loginErrors, setLoginErrors] = useState({
@@ -39,15 +42,14 @@ const App = () => {
     }
     setIsLogin(true);
     setIsShowModal(false);
-
   };
 
   const calloutGetLoggedInPlayer = (response) => {
-    console.log('response', response);
+    console.log('calloutGetLoggedInPlayer: response', response);
   };
 
   const calloutLogout = (response) => {
-    console.log('response', response);
+    console.log('calloutLogout: response', response);
   };
 
   useEffect(() => {
@@ -61,13 +63,18 @@ const App = () => {
     <div>
       <NavBar 
         setIsShowModal={setIsShowModal} 
+        setUser={setUser}
+        setIsLogin={setIsLogin}
         isLogin={isLogin} 
       />
       <Carousel />
       <DemoMarquee />
-      <GamesContainer />
+      <GamesContainer user={user} isLogin={isLogin} />
       <LoginModal 
-        show={isShowModal} 
+        setUser={setUser}
+        user={user}
+        isShow={isShowModal}
+        setIsShow={setIsShowModal}
         errors={loginErrors} 
       />
     </div>

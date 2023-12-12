@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-export const LoginForm = ({ errors }) => {
-  const [ username, setUsername ] = useState('');  
-  const [ password, setPassword ] = useState('');
+export const LoginForm = ({ errors, user, setUser }) => {
   const [ isLoading, setIsLoading ] = useState(false);
 
   const language = 'EN';
@@ -14,7 +12,7 @@ export const LoginForm = ({ errors }) => {
     try {
       window.iapiSetClientType('casino'); 
       window.iapiSetClientPlatform('web');
-      window.iapiLogin(username, password, 1, language);
+      window.iapiLogin(user.username, user.password, 1, language);
     } catch (err) {
       console.log('err', err);
     } finally {
@@ -41,8 +39,8 @@ export const LoginForm = ({ errors }) => {
               <i className="bi bi-person-circle"></i>
             </span>
             <input 
-              value={username}
-              onChange={(ev) => setUsername(ev.target.value)} 
+              value={user.username}
+              onChange={(ev) => setUser({ ...user, username: ev.target.value })} 
               type="text" 
               className="form-control bg-white border-white text-dark placeholder-dark" 
               name="username"
@@ -54,8 +52,8 @@ export const LoginForm = ({ errors }) => {
               <i className="bi bi-lock"></i>
             </span>
             <input 
-              value={password}
-              onChange={(ev) => setPassword(ev.target.value)} 
+              value={user.password}
+              onChange={(ev) => setUser({ ...user, password: ev.target.value })} 
               type="password" 
               name="password"
               className="form-control bg-white border-white text-dark placeholder-dark" 
