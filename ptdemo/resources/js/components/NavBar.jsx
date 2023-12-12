@@ -1,6 +1,15 @@
 import React from 'react';
 
-export const NavBar = ({ setIsShowModal, isLogin }) => {
+export const NavBar = ({ setIsShowModal, setIsLogin, setUser, isLogin }) => {
+  const logout = () => {
+    setUser({
+      username: '',
+      password: ''
+    });
+    setIsLogin(false);
+    window.iapiLogout(1, 1);
+  };
+
   return (
     <React.Fragment>
       <nav className="py-4 navbar navbar-expand-lg bg-body-tertiary">
@@ -28,7 +37,7 @@ export const NavBar = ({ setIsShowModal, isLogin }) => {
               <button 
                 type="button" 
                 className="btn btn-lg fst-italic"
-                onClick={() => {}}
+                onClick={() => logout()}
               >
                 LOG OUT
               </button>
