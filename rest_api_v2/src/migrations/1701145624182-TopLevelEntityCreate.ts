@@ -7,7 +7,7 @@ import {
   TableForeignKey
 } from "typeorm"
 
-export class TopLevelEntityCreate1701170728900 implements MigrationInterface {
+export class TopLevelEntityCreate1701145624182 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.createTable(
