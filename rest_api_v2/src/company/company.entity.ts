@@ -6,7 +6,7 @@ import {
   ManyToOne,
   OneToMany
 } from 'typeorm';
-import { Customer } from '../customer/customer.entity';
+import { Instance } from '../instance/instance.entity';
 
 @Entity()
 export class Company {
@@ -17,6 +17,6 @@ export class Company {
   @Column({ length: 256 })
   name: string;
 
-  @OneToMany(() => Customer, (customer) => customer.company)
-  customers: Customer[]
+  @OneToMany(() => Instance, (instance) => instance.company)
+  instances: Instance[];
 }

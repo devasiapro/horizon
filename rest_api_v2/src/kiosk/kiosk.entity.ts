@@ -10,6 +10,7 @@ import {
 import { TopLevelEntity } from './top-level-entity.entity';
 import { Instance } from '../instance/instance.entity';
 import { GameSession } from '../game-session/game-session.entity';
+import { Customer } from '../customer/customer.entity';
 
 @Entity()
 export class Kiosk {
@@ -27,4 +28,7 @@ export class Kiosk {
 
   @OneToMany(() => GameSession, (gameSession) => gameSession.kiosk)
   gameSessions: GameSession[]
+
+  @OneToMany(() => Customer, (customer) => customer.instance)
+  customers: Customer[]
 }

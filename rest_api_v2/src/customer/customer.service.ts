@@ -9,6 +9,11 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
+  public async fetchAll() {
+    const customers = await this.customerRepository.find();
+    return customers;
+  }
+
   public async findByBrandName(brandName: string): Promise<Customer> {
     const customer = await this.customerRepository.findOneBy({ brandName });
     return customer;
