@@ -12,7 +12,6 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
   const languageCode = 'EN';
   const mode = 'real';
   const real = 1;
-  const client = 'ngm_desktop';
 
   const objectToQueryString = (obj) => {
     const keys = Object.keys(obj);
@@ -23,8 +22,9 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
   };
 
   const launchDemoGame = (ev, game) => {
+    const client = game.is_live ? 'live_desk' : 'ngm_desk';
     window.iapiSetClientParams(client, 'language=' + 'en' + '&real=0');
-    window.iapiLaunchClient(client, game, mode, '_blank');
+    window.iapiLaunchClient(client, game.code, mode, '_blank');
   };
 
   const launchActualGame = async (ev, game) => {
@@ -58,10 +58,15 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
     formData.append('password', user.password);
     console.log('url', url);
     try {
-      const response = await axios.post(url, formData);
-      const sessionToken = response.sessionToken.sessionToken;
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData,
+      });
+      const body = await response.json();
+      const sessionToken = body.sessionToken.sessionToken;
+
       const gameLaunchParams = {
-        gameCodeName: 'game', 
+        gameCodeName: game.code, 
         username: user.username,
         tempToken: sessionToken,
         casino: 'flyingdragon88',
