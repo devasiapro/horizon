@@ -22,9 +22,8 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
   };
 
   const launchDemoGame = (ev, game) => {
-    const client = game.is_live ? 'live_desk' : 'ngm_desk';
-    window.iapiSetClientParams(client, 'language=' + 'en' + '&real=0');
-    window.iapiLaunchClient(client, game.code, mode, '_blank');
+    window.iapiSetClientParams('ngm_desktop', 'language=' + 'en' + '&real=0');
+    window.iapiLaunchClient('ngm_desktop', game.code, 'offline', '_blank');
   };
 
   const launchActualGame = async (ev, game) => {
@@ -65,8 +64,10 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
       const body = await response.json();
       const sessionToken = body.sessionToken.sessionToken;
 
+      const gameCode = game.is_live ? game.alias + ';' + game.code : game.code;
+
       const gameLaunchParams = {
-        gameCodeName: game.code, 
+        gameCodeName: gameCode, 
         username: user.username,
         tempToken: sessionToken,
         casino: 'flyingdragon88',
