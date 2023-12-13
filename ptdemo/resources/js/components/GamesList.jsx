@@ -4,9 +4,8 @@ import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
 
-export const GamesList = ({ user, isLogin }) => {
+export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [games, setGames] = useState([]);
   const [toastMessage, setToastMessage] = useState('');
 
   const language = 'English';
@@ -77,6 +76,7 @@ export const GamesList = ({ user, isLogin }) => {
     } catch (err) {
       console.log('err', err);
     } finally {
+
     } 
   };
 
@@ -95,24 +95,6 @@ export const GamesList = ({ user, isLogin }) => {
     updatedGames.game = updatedGame;
     setGames(updatedGames)
   };
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const response = await axios.get('/api/game');
-        setGames(response.data.map(game => {
-          game.isHover = false;
-          return game;
-        }));
-        setGames(response.data);
-      } catch (err) {
-        console.log('err', err);
-      } finally {
-
-      }
-    };
-    init();
-  }, []);
 
   return (
     <React.Fragment>
