@@ -14,10 +14,14 @@ class LiveGameSheet implements GameSheet {
     }
 
     public function getGameCodeIndex(): int {
-        return 3;
+        return 2;
     }
 
     public function getGameTypeIndex(): int {
         return 1;
+    }
+
+    public function getGameAliasIndex(): int {
+        return 3;
     }
 }

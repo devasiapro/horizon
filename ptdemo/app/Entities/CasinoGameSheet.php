@@ -20,4 +20,8 @@ class CasinoGameSheet implements GameSheet {
     public function getGameTypeIndex(): int {
         return 3;
     }
+
+    public function getGameAliasIndex(): null {
+        return null;
+    }
 }
