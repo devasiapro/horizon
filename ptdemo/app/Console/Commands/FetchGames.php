@@ -68,12 +68,13 @@ class FetchGames extends Command
             if (!$row[$gameSheet->getGameTypeIndex()]) {
                 continue;
             }
-
+            $aliasIndex = $gameSheet->getGameAliasIndex();
             $game = new Game();
             $game->name = $row[$gameSheet->getGameNameIndex()];
             $game->code = $row[$gameSheet->getGameCodeIndex()];
             $game->game_type = $row[$gameSheet->getGameTypeIndex()];
             $game->category = $category;
+            $game->alias = $aliasIndex ? $row[$aliasIndex] : null;
             $game->is_live = $this->option('is-live');
             $game->is_progressive = $this->option('is-progressive');
             $game->save();

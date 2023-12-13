@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('code', 45);
             $table->string('game_type', 45);
             $table->string('category', 45);
+            $table->string('alias', 45)->nullable();
             $table->boolean('is_live');
             $table->boolean('is_progressive');
             $table->timestamps();
