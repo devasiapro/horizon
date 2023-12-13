@@ -64,10 +64,8 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
       const body = await response.json();
       const sessionToken = body.sessionToken.sessionToken;
 
-      const gameCode = game.is_live ? game.alias + ';' + game.code : game.code;
-
       const gameLaunchParams = {
-        gameCodeName: gameCode, 
+        gameCodeName: game.code, 
         username: user.username,
         tempToken: sessionToken,
         casino: 'flyingdragon88',
@@ -102,6 +100,10 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
     setGames(updatedGames)
   };
 
+  const fetchImageName = (game) => {
+    return game.is_live ? game.alias : game.code;
+  };
+
   return (
     <React.Fragment>
       <div className="mx-2 py-4">
@@ -117,7 +119,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
               >
                 <div className="image-wrapper">
                   <img 
-                    src={`/images/games_icons_desktop/${game.code}.jpg`}
+                    src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`}
                     className="img-fluid" 
                   />
                   <div className={`overlay mb-3 ${game.isHover ? '' : 'd-none'}`}>
