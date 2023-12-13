@@ -19,7 +19,9 @@ class FetchGames extends Command
     protected $signature = 'app:fetch-games 
                             {file} 
                             {--sheet=: Name of the sheet.}
-                            {--category=: Casino, Live, Quickspin}';
+                            {--category=: Casino, Live, Quickspin}
+                            {--is-live=: }
+                            {--is-progressive=: }';
 
     /**
      * The console command description.
@@ -72,6 +74,8 @@ class FetchGames extends Command
             $game->code = $row[$gameSheet->getGameCodeIndex()];
             $game->game_type = $row[$gameSheet->getGameTypeIndex()];
             $game->category = $category;
+            $game->is_live = $this->option('is-live');
+            $game->is_progressive = $this->option('is-progressive');
             $game->save();
         }
     }
@@ -79,28 +83,31 @@ class FetchGames extends Command
     private function runAll(): void {
         $this->call('app:fetch-games', [
             'file' => "database/raw_files/Casino Games.xlsx",
+            '--is-live' => false,
+            '--is-progressive' => false,
             '--sheet' => "Non Jackpot SlotsTable Games",
             '--category' => 'Casino',
         ]);    
         $this->call('app:fetch-games', [
             'file' => "database/raw_files/Casino Games.xlsx",
+            '--is-live' => false,
+            '--is-progressive' => true,
             '--sheet' => "Progressive SlotsTable Games",
             '--category' => 'Casino',
         ]);    
         $this->call('app:fetch-games', [
             'file' => "database/raw_files/Live Games.xlsx",
+            '--is-live' => true,
+            '--is-progressive' => false,
             '--sheet' => "Non-Progressive",
             '--category' => 'Live',
         ]);
         $this->call('app:fetch-games', [
             'file' => "database/raw_files/Live Games.xlsx",
+            '--is-live' => true,
+            '--is-progressive' => true,
             '--sheet' => "Progressive",
             '--category' => 'Live',
-        ]);
-        $this->call('app:fetch-games', [
-            'file' => "database/raw_files/Quickspin Games List.xlsx",
-            '--sheet' => "Sheet1",
-            '--category' => 'Quickspin',
         ]);
     }
 }
