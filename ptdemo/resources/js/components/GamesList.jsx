@@ -65,7 +65,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
       const sessionToken = body.sessionToken.sessionToken;
 
       const gameLaunchParams = {
-        gameCodeName: game.code, 
+        gameCodeName: game.is_live ? game.code + ';' + game.alias : game.code,
         username: user.username,
         tempToken: sessionToken,
         casino: 'flyingdragon88',
