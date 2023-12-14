@@ -11,14 +11,18 @@ export const LoginModal = ({ setUser, user, isShow, setIsShow, errors }) => {
       onHide={() => setIsShow(false)}
       show={isShow}
       size={"xl"}
+      dialogClassName={"modal-90w"}
       centered
     >
+      <Modal.Header closeButon>
+        <Modal.Title> </Modal.Title>
+      </Modal.Header>
       <Modal.Body>
         <div className="row">
           <div className="col p-4">
             <LoginForm user={user} setUser={setUser} errors={errors} />
           </div>
-          <div className="col">
+          <div className="d-none d-lg-block col">
             <LoginBanner />
           </div>
         </div>

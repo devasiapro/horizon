@@ -12,7 +12,7 @@ export const NavBar = ({ setIsShowModal, setIsLogin, setUser, isLogin }) => {
 
   return (
     <React.Fragment>
-      <nav className="py-4 navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="py-2 navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
             <img 

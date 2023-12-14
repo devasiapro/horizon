@@ -13,20 +13,5 @@
     overflow: hidden;
     position: absolute;
     white-space: nowrap;
-    animation: marquee 40s linear infinite;
-  }
-
-  .marquee2 {
-    margin-top: 10px;
-    animation-delay: -15s;
-  }
-}
-
-@keyframes marquee {
-  0% {
-    left: 100%;
-  }
-  100% {
-    left: -100%
   }
 }
