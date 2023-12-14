@@ -10,7 +10,7 @@ export const GameFilter = ({ search, setSearch, filter, setFilter }) => {
   };
 
   return (
-    <div className="d-flex flex-row justify-content-between filter-games">
+    <div className="d-flex flex-row justify-content-between filter-games mx-3">
       <div className="fw-bolder fst-italic d-flex flex-row justify-content-start filter-elements">
         <div 
           onClick={() => setFilter('all')}

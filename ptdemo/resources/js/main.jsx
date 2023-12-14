@@ -5,6 +5,7 @@ import { NavBar } from './components/NavBar';
 import { Carousel } from './components/Carousel';
 import { DemoMarquee } from './components/DemoMarquee';
 import { GamesContainer } from './components/GamesContainer';
+import { Footer } from './components/Footer';
 import { LoginModal } from './components/LoginModal';
 
 const App = () => {
@@ -46,6 +47,13 @@ const App = () => {
 
   const calloutGetLoggedInPlayer = (response) => {
     console.log('calloutGetLoggedInPlayer: response', response);
+    if (response.username) {
+      setIsLogin(true);
+      setUser({
+        username: response.username,
+        password: ''
+      });
+    }
   };
 
   const calloutLogout = (response) => {
@@ -70,6 +78,7 @@ const App = () => {
       <Carousel />
       <DemoMarquee />
       <GamesContainer user={user} isLogin={isLogin} />
+      <Footer />
       <LoginModal 
         setUser={setUser}
         user={user}
