@@ -10,8 +10,6 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
 
   const language = 'English';
   const languageCode = 'EN';
-  const mode = 'real';
-  const real = 1;
 
   const objectToQueryString = (obj) => {
     const keys = Object.keys(obj);
@@ -106,7 +104,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
 
   return (
     <React.Fragment>
-      <div className="mx-2 py-4">
+      <div className="mx-5 py-4">
         <div className="row">
         {
           games.map((game, index) => {
@@ -117,27 +115,47 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
                 onMouseOver={(ev) => onMouseOver(ev, game)}
                 onMouseOut={(ev) => onMouseOut(ev, game)}
               >
-                <div className="image-wrapper">
+                <div className="image-wrapper d-flex justify-content-center">
                   <img 
                     src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`}
                     className="img-fluid" 
                   />
                   <div className={`overlay mb-3 ${game.isHover ? '' : 'd-none'}`}>
-                    <div className="d-flex justify-content-evenly">
+                    <div className="d-sm-flex d-lg-none flex-column px-3">
                       <button 
                         type="button"
                         onClick={(ev) => launchActualGame(ev, game)}
-                        className="btn btn-primary btn-sm"
+                        className="btn-game w-auto flex-fill py-3 mb-3"
                       >
                         Play
                       </button>
+                      { !game.is_live &&
+                        <button 
+                          type="button"
+                          onClick={(ev) => launchDemoGame(ev, game)}
+                          className="btn-game w-auto flex-fill py-3 mb-3"
+                        >
+                          Demo
+                        </button>
+                      }
+                    </div>
+                    <div className="d-lg-flex justify-content-evenly d-none">
                       <button 
                         type="button"
-                        onClick={(ev) => launchDemoGame(ev, game)}
-                        className="btn btn-primary btn-sm"
+                        onClick={(ev) => launchActualGame(ev, game)}
+                        className="btn-game"
                       >
-                        Demo
+                        Play
                       </button>
+                      { !game.is_live &&
+                        <button 
+                          type="button"
+                          onClick={(ev) => launchDemoGame(ev, game)}
+                          className="btn-game"
+                        >
+                          Demo
+                        </button>
+                      }
                     </div>
                   </div>
                 </div>

@@ -8,6 +8,7 @@
 @import 'bootstrap/scss/bootstrap';
 
 @import 'marquee';
+@import 'button';
 
 body {
   font-family: "Montserrat", "Gotham";
@@ -34,6 +35,8 @@ body {
 .container-games {
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/images/games-bg.jpeg);
   background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .filter-games {
@@ -60,6 +63,7 @@ body {
 
 .image-wrapper {
   position: relative;
+  height: 300px;
 }
 
 .overlay {
@@ -94,4 +98,42 @@ body {
 .filter-elements {
   padding: 16px;
   gap: 16px;
+}
+
+.mobile-filter {
+  display: flex;
+  padding: 1px 34px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  border-radius: 5px 5px 0px 0px;
+  background-color: #141415;
+}
+
+.mobile-filter-active {
+  border-top: 5px solid #ffffff !important;
+}
+
+.mobile-filter-element {
+  border-top: 5px solid #141415;
+  display: flex;
+  padding: 10px 4px; 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+}
+
+.mobile-filter-image {
+  width: 48px;
+  height: 48px;
+}
+
+.mobile-filter-text {
+  color: #ffffff;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: normal;
 }

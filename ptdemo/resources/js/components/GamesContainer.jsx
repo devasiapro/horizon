@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { GameFilter } from './GameFilter';
+import { GameFilterMobile } from './GameFilterMobile';
 import { GamesList } from './GamesList';
 import { Filters } from '../enums/Filters';
 
@@ -64,12 +65,14 @@ export const GamesContainer = ({ user, isLogin }) => {
 
   return (
     <div className="container-games pt-4 pb-4 mb-5">
-      <GameFilter 
-        setSearch={setSearch} 
-        search={search} 
-        setFilter={setFilter} 
-        filter={filter} 
-      />
+      <div className="d-lg-block d-none">
+        <GameFilter 
+          setSearch={setSearch} 
+          search={search} 
+          setFilter={setFilter} 
+          filter={filter} 
+        />
+      </div>
       { !isLoading &&
         <GamesList 
           games={filteredGames} 
@@ -78,6 +81,12 @@ export const GamesContainer = ({ user, isLogin }) => {
           isLogin={isLogin} 
         />
       }
+      <GameFilterMobile 
+        setSearch={setSearch} 
+        search={search} 
+        setFilter={setFilter} 
+        filter={filter} 
+      />
     </div>
   );
 };
