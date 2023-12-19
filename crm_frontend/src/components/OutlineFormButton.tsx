@@ -4,7 +4,7 @@ import {
   Button
 } from "@chakra-ui/react";
 
-export const StockFormButton = ({ 
+export const OutlineFormButton = ({ 
   toolTipText = null, 
   label = "Next", 
   isEnabled = true, 
@@ -19,6 +19,7 @@ export const StockFormButton = ({
         isDisabled={isEnabled}
       >
         <Button
+          variant="outline"
           isLoading={isLoading}
           mt={4}
           type="button"
@@ -26,7 +27,7 @@ export const StockFormButton = ({
           onClick={onClick}
           isDisabled={!isEnabled}
         >
-          {label}
+          {label} 2
         </Button>
       </Tooltip>
     );

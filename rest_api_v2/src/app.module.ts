@@ -19,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
 import { WalletTypeModule } from './wallet-type/wallet-type.module';
+import { ValidationModule } from './validation/validation.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { WalletTypeModule } from './wallet-type/wallet-type.module';
     AuthModule,
     UserModule,
     ReportModule,
-    WalletTypeModule
+    WalletTypeModule,
+    ValidationModule
   ],
   controllers: [AppController],
   providers: [AppService],
