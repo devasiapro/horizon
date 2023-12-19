@@ -23,20 +23,22 @@ export const StockInputText = ({
 
   return (
     <FormControl mb={3} variant={"horizon"} isInvalid={errorMessage}>
-      <FormLabel ml={"15px"} fontSize={["sm", "md", "lg"]}>{label}</FormLabel>
+      <FormLabel fontSize={["sm", "md", "lg"]}>{label}</FormLabel>
       <Skeleton isLoaded={!isGlobalLoading.isGlobalLoading}>
         <Input
           size={["sm", "md"]}
           type="text"
-          borderRadius={"8px"}
-          bg={"horizon.150"}
+          borderRadius={"16px"}
+          border={'0.5px'}
+          borderColor={'#374A16'}
+          bg={"#EAF4D8"}
           name={formName}
           onChange={onChange}
           value={value}
           placeholder={placeholder}
         />
       </Skeleton>
-      {helperText && <FormHelperText ml={"15px"}>{helperText}</FormHelperText>}
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
       {errorMessage && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
     </FormControl>
   );

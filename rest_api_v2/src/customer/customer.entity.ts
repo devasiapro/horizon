@@ -38,4 +38,12 @@ export class Customer {
   @ManyToOne(() => Instance, (instance) => instance.customers)
   instance: Instance
 
+  @Column({ length: 256 })
+  contactPerson: string
+
+  @Column({ length: 256 })
+  email: string
+
+  @Column({ length: 256 })
+  skypeGroup: string
 }

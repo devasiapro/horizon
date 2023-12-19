@@ -25,10 +25,10 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import axios from 'axios';
 import horizonLogo from "../../public/images/horizon-logo.png";
 import { UserCircle } from "../assets/logo/icons";
 import { useAuthHook } from "../hooks/useAuthHook";
-import axios from 'axios';
 
 export const NavBar = () => {
   const navigate = useNavigate();

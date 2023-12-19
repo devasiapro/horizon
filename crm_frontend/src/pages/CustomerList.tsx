@@ -26,7 +26,8 @@ import {
   SkeletonText,
   Select,
   FormControl,
-  FormLabel
+  FormLabel,
+  useDisclosure
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios';
@@ -35,8 +36,10 @@ import moment from 'moment';
 import { useAuthHook } from '../hooks/useAuthHook';
 import { Pagination } from '../components/Pagination';
 import { useQuery } from '../hooks/useQuery';
+import { CustomerCreateModal } from '../components/CustomerCreateModal';
 
 export const CustomerList = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [customers, setCustomers] = useState([]);
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
@@ -138,6 +141,10 @@ export const CustomerList = () => {
     setWalletTypeFilters(newFilter);
   };
 
+  const openTransferModal = () => {
+
+  };
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -167,21 +174,12 @@ export const CustomerList = () => {
           Customers
         </Heading>
         <Button
-          onClick={() => navigate('/customer/add?wallet_type=transfer&step=1')}
+          onClick={() => window.open('/customer/create', '_blank')}
           size="md"
           type="button"
           colorScheme="horizon"
         >
-          <AddIcon /> Transfer
-        </Button>
-        <Button
-          onClick={() => navigate('/customer/add?wallet_type=seamless&step=1')}
-          mr="20px"
-          size="md"
-          type="button"
-          colorScheme="horizon"
-        >
-          <AddIcon /> Seamless
+          Add New
         </Button>
       </Flex>
       <SimpleGrid>
@@ -357,6 +355,7 @@ export const CustomerList = () => {
           total={total} 
         />
       </SimpleGrid>
+      <CustomerCreateModal isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };

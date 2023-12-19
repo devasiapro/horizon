@@ -13,4 +13,9 @@ export class WalletTypeService {
     await this.walletTypeRepository.save(walletType);
     return walletType;
   }
+
+  public async findById(walletTypeId: number): Promise<WalletType> {
+    const walletType = await this.walletTypeRepository.findOneBy({ id: walletTypeId });
+    return walletType;
+  }
 }

@@ -20,6 +20,8 @@ import { CustomerEdit } from './pages/CustomerEdit';
 import { CustomerView } from './pages/CustomerView';
 import { CustomerContract } from './pages/CustomerContract';
 import { CustomerIntegration } from './pages/CustomerIntegration';
+import { CustomerCreate } from './pages/CustomerCreate';
+import { CustomerCreateSuccess } from './pages/CustomerCreateSuccess';
 import { MyTheme } from "./theme/MyTheme";
 
 const router = createBrowserRouter([
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: '/customer',
         element: <CustomerList />
+      },
+      {
+        path: '/customer/create',
+        element: <CustomerCreate />
+      },
+      {
+        path: '/customer/create/success',
+        element: <CustomerCreateSuccess />
       },
       {
         path: '/customer/add',
