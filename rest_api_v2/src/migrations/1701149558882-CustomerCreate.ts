@@ -44,6 +44,21 @@ export class CustomerCreate1701149558882 implements MigrationInterface {
               type: 'int',
               isNullable: true,
             },
+            {
+              name: 'contact_person',
+              type: 'varchar(256)', 
+              isNullable: true,
+            },
+            {
+              name: 'email',
+              type: 'varchar(256)', 
+              isNullable: true,
+            },
+            {
+              name: 'skype_group',
+              type: 'varchar(256)', 
+              isNullable: true,
+            },
           ],
         }),
         true

@@ -4,9 +4,13 @@ import { customerProviders } from './customer.providers';
 import { CustomerService } from './customer.service';
 import { CustomerController } from './customer.controller';
 import { Customer } from './customer.entity';
+import { WalletTypeModule } from '../wallet-type/wallet-type.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    DatabaseModule, 
+    WalletTypeModule
+  ],
   providers: [
     ...customerProviders,
     CustomerService
