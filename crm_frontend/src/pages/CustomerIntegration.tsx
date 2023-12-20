@@ -43,9 +43,9 @@ export const CustomerIntegration = () => {
         `${import.meta.env.VITE_API_URL}/customer/${customerId}/integration`, {
             integration_status_id: integrationStatusId
           }, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       toast({
