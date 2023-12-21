@@ -21,6 +21,7 @@ import moment from 'moment';
 import { useAuthHook } from '../hooks/useAuthHook';
 import { KPIContainerCustomer } from '../components/KPIContainerCustomer';
 import { CustomerGeneralInformationView } from '../components/CustomerGeneralInformationView';
+import { CustomerPerformanceView } from '../components/CustomerPerformanceView';
 
 export const CustomerView = () => {
   const [gameSessions, setGameSessions] = useState({
@@ -158,19 +159,23 @@ export const CustomerView = () => {
       </Box>
 
       <Box bg={"white"}>
-        <Tabs isFitted variant='enclosed'>
+        <Tabs variant='enclosed'>
           <TabList>
             <Tab>General Information</Tab>
             <Tab>Performance</Tab>
-            <Tab>Contracts</Tab>
-            <Tab>Billing</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <CustomerGeneralInformationView setCustomer={setCustomer} customer={customer} />
+              <CustomerGeneralInformationView 
+                setCustomer={setCustomer} 
+                customer={customer} 
+              />
             </TabPanel>
             <TabPanel>
-              <p>two!</p>
+              <CustomerPerformanceView 
+                gameSessions={gameSessions} 
+                customer={customer} 
+              />
             </TabPanel>
           </TabPanels>
         </Tabs> 
