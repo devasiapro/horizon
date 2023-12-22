@@ -7,6 +7,7 @@ import {
 import moment from 'moment';
 import { PerformanceCard } from './PerformanceCard';
 import { CustomerPerformanceGraph } from './CustomerPerformanceGraph';
+import { CustomerPerformanceTable } from './CustomerPerformanceTable';
 
 export const CustomerPerformanceView = ({ 
   gameSessions, 
@@ -33,11 +34,12 @@ export const CustomerPerformanceView = ({
 
   const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
   const currentDateEnd = yesterday.format('YYYY-MM-DD');
-  const currentMonthStart = moment().startOf('month').format('YYYY-MM-DD');;
+  const currentMonthStart = moment().startOf('month').clone().format('YYYY-MM-DD');;
   const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
   const previousDateEnd = weekBefore.format('YYYY-MM-DD');
   const previousMonthStart = moment()
     .subtract(1, 'months')
+    .clone()
     .startOf('month')
     .format('YYYY-MM-DD');
   
@@ -62,13 +64,13 @@ export const CustomerPerformanceView = ({
     });
 
     const totalCurrentWeekly = gameSessions.current.filter(gameSession => { 
-      return moment(currentDateEnd).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateStart).unix();
+      return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
     const totalPreviousWeekly = gameSessions.previous.filter(gameSession => {
-      return moment(previousDateEnd).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateStart).unix();
+      return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
@@ -81,13 +83,14 @@ export const CustomerPerformanceView = ({
     });
 
     const totalCurrentMonthly = gameSessions.current.filter(gameSession => { 
-      return moment(currentMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateStart).unix();
+      console.log(currentMonthStart, gameSession.datePlayed, currentDateEnd);
+      return moment(currentMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
     const totalPreviousMonthly = gameSessions.previous.filter(gameSession => {
-      return moment(previousMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateStart).unix();
+      return moment(previousMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
@@ -124,7 +127,7 @@ export const CustomerPerformanceView = ({
         <CustomerPerformanceGraph customerId={customer.id} />
       </GridItem>
       <GridItem w="100^">
-        <div>Customer Performance</div>
+        <CustomerPerformanceTable gameSessions={gameSessions} label={"Brand"} />
       </GridItem>
     </Grid>
   );

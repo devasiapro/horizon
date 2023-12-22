@@ -57,16 +57,22 @@ export const CustomerView = () => {
 
   const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
   const currentDateEnd = yesterday.format('YYYY-MM-DD');
+  const currentMonthStart = moment().startOf('month').clone().format('YYYY-MM-DD');;
   const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
   const previousDateEnd = weekBefore.format('YYYY-MM-DD');
+  const previousMonthStart = moment()
+    .subtract(1, 'months')
+    .clone()
+    .startOf('month')
+    .format('YYYY-MM-DD');
 
   useEffect(() => {
     const init = async () => {
       fetchCustomerInfo();
       try {
         const responses = await Promise.all([
-          fetchCustomerReport(customerId, currentDateStart, currentDateEnd),
-          fetchCustomerReport(customerId, previousDateStart, previousDateEnd)
+          fetchCustomerReport(customerId, currentMonthStart, currentDateEnd),
+          fetchCustomerReport(customerId, previousMonthStart, previousDateEnd)
         ]);
         console.log('responses', responses);
         setGameSessions({

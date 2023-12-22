@@ -17,6 +17,11 @@ export class GameSessionService {
   public async findAllByInstance(instanceId, startDate, endDate) {
     console.log(instanceId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({
+      relations: {
+        player: {
+          country: true
+        }
+      },
       where: {
         instanceId: instanceId,
         datePlayed: Between(startDate, endDate)        
@@ -28,6 +33,11 @@ export class GameSessionService {
   public async findAllByKiosk(kioskId, startDate, endDate) {
     console.log('findAllByKiosk', kioskId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({
+      relations: {
+        player: {
+          country: true
+        }
+      },
       where: {
         kioskId: kioskId,
         datePlayed: Between(startDate, endDate)        

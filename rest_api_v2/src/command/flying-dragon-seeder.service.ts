@@ -60,7 +60,6 @@ export class FlyingDragonSeederService {
     }
     for (let i = 0; i < this.gameSessions.length; i++) {
       const gameSession = this.gameSessions[i];
-      console.log(gameSession.date1, i);
       let company = await this
         .companyService
         .findByName(gameSession.company);
