@@ -22,7 +22,7 @@ export const CustomerEdit = () => {
   const query = useQuery();
   const params = useParams();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const isGlobalLoading = useContext(IsGlobalLoadingContext);
 
   const customerId = params.customerId;

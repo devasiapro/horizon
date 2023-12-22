@@ -47,7 +47,7 @@ export const CustomerContract = () => {
 
   const navigate = useNavigate();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
 
   const params = useParams();
   const customerId = params.customerId;

@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useAuthHook } from '../hooks/useAuthHook';
 
-export const CustomerPerformanceGraph = () => {
+export const CustomerPerformanceGraph = ({ gameSessions }) => {
   const [graph, setGraph] = useState({
     labels: [],
     datasets: [
@@ -38,52 +38,29 @@ export const CustomerPerformanceGraph = () => {
 
   const params = useParams();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const customerId = params.customerId;
 
   useEffect(() => {
-    const init = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/customer/${customerId}/report/ggr`, {
-              params: {
-                start_date: startDate,
-                end_date: endDate 
-              },
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-          }
-        ); 
-
-        const gameSessions = response.data;
-        const emptyGgrs = [];
-        for (let i = 0; i < arr.length; i++) {
-          emptyGgrs[i] = 0;
-        }
-
-        gameSessions.forEach(gameSession => {
-          const index = moment(gameSession.datePlayed).date() - 1;
-          emptyGgrs[index] = emptyGgrs[index] + Number(gameSession.totalIncome);
-        });
-        setGraph({
-          labels: labels,
-          datasets: [
-            {
-              label: '',
-              data: emptyGgrs,
-              backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-          ],
-        });
-      } catch (err) {
-        console.log('err', err);
-      } finally {
-
-      }
-    };
-    init();
-  }, []);
+    const emptyGgrs = [];
+    for (let i = 0; i < arr.length; i++) {
+      emptyGgrs[i] = 0;
+    }
+    gameSessions.current.forEach(gameSession => {
+      const index = moment(gameSession.datePlayed).date() - 1;
+      emptyGgrs[index] = emptyGgrs[index] + Number(gameSession.totalIncome);
+    });
+    setGraph({
+      labels: labels,
+      datasets: [
+        {
+          label: '',
+          data: emptyGgrs,
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
+      ],
+    });
+  }, [gameSessions]);
 
   const options = {
     responsive: true,
