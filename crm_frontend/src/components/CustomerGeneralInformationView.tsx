@@ -18,7 +18,7 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
 
   const update = async (ev) => {
     ev.preventDefault();

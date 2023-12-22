@@ -37,7 +37,7 @@ export const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
 
   const yesterday = moment().subtract(1, 'days');
   const weekBefore = moment().subtract(8, 'days');

@@ -16,7 +16,7 @@ export const EarningGamesContainer = ({ dateTo, dateFrom }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const toast = useToast();
 
   const fetchGameEarning = async (dateTo, dateFrom, gameType, order, count) => {

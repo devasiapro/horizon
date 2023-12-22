@@ -52,18 +52,23 @@ export const KPIContainerCustomer = ({
     movement: 0
   });
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
+
+  const computeMovement = (current, previous) => {
+    return ((current - previous) / ((current + previous) / 2 )) * 100
+  };
 
   useEffect(() => {
-    console.log('gameSessions', gameSessions);
     const currentGgr = gameSessions
       .current
       .reduce((sum, current) => sum + Number(current.totalIncome), 0);
+    console.log('currentGgr', currentGgr);
     const previousGgr = gameSessions
       .previous
       .reduce((sum, current) => sum + Number(current.totalIncome), 0);
-    const movementGgr = (((currentGgr / previousGgr) * 100) - 100).toFixed(2);
-    setGgr({current: currentGgr, previous: previousGgr, movement: movementGgr});
+
+    const movementGgr = computeMovement(currentGgr, previousGgr);
+    setGgr({current: currentGgr, previous: previousGgr, movement: movementGgr.toFixed(2)});
 
     const currentTotalBets = gameSessions
       .current
@@ -71,21 +76,20 @@ export const KPIContainerCustomer = ({
     const previousTotalBets = gameSessions
       .previous
       .reduce((sum, current) => sum + Number(current.totalGameBets), 0);
-    const movementTotalBets = (((currentTotalBets / previousTotalBets) * 100) - 100).toFixed(2);
+    const movementTotalBets = computeMovement(currentTotalBets, previousTotalBets);;
     setTotalBets({
       current: currentTotalBets,
       previous: previousTotalBets,
-      movement: movementTotalBets
+      movement: movementTotalBets.toFixed(2)
     });
 
     const currentTotalPlayers = gameSessions.current.reduce((sum, current) => sum + Number(current.playersCount), 0);
     const previousTotalPlayers = gameSessions.previous.reduce((sum, current) => sum + Number(current.playersCount), 0);
-    const movementTotalPlayers = (((currentTotalPlayers / previousTotalPlayers) * 100) - 100).toFixed(2);
-
+    const movementTotalPlayers = computeMovement(currentTotalPlayers, previousTotalPlayers);
     setTotalPlayers({
       current: currentTotalPlayers,
       previous: previousTotalPlayers,
-      movement: movementTotalPlayers 
+      movement: movementTotalPlayers.toFixed(2)
     }); 
 
     const currentTotalWins = gameSessions
@@ -94,25 +98,25 @@ export const KPIContainerCustomer = ({
     const previousTotalWins = gameSessions
       .previous
       .reduce((sum, current) => sum + Number(current.totalGameWins), 0);
-    const movementTotalWins = (((currentTotalWins / previousTotalWins) * 100) - 100).toFixed(2);
+    const movementTotalWins = computeMovement(currentTotalWins, previousTotalWins);
 
     const currentRtp = currentTotalWins / currentTotalBets;
     const previousRtp = previousTotalWins / previousTotalBets;
-    const movementRtp = (((currentRtp / previousRtp) * 100) - 100).toFixed(2);
+    const movementRtp = (((currentRtp / previousRtp) * 100) - 100);
     setRtp({
       current: (currentRtp * 100).toFixed(2),
       previous: (previousRtp * 100).toFixed(2),
-      movement: movementRtp
+      movement: movementRtp.toFixed(2)
     }); 
 
     const currentBetCount = gameSessions.current.reduce((sum, current) => sum + Number(current.gamesCount), 0);
     const previousBetCount = gameSessions.previous.reduce((sum, current) => sum + Number(current.gamesCount), 0);
-    const movementBetCount = (((currentBetCount / previousBetCount) * 100) - 100).toFixed(2);
+    const movementBetCount = computeMovement(currentBetCount, previousBetCount);
 
     setBetCount({
       current: currentBetCount,
       previous: previousBetCount,
-      movement: movementBetCount
+      movement: movementBetCount.toFixed(2)
     }); 
   }, [gameSessions]);
 

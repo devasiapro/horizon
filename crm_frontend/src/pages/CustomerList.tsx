@@ -56,7 +56,7 @@ export const CustomerList = () => {
 
   const navigate = useNavigate();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const query = useQuery();
 
   const isoFormatToHuman = (origDate) => {

@@ -102,7 +102,7 @@ export const CustomerAddSeamlessProductionDetails = ({ step }) => {
       return;
     }
 
-    const token = useAuth.getAuth().token;
+    const token = useAuth.getToken();
     const regulations = formSeamless.regulations ? 
       cleanValues(formSeamless.regulations.split(',')) : 
       [];

@@ -42,6 +42,10 @@ export const CustomerPerformanceView = ({
     .clone()
     .startOf('month')
     .format('YYYY-MM-DD');
+
+  const computeMovement = (current, previous) => {
+    return ((current - previous) / ((current + previous) / 2 )) * 100
+  };
   
   useEffect(() => {
     const totalCurrentDaily = gameSessions.current.filter(gameSession => {
@@ -56,7 +60,7 @@ export const CustomerPerformanceView = ({
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
-    const movementDaily = (((totalCurrentDaily / totalPreviousDaily) * 100) - 100);
+    const movementDaily = computeMovement(totalCurrentDaily, totalPreviousDaily);
     setDailyPlayerStat({
       value: totalCurrentDaily,
       label: 'Daily Players',
@@ -64,18 +68,18 @@ export const CustomerPerformanceView = ({
     });
 
     const totalCurrentWeekly = gameSessions.current.filter(gameSession => { 
-      return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
+      return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
     const totalPreviousWeekly = gameSessions.previous.filter(gameSession => {
-      return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
+      return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
     })
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
-    const movementWeekly = (((totalCurrentWeekly / totalPreviousWeekly) * 100) - 100);
+    const movementWeekly = computeMovement(totalCurrentWeekly, totalPreviousWeekly);
     setWeeklyPlayerStat({
       value: totalCurrentWeekly,
       label: 'Total Weekly Players',
@@ -83,7 +87,6 @@ export const CustomerPerformanceView = ({
     });
 
     const totalCurrentMonthly = gameSessions.current.filter(gameSession => { 
-      console.log(currentMonthStart, gameSession.datePlayed, currentDateEnd);
       return moment(currentMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
     })
     .reduce((total, current) => {
@@ -95,7 +98,7 @@ export const CustomerPerformanceView = ({
     .reduce((total, current) => {
       return total + Number(current.playersCount);
     }, 0);
-    const movementMonthly = (((totalCurrentMonthly / totalPreviousMonthly) * 100) - 100);
+    const movementMonthly = computeMovement(totalCurrentMonthly, totalPreviousMonthly);
     setMonthlyPlayerStat({
       value: totalCurrentMonthly,
       label: 'Total Monthly Players',
@@ -124,7 +127,7 @@ export const CustomerPerformanceView = ({
             label={monthlyPlayerStat.label} 
           />
         </Flex>
-        <CustomerPerformanceGraph customerId={customer.id} />
+        <CustomerPerformanceGraph gameSessions={gameSessions} />
       </GridItem>
       <GridItem w="100^">
         <CustomerPerformanceTable gameSessions={gameSessions} label={"Brand"} />

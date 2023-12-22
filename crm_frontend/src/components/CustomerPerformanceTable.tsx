@@ -24,7 +24,6 @@ export const CustomerPerformanceTable = ({ gameSessions, label }) => {
         bets: 0  
       }; 
     });
-    console.log('countries', countries); 
     gameSessions.current.forEach(gameSession => {
       countries[gameSession.player.countryName] = {
         income: countries[gameSession.player.countryName]['income'] + Number(gameSession.totalIncome),
@@ -66,7 +65,7 @@ export const CustomerPerformanceTable = ({ gameSessions, label }) => {
           <Tbody>
             { tabular.map(row => {
                 return (
-                  <Tr>
+                  <Tr key={row.country}>
                     <Td><Center>{row.country}</Center></Td>
                     <Td><Center>{row.bets.toLocaleString()}</Center></Td>
                     <Td><Center>{row.income.toLocaleString()}</Center></Td>
