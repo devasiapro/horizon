@@ -17,11 +17,11 @@ import { CustomerAdd } from './pages/CustomerAdd';
 import { CustomerAddSeamless } from './pages/CustomerAddSeamless';
 import { CustomerAddTransfer } from './pages/CustomerAddTransfer';
 import { CustomerEdit } from './pages/CustomerEdit';
-import { CustomerView } from './pages/CustomerView';
 import { CustomerContract } from './pages/CustomerContract';
 import { CustomerIntegration } from './pages/CustomerIntegration';
 import { CustomerCreate } from './pages/CustomerCreate';
 import { CustomerCreateSuccess } from './pages/CustomerCreateSuccess';
+import { CustomerView } from './pages/CustomerView';
 import { MyTheme } from "./theme/MyTheme";
 
 const router = createBrowserRouter([

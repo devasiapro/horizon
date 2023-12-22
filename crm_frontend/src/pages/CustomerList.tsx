@@ -302,7 +302,7 @@ export const CustomerList = () => {
                 <Tr key={customer.id}>
                   <Td>
                     <Link onClick={() => navigate(
-                      `/customer/${customer.id}/edit?wallet_type=${customer.wallet_type}&step=1`
+                      `/customer/${customer.id}`
                     )}>
                       <b>{customer.brandName}</b>
                     </Link>
@@ -334,9 +334,9 @@ export const CustomerList = () => {
                       type="button"
                       colorScheme="horizon"
                       onClick={() => navigate(
-                        `/customer/${customer.id}/edit?wallet_type=${customer.wallet_type}&step=1`
+                        `/customer/${customer.id}`
                       )}>
-                      Edit
+                      View
                     </Button>
                   </Td>
                 </Tr>

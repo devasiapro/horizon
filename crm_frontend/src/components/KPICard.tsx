@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Spacer,
+  Flex,
   Card,
   CardHeader,
   CardBody,
@@ -35,7 +37,8 @@ export const KPICard = ({
   previousDateEnd,
   currentValue,
   previousValue,
-  movementValue
+  movementValue,
+  currencySymbol
 }) => {
   return (
     <Card
@@ -46,51 +49,62 @@ export const KPICard = ({
       bg={"white"}
       boxShadow={"lg"}
     >
-      <CardBody p={{ base: "12px", sm: "14px", md: "16px", lg: "35px" }}>
-        <Center>
-          <Stat size={["xs", "sm", "md", "lg"]}>
-            <HStack mb={{ base: 1, md: 1, lg: 2 }}>
-              <Stack spacing={{ base: 0, md: 1 }}>
-                <Text
-                  fontWeight="extrabold"
-                  fontSize={["xs", "sm", "md", "lg"]}
-                >
-                  {label}
-                </Text>
-                <StatHelpText>
-                  {currentDateStart.format('MMM DD')} - {currentDateEnd.format('MMM DD')}
-                </StatHelpText>
-              </Stack>
-              <Icon
-                as={icon}
-                boxSize={{ base: 7, sm: 7, md: 8, lg: 10 }}
-                ml={{ base: "2px", md: 2 }}
-              />
-            </HStack>
+      <CardBody p={{ base: "6px", sm: "6px", md: "6px", lg: "6px" }}>
+        <Flex>
+          <Text
+            fontWeight="extrabold"
+            fontSize={"28px"}
+          >
+            {label}
+          </Text>
+          <Spacer />
+          <Icon
+            as={icon}
+            boxSize={{ base: 6, sm: 6, md: 6, lg: 6 }}
+            ml={{ base: "2px", md: 2 }}
+          /> 
+        </Flex>
 
-            <HStack>
-              <StatNumber>
-                {previousValue && previousValue.toLocaleString()}
-              </StatNumber>
+        <Center>
+          <Text
+            fontWeight="extrabold"
+            fontSize={"28px"}
+          >
+            {currencySymbol} {currentValue && currentValue.toLocaleString()}
+          </Text>
+        </Center>
+        <Center>
+          <Text fontSize={"12px"}>
+            {currentDateStart.format('MMM DD')} - {currentDateEnd.format('MMM DD')}
+          </Text>
+        </Center>
+
+        <Flex>
+          <Box>
+            <Text fontSize={"16px"}>
+              {currencySymbol} {previousValue && previousValue.toLocaleString()}
+            </Text>
+            <Text fontSize={"12px"}>
+              {previousDateStart.format('MMM DD')} - {previousDateEnd.format('MMM DD')}
+            </Text>
+          </Box>
+          <Spacer />
+          <Box>
+            <Stat size={"xl"}>
               {movementValue > 0 ? (
-                <StatHelpText>
+                <StatNumber>
                   <StatArrow type="increase" />
                   {movementValue}%
-                </StatHelpText>
+                </StatNumber>
               ) : (
-                <StatHelpText>
+                <StatNumber>
                   <StatArrow type="decrease" />
                   {movementValue}%
-                </StatHelpText>
+                </StatNumber>
               )}
-            </HStack>
-
-            <StatHelpText mb={{ base: 0, md: 1, lg: 2 }}>
-              {currentValue && currentValue.toLocaleString()} : 
-              {previousDateStart.format('MMM DD')} - {previousDateEnd.format('MMM DD')}
-            </StatHelpText>
-          </Stat>
-        </Center>
+            </Stat>
+          </Box>
+        </Flex>
       </CardBody> 
     </Card>
   );

@@ -117,6 +117,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
               >
                 <div className="image-wrapper d-flex justify-content-center">
                   <img 
+                    alt={game.name}
                     src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`}
                     className="img-fluid" 
                   />
