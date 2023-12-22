@@ -7,6 +7,7 @@ import {
   OneToMany,
   JoinColumn
 } from 'typeorm';
+import { Expose } from 'class-transformer';
 import { Company } from '../company/company.entity';
 import { GameSession } from '../game-session/game-session.entity';
 import { WalletType } from '../wallet-type/wallet-type.entity';
@@ -19,7 +20,7 @@ export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 256 })
+  @Column({ length: 256, name: 'brand_name' })
   brandName: string;
 
   @ManyToOne(() => WalletType, (walletType) => walletType.customers)

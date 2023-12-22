@@ -25,8 +25,14 @@ export class GameSession {
   @ManyToOne(() => Kiosk, (kiosk) => kiosk.gameSessions)
   kiosk: Kiosk;
 
+  @Column({ type: 'int', nullable: true })
+  kioskId: number;
+
   @ManyToOne(() => Instance, (instance) => instance.gameSessions)
   instance: Instance;
+
+  @Column({ type: 'int', nullable: true })
+  instanceId: number;
 
   @ManyToOne(() => Player, (player) => player.gameSessions)
   @JoinColumn({ name: 'player_code', referencedColumnName: 'playerCode' })
