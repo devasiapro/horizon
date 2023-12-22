@@ -16,6 +16,8 @@ import {
   Link,
   Icon,
   SimpleGrid,
+  Grid,
+  GridItem,
   Input,
   InputGroup,
   InputLeftElement,
@@ -27,7 +29,9 @@ import {
   Select,
   FormControl,
   FormLabel,
-  useDisclosure
+  useDisclosure,
+  Card,
+  CardBody
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import axios from 'axios';
@@ -105,6 +109,7 @@ export const CustomerList = () => {
     if (page <= 0) return;
     try {
       const response = await fetchCustomers();
+      console.log('response', response);
       processResponse(response);
     } catch (err) {
       console.log('err', err);
@@ -169,10 +174,21 @@ export const CustomerList = () => {
 
   return (
     <Box p={{ base: 2, md: 4, lg: 6 }}>
-      <Flex mb="20px" gap="2">
-        <Heading as="h3" size="lg" mb={4}>
-          Customers
-        </Heading>
+      <Grid templateColumns="repeat(3, 1fr)">
+        <GridItem w="100%">
+          <Card boxShadow="xl" p="2" bg="#374A16" color="white">
+            <CardBody align="center">
+              <Heading size="4xl" as="h1">{customers.length}</Heading>
+              <Heading size="md" mt="2">Total</Heading>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem w="100%">
+        </GridItem>
+        <GridItem w="100%">
+        </GridItem>
+      </Grid>
+      <Flex mt="10px" mb="10px" gap="2">
         <Button
           onClick={() => window.open('/customer/create', '_blank')}
           size="md"
@@ -183,62 +199,6 @@ export const CustomerList = () => {
         </Button>
       </Flex>
       <SimpleGrid>
-        <Flex minWidth="max-content" alignItems="center" gap="2">
-          <Pagination 
-            itemLabel={"customers"}
-            cb={onPageChange} 
-            setPage={setPage} 
-            page={page} 
-            pages={pageCount} 
-            total={total} 
-          />
-          <Spacer />
-          <Box>
-            <form onSubmit={(ev) => filter(ev)}>
-              <Flex minWidth="max-content" alignItems="center" gap="2">
-                <CheckboxGroup 
-                  colorScheme="green" 
-                  defaultValue={walletTypeFilters}
-                >
-                  <Stack direction={['row']}>
-                    <Checkbox 
-                      onChange={(ev) => processWalletTypeFilters(ev.target.checked, 'transfer')}
-                      value="transfer">
-                      Transfer
-                    </Checkbox>
-                    <Checkbox 
-                      onChange={(ev) => processWalletTypeFilters(ev.target.checked, 'seamless')}
-                      value="seamless">
-                      Seamless
-                    </Checkbox>
-                  </Stack>
-                </CheckboxGroup>
-                <InputGroup mb={"4px"}>
-                  <InputLeftElement pointerEvents={"none"}>
-                    <SearchIcon color={"gray.300"} />
-                  </InputLeftElement>
-                  <Input 
-                    value={search}
-                    onChange={(ev) => setSearch(ev.target.value)} 
-                    placeholder="Brand Name" 
-                    bg={"white"}
-                  />
-                </InputGroup>
-                <Button
-                  onClick={(ev) => filter(ev)}
-                  pl={"30px"}
-                  pr={"30px"}
-                  size="md"
-                  type="button"
-                  colorScheme="horizon"
-                >
-                  Search
-                </Button>
-              </Flex>
-            </form>
-          </Box>
-
-        </Flex>
 
         <Skeleton isLoaded={!isLoading}>
         <TableContainer
@@ -256,43 +216,19 @@ export const CustomerList = () => {
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Brand Name
+                  Operator
                 </Th>
                 <Th
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Instance
+                  Customer
                 </Th>
                 <Th
                   color={"white"}
                   fontSize={{ base: "10px", sm: "12px", md: "14px" }}
                 >
-                  Wallet Type
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
-                  Currency
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
-                  Date Added
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
-                  Contract Status
-                </Th>
-                <Th
-                  color={"white"}
-                  fontSize={{ base: "10px", sm: "12px", md: "14px" }}
-                >
-                  Edit
+                  Platform
                 </Th>
               </Tr>
             </Thead>
@@ -301,43 +237,17 @@ export const CustomerList = () => {
               return (
                 <Tr key={customer.id}>
                   <Td>
-                    <Link onClick={() => navigate(
+                    <Link onClick={() => window.open(
                       `/customer/${customer.id}`
-                    )}>
+                    , '_blank').focus()}>
                       <b>{customer.brandName}</b>
                     </Link>
                   </Td>
                   <Td>
-                    {customer.instance ?? 'Not Available'}
+                    {customer.parent ? customer.parent.brandName : 'NA'}
                   </Td>
                   <Td>
-                    {customer.wallet_type}
-                  </Td>
-                  <Td>
-                  </Td>
-                  <Td>
-                    {isoFormatToHuman(customer.date_added)}
-                  </Td>
-                  <Td>
-                    <Button 
-                      mt={4}
-                      type="button"
-                      colorScheme="horizon"
-                      onClick={() => navigate(`/customer/${customer.id}/contract`)}
-                    >
-                      {customer.contract_status ? customer.contract_status.name : 'N/A'}
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Button 
-                      mt={4}
-                      type="button"
-                      colorScheme="horizon"
-                      onClick={() => navigate(
-                        `/customer/${customer.id}`
-                      )}>
-                      View
-                    </Button>
+                    {customer.walletType.name}
                   </Td>
                 </Tr>
               );
@@ -346,14 +256,6 @@ export const CustomerList = () => {
           </Table>
         </TableContainer>
         </Skeleton>
-        <Pagination 
-          itemLabel={"customers"}
-          cb={onPageChange} 
-          setPage={setPage} 
-          page={page} 
-          pages={pageCount} 
-          total={total} 
-        />
       </SimpleGrid>
       <CustomerCreateModal isOpen={isOpen} onClose={onClose} />
     </Box>

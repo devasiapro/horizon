@@ -10,7 +10,12 @@ export class CustomerService {
   ) {}
 
   public async fetchAll() {
-    const customers = await this.customerRepository.find();
+    const customers = await this.customerRepository.find({
+      relations: {
+        parent: true,
+        walletType: true
+      }        
+    });
     return customers;
   }
 
