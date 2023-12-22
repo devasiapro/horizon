@@ -28,23 +28,25 @@ export class Customer {
 
   @ManyToOne(() => Customer, (customer) => customer.subCustomers)
   @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
-  parent: Customer
+  parent: Customer;
 
   @OneToMany(() => Customer, (customer) => customer.parent)
-  subCustomers: Customer[]
+  subCustomers: Customer[];
 
   @ManyToOne(() => Kiosk, (kiosk) => kiosk.customers)
-  kiosk: Kiosk 
+  kiosk: Kiosk;
 
   @ManyToOne(() => Instance, (instance) => instance.customers)
-  instance: Instance
+  instance: Instance;
 
   @Column({ length: 256 })
-  contactPerson: string
+  contactPerson: string;
 
   @Column({ length: 256 })
-  email: string
+  email: string;
 
   @Column({ length: 256 })
-  skypeGroup: string
+  skypeGroup: string;
+
+
 }
