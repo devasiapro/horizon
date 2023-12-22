@@ -43,7 +43,7 @@ export const CustomerCreate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const navigate = useNavigate();
 
   const submit = async (ev) => {

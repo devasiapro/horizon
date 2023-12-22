@@ -105,7 +105,7 @@ export const CustomerEditSeamlessProductionDetails = ({ customerId, step }) => {
       return;
     }
 
-    const token = useAuth.getAuth().token;
+    const token = useAuth.getToken();
 
     const testAccountStagings = formSeamless.test_account_stagings.split(',').map(accounts => {
       return cleanValues(accounts.split('/'));

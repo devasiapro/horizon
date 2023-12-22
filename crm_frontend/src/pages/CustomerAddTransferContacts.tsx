@@ -64,7 +64,7 @@ export const CustomerAddTransferContacts = ({ step }) => {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const token = useAuth.getAuth().token;
+    const token = useAuth.getToken();
     const languages = formTransfer.languages ? cleanValues(formTransfer.languages.split(',')) : [];
     const currencies = formTransfer.currencies ? cleanValues(formTransfer.currencies.split(',')) : [];
     const domainWhitelist = formTransfer.domain_whitelist ? 

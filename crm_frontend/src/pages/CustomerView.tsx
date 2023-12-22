@@ -28,6 +28,10 @@ export const CustomerView = () => {
     current: [],
     previous: []
   });
+  const [weeklyGameSessions, setWeeklyGameSessions] = useState({
+    current: [],
+    previous: []
+  });
   const [customer, setCustomer] = useState({
     brandName: '',
     parent: {
@@ -49,7 +53,7 @@ export const CustomerView = () => {
 
   const params = useParams();
   const useAuth = useAuthHook();
-  const token = useAuth.getAuth().token;
+  const token = useAuth.getToken();
   const customerId = params.customerId;
 
   const yesterday = moment().subtract(1, 'days');
@@ -57,27 +61,31 @@ export const CustomerView = () => {
 
   const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
   const currentDateEnd = yesterday.format('YYYY-MM-DD');
-  const currentMonthStart = moment().startOf('month').clone().format('YYYY-MM-DD');;
+  const currentMonthStart = moment().startOf('month').format('YYYY-MM-DD');;
+
   const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
   const previousDateEnd = weekBefore.format('YYYY-MM-DD');
-  const previousMonthStart = moment()
-    .subtract(1, 'months')
-    .clone()
-    .startOf('month')
-    .format('YYYY-MM-DD');
+  const previousMonthStart = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
 
   useEffect(() => {
     const init = async () => {
       fetchCustomerInfo();
       try {
         const responses = await Promise.all([
-          fetchCustomerReport(customerId, currentMonthStart, currentDateEnd),
-          fetchCustomerReport(customerId, previousMonthStart, previousDateEnd)
+          fetchGameSessions(customerId, currentMonthStart, currentDateEnd),
+          fetchGameSessions(customerId, previousMonthStart, previousDateEnd)
         ]);
-        console.log('responses', responses);
         setGameSessions({
           current: responses[0],
           previous: responses[1]
+        });
+        setWeeklyGameSessions({
+          current: responses[0].filter((gameSession) => {
+            return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix(); 
+          }),
+          previous: responses[1].filter((gameSession) => {
+            return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix(); 
+          })
         });
       } catch (err) {
           console.log('err', err);
@@ -120,10 +128,10 @@ export const CustomerView = () => {
     }
   };
 
-  const fetchCustomerReport = async (customerId, dateStart, dateEnd) => {
+  const fetchGameSessions = async (customerId, dateStart, dateEnd) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/customer/${customerId}/report/ggr`, {
+        `${import.meta.env.VITE_API_URL}/customer/${customerId}/game-session`, {
             params: {
               start_date: dateStart,
               end_date: dateEnd
@@ -156,7 +164,7 @@ export const CustomerView = () => {
         mt={{ base: 1, sm: 1, md: 1, lg: 1 }}
       >
         <KPIContainerCustomer
-          gameSessions={gameSessions}
+          gameSessions={weeklyGameSessions}
           currentDateStart={yesterday.clone().weekday(0)}
           currentDateEnd={yesterday}
           previousDateStart={weekBefore.clone().weekday(0)}

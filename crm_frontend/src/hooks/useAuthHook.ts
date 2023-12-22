@@ -53,6 +53,12 @@ export const useAuthHook = () => {
     return false;
   };
 
+  const getToken = () => {
+    const cookie = new Cookies();
+    const token = cookie.get('token');
+    return token;
+  };
+
   const getAuth = () => {
     return authContext.auth;
   };
@@ -78,6 +84,7 @@ export const useAuthHook = () => {
   return {
     logout,
     getAuth,
+    getToken,
     refreshAuth,
     isLoggedIn,
     setAsLogged

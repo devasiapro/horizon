@@ -36,7 +36,7 @@ export class CustomerController {
   ) {}
 
   @Get('')
-  //@UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   public async findAll(@Res() res: Response) {
     const customers = await this.customerService.fetchAll();
     return res.status(200).json({
@@ -45,7 +45,7 @@ export class CustomerController {
   }
 
   @Get(':customerId')
-  //@UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   public async find(
     @Param() params: any,
     @Res() res: Response
@@ -54,8 +54,8 @@ export class CustomerController {
     return res.status(200).json(customer);
   }
 
-  @Get(':customerId/report/ggr')
-  //@UseGuards(AuthGuard())
+  @Get(':customerId/game-session')
+  @UseGuards(AuthGuard())
   public async findReportGgr(
     @Query() query: ReportDto,
     @Param() params: any,
@@ -100,7 +100,7 @@ export class CustomerController {
   }
 
   @Post()
-  //@UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   public async create(
     @Res() res: Response,
     @Body() createCustomerDto: CreateCustomerDto
@@ -134,7 +134,7 @@ export class CustomerController {
   }
 
   @Patch(':customerId')
-  //@UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   public async update(
     @Param() params: any,
     @Res() response: Response,
