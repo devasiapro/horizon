@@ -33,7 +33,7 @@ export const Home = () => {
     labels: '',
     datasets: []
   });
-  const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('customer');
+  const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('country');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const useAuth = useAuthHook();
@@ -41,11 +41,16 @@ export const Home = () => {
 
   const yesterday = moment().subtract(1, 'days');
   const weekBefore = moment().subtract(8, 'days');
+  const monthBefore = moment().subtract(1, 'months').startOf('month');
 
-  const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
+  const currentDateStart = moment().startOf('month').format('YYYY-MM-DD');
   const currentDateEnd = yesterday.format('YYYY-MM-DD');
-  const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
-  const previousDateEnd = weekBefore.format('YYYY-MM-DD');
+  const previousDateStart = moment()
+    .subtract(1, 'months')
+    .startOf('month')
+    .format('YYYY-MM-DD');
+  const previousDateEnd = moment().subtract(1, 'months').subtract(1, 'days').format('YYYY-MM-DD');
+  console.log(currentDateStart, currentDateEnd, previousDateStart, previousDateEnd);
 
   const fetchCustomerIncomes = async (dateFrom, dateTo) => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/customer-income`, {
@@ -223,65 +228,20 @@ export const Home = () => {
       <Box my={3}>
         <Flex align={"center"}>
           <Heading size={["md", "lg"]} color="horizon.300">
-            Week-to-Date Statistics
+            Monthly
           </Heading>
-          <Spacer />
-          <Box bg={"white"} borderRadius={8} px={2}>
-            <Flex height={"47px"} align={"center"}>
-              <Text>{currentDateTime}</Text>
-            </Flex>
-          </Box>
         </Flex>
       </Box>
-
       <Box
         mb={{ base: 3, sm: 6, md: 7, lg: 6 }}
         mt={{ base: 1, sm: 2, md: 4, lg: 6 }}
       >
         <KPIContainer 
-          currentDateStart={yesterday.clone().weekday(0)}
+          currentDateStart={yesterday.clone().startOf('month')}
           currentDateEnd={yesterday}
-          previousDateStart={weekBefore.clone().weekday(0)}
-          previousDateEnd={weekBefore}
+          previousDateStart={monthBefore.clone()}
+          previousDateEnd={moment().subtract(1, 'months').subtract(1, 'days')}
         />
-      </Box>
-
-      <Box>
-        <Flex align={"center"} mb="20px">
-          <Box bg={"white"} borderRadius={8} px={2}>
-            <Flex height={"47px"} align={"center"}>
-              <Button 
-                variant={selectedIncomeFilter === 'customer' ? 'solid' : 'ghost'}
-                mr="10px"
-                size="sm"
-                type="button"
-                colorScheme="horizon"
-                onClick={() => setSelectedIncomeFilter('customer')}
-              >
-                Customer
-              </Button>
-              <Button 
-                variant={selectedIncomeFilter === 'country' ? 'solid' : 'ghost'}
-                mr="10px"
-                size="sm"
-                type="button"
-                colorScheme="horizon"
-                onClick={() => setSelectedIncomeFilter('country')}
-              >
-                Country
-              </Button>
-              <Button 
-                variant={selectedIncomeFilter === 'product' ? 'solid' : 'ghost'}
-                size="sm"
-                type="button"
-                colorScheme="horizon"
-                onClick={() => setSelectedIncomeFilter('product')}
-              >
-                Product
-              </Button>
-            </Flex>
-          </Box>
-        </Flex>
       </Box>
 
       <Box>
@@ -308,10 +268,6 @@ export const Home = () => {
               </Skeleton>
             </Box>
             <SimpleGrid columns={2} gap={4}>
-              <EarningGamesContainer 
-                dateTo={currentDateEnd}
-                dateFrom={currentDateStart}
-              />
             </SimpleGrid>
           </GridItem>
         </Grid>
