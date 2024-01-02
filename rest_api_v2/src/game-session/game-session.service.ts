@@ -14,6 +14,26 @@ export class GameSessionService {
     return gameSession;
   }
 
+  public async findAll(startDate, endDate) {
+    console.log(startDate == endDate);
+    const gameSessions = await this.gameSessionRepository.find({
+      relations: {
+        player: {
+          country: true
+        },
+        game: {
+          clientType: true,
+          clientPlatform: true,
+          gameType: true
+        }
+      },
+      where: {
+        datePlayed: startDate == endDate ? startDate : Between(startDate, endDate)        
+      }
+    });
+    return Promise.resolve(gameSessions);
+  }
+
   public async findAllByInstance(instanceId, startDate, endDate) {
     console.log(instanceId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({

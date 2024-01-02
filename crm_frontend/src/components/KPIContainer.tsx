@@ -6,7 +6,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import axios from 'axios';
-
+import moment from 'moment';
 import {
   Chips,
   Ribbon,
@@ -19,11 +19,38 @@ import { KPICard } from './KPICard';
 import { useAuthHook } from '../hooks/useAuthHook';
 
 export const KPIContainer = ({
+  gameSessions,
   currentDateStart,
   currentDateEnd,
   previousDateStart,
-  previousDateEnd
+  previousDateEnd  
 }) => {
+
+  const [ggr, setGgr] = useState({
+    current: 0,
+    previous: 0,
+    movement: 0
+  });
+  const [totalBets, setTotalBets] = useState({
+    current: 0,
+    previous: 0,
+    movement: 0
+  });
+  const [totalPlayers, setTotalPlayers] = useState({
+    current: 0,
+    previous: 0,
+    movement: 0
+  });
+  const [rtp, setRtp] = useState({
+    current: 0,
+    previous: 0,
+    movement: 0
+  });
+  const [betCount, setBetCount] = useState({
+    current: 0,
+    previous: 0,
+    movement: 0
+  });
 
   const [currentKpi, setCurrentKpi] = useState({
     income: 0,
@@ -39,62 +66,77 @@ export const KPIContainer = ({
     rtp: 0, 
     number_of_spins: 0 
   });
+
   const [isLoading,setIsLoading] = useState(false);
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
   const toast = useToast();
 
-  const fetchKpi = async (dateFrom, dateTo) => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/report/kpi`, {
-        params: {
-          date_from: dateFrom,
-          date_to: dateTo
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return response;
-    } catch (err) {
-    } finally {
-    }
-  }
-
-  const computeMovementValue = (previousKpiValue, currentKpiValue) => {
-    return (((currentKpiValue / previousKpiValue) * 100) - 100).toFixed(2);
+  const computeMovement = (current, previous) => {
+    return ((current - previous) / ((current + previous) / 2 )) * 100
   };
 
   useEffect(() => {
-    const init = async () => {
-      try {
-        setIsLoading(true);
-        const responses = await Promise.all([
-          fetchKpi(
-            currentDateStart.format('YYYY-MM-DD'), 
-            currentDateEnd.format('YYYY-MM-DD')
-          ),
-          fetchKpi(
-            previousDateStart.format('YYYY-MM-DD'), 
-            previousDateEnd.format('YYYY-MM-DD')
-          )
-        ]);
-        console.log('responses', responses);
-        setCurrentKpi(responses[0].data);
-        setPreviousKpi(responses[1].data);
-      } catch (err) {
-        toast({
-          title: 'Error encountered',
-          description: 'An error was encountered while fetching data. Please try to reload or report to the Admin.',
-          status: 'error',
-          isClosable: true 
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    init();
-  }, []);
+    const currentGgr = gameSessions
+      .current
+      .reduce((sum, current) => sum + Number(current.totalIncome), 0);
+    console.log('currentGgr', currentGgr);
+    const previousGgr = gameSessions
+      .previous
+      .reduce((sum, current) => sum + Number(current.totalIncome), 0);
+    const movementGgr = computeMovement(currentGgr, previousGgr);
+    setGgr({current: currentGgr, previous: previousGgr, movement: movementGgr.toFixed(2)});
+
+    const currentTotalBets = gameSessions
+      .current
+      .reduce((sum, current) => sum + Number(current.totalGameBets), 0);
+    const previousTotalBets = gameSessions
+      .previous
+      .reduce((sum, current) => sum + Number(current.totalGameBets), 0);
+    const movementTotalBets = computeMovement(currentTotalBets, previousTotalBets);;
+    setTotalBets({
+      current: currentTotalBets,
+      previous: previousTotalBets,
+      movement: movementTotalBets.toFixed(2)
+    });
+
+    const currentTotalPlayers = gameSessions.current.reduce((sum, current) => sum + Number(current.playersCount), 0);
+    const previousTotalPlayers = gameSessions.previous.reduce((sum, current) => sum + Number(current.playersCount), 0);
+    const movementTotalPlayers = computeMovement(currentTotalPlayers, previousTotalPlayers);
+    setTotalPlayers({
+      current: currentTotalPlayers,
+      previous: previousTotalPlayers,
+      movement: movementTotalPlayers.toFixed(2)
+    }); 
+
+    const currentTotalWins = gameSessions
+      .current
+      .reduce((sum, current) => sum + Number(current.totalGameWins), 0);
+    const previousTotalWins = gameSessions
+      .previous
+      .reduce((sum, current) => sum + Number(current.totalGameWins), 0);
+    const movementTotalWins = computeMovement(currentTotalWins, previousTotalWins);
+
+    const currentRtp = currentTotalWins / currentTotalBets;
+    const previousRtp = previousTotalWins / previousTotalBets;
+    const movementRtp = (((currentRtp / previousRtp) * 100) - 100);
+    setRtp({
+      current: (currentRtp * 100).toFixed(2),
+      previous: (previousRtp * 100).toFixed(2),
+      movement: movementRtp.toFixed(2)
+    }); 
+
+    const currentBetCount = gameSessions.current.reduce((sum, current) => sum + Number(current.gamesCount), 0);
+    const previousBetCount = gameSessions.previous.reduce((sum, current) => sum + Number(current.gamesCount), 0);
+    const movementBetCount = computeMovement(currentBetCount, previousBetCount);
+
+    setBetCount({
+      current: currentBetCount,
+      previous: previousBetCount,
+      movement: movementBetCount.toFixed(2)
+    }); 
+
+  }, [gameSessions]);
 
   return (
     <SimpleGrid
@@ -107,11 +149,11 @@ export const KPIContainer = ({
           currentDateEnd={currentDateEnd}
           previousDateStart={previousDateStart}
           previousDateEnd={previousDateEnd}
-          label="Income"
+          label="GGR"
           icon={MoneyBag}
-          currentValue={currentKpi.income && currentKpi.income.toLocaleString()} 
-          previousValue={previousKpi.income && previousKpi.income.toLocaleString()} 
-          movementValue={computeMovementValue(previousKpi.income, currentKpi.income)}
+          currentValue={ggr.current} 
+          previousValue={ggr.previous} 
+          movementValue={ggr.movement}
         />
       </Skeleton>
 
@@ -121,11 +163,11 @@ export const KPIContainer = ({
           currentDateEnd={currentDateEnd}
           previousDateStart={previousDateStart}
           previousDateEnd={previousDateEnd}
-          label="Casino Bets"
+          label="Total Bets"
           icon={Chips}
-          currentValue={currentKpi.bets && currentKpi.bets.toLocaleString()} 
-          previousValue={previousKpi.bets && previousKpi.bets.toLocaleString()} 
-          movementValue={computeMovementValue(previousKpi.bets, currentKpi.bets)}
+          currentValue={totalBets.current} 
+          previousValue={totalBets.previous} 
+          movementValue={totalBets.movement}
         />
       </Skeleton>
 
@@ -137,9 +179,9 @@ export const KPIContainer = ({
           previousDateEnd={previousDateEnd}
           label="Total Players"
           icon={Player}
-          currentValue={currentKpi.total_players && currentKpi.total_players.toLocaleString()} 
-          previousValue={previousKpi.total_players && previousKpi.total_players.toLocaleString()} 
-          movementValue={computeMovementValue(previousKpi.total_players, currentKpi.total_players)}
+          currentValue={totalPlayers.current} 
+          previousValue={totalPlayers.previous} 
+          movementValue={totalPlayers.movement}
         />
       </Skeleton>
 
@@ -149,11 +191,11 @@ export const KPIContainer = ({
           currentDateEnd={currentDateEnd}
           previousDateStart={previousDateStart}
           previousDateEnd={previousDateEnd}
-          label="RTP"
+          label="RTP (%)"
           icon={Money}
-          currentValue={currentKpi.rtp && currentKpi.rtp.toLocaleString()} 
-          previousValue={previousKpi.rtp && previousKpi.rtp.toLocaleString()} 
-          movementValue={computeMovementValue(previousKpi.rtp, currentKpi.rtp)}
+          currentValue={rtp.current} 
+          previousValue={rtp.previous} 
+          movementValue={rtp.movement}
         />
       </Skeleton>
 
@@ -163,11 +205,11 @@ export const KPIContainer = ({
           currentDateEnd={currentDateEnd}
           previousDateStart={previousDateStart}
           previousDateEnd={previousDateEnd}
-          label="Number of Spins"
+          label="Bet Count"
           icon={Slot}
-          currentValue={currentKpi.number_of_spins && currentKpi.number_of_spins.toLocaleString()} 
-          previousValue={previousKpi.number_of_spins && previousKpi.number_of_spins.toLocaleString()} 
-          movementValue={computeMovementValue(previousKpi.number_of_spins, currentKpi.number_of_spins)}
+          currentValue={betCount.current} 
+          previousValue={betCount.previous} 
+          movementValue={betCount.movement}
         />
       </Skeleton>
     </SimpleGrid>
