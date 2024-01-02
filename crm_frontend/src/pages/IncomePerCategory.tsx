@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Divider,
@@ -26,28 +26,71 @@ import {
 import { BsChevronDoubleRight, BsCaretDownFill } from "react-icons/bs";
 import styles from "../../public/css/Table.module.css";
 
-export const IncomePerCustomer = ({ topData, yesterday, weekBefore, filter }) => {
+export const IncomePerCategory = ({ 
+  gameSessions, 
+  currentMonth, 
+  lastMonth, 
+  filter 
+}) => {
+  const [topData, setTopData] = useState([]);
+  const [sortedData, setSortedData] = useState([]);
+
+  const computeMovement = (current, previous) => {
+    return ((current - previous) / ((current + previous) / 2 )) * 100
+  };
+
+  const initializeCategories = (gameSessions) => {
+    const categories = {};
+    gameSessions.current.forEach((gameSession) => {
+      categories[gameSession.player.countryName] = {
+        previous: 0,
+        current: 0,
+        growth: 0
+      };
+    });
+    gameSessions.previous.forEach((gameSession) => {
+      categories[gameSession.player.countryName] = {
+        previous: 0,
+        current: 0,
+        growth: 0
+      };
+    });
+    return categories;
+  };
+
+  useEffect(() => {
+    const categories = initializeCategories(gameSessions);
+    
+    gameSessions.current.forEach((gameSession) => {
+      categories[gameSession.player.countryName].current += Number(gameSession.totalIncome);
+    });
+    gameSessions.previous.forEach((gameSession) => {
+      categories[gameSession.player.countryName].previous += Number(gameSession.totalIncome);
+    });
+    console.log('gameSessions', gameSessions);
+    const tempArr = [];
+    for (const key in categories) {
+      tempArr.push({
+        category: key,
+        current: categories[key].current,
+        previous: categories[key].previous,
+        growth: computeMovement(categories[key].current, categories[key].previous),
+      });
+      tempArr.sort((a, b) => a.current - b.current);
+    }
+    setSortedData(tempArr);
+  }, [gameSessions]);
+
   return (
     <React.Fragment>
       <Box>
         <Card p={0} variant={"unstyled"}>
           <CardBody p={0}>
-            <Box mt={3} mb={5} px={5}>
+            <Box mt={3} mb={5} px={4}>
               <Flex>
                 <Heading size="md" color={"horizon.300"}>
                   Income per {filter.charAt(0).toUpperCase() + filter.slice(1)}
                 </Heading>
-              </Flex>
-              <Flex mt="20px">
-                <HStack spacing={1} color={"horizon.300"}>
-                  <Text fontSize={"14px"} fontWeight={"800"}>
-                    Last Week: {weekBefore.clone().weekday(0).format('MMM DD, YYYY')} - {weekBefore.format('MMM DD, YYYY')}
-                  </Text>
-                  <Divider orientation="vertical" ml="20px" mr="20px" />
-                  <Text fontSize={"14px"} fontWeight={"800"}>
-                    Current Week: {yesterday.clone().weekday(0).format('MMM DD, YYYY')} - {yesterday.format('MMM DD, YYYY')}
-                  </Text>
-                </HStack>
               </Flex>
             </Box>
             <TableContainer size="sm" mt={0}>
@@ -98,39 +141,38 @@ export const IncomePerCustomer = ({ topData, yesterday, weekBefore, filter }) =>
                   </Tr>
                 </Thead>
                 <Tbody p={0} m={0}>
-                  {topData.map((topElement, index) => {
+                  {sortedData.map((element, index) => {
                     const isOddIndex = index % 2 !== 1;
                     return (
                       <Tr
-                        key={topElement.name}
+                        key={element.category}
                         py={0}
                         m={0}
-                        // px={3}
                         className={isOddIndex && styles.striped}
                         cursor={"pointer"}
                         _hover={{ bg: "#ECF1E3" }}
                       >
-                        <Td justifyItems={"center"}>{topElement.name}</Td>
+                        <Td justifyItems={"center"}>{element.category}</Td>
 
                         <Td isNumeric>
-                          {parseFloat(topElement.last_total_earnings)
+                          {parseFloat(element.previous)
                             .toFixed(2)
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         </Td>
                         <Td isNumeric>
-                          {parseFloat(topElement.current_total_earnings)
+                          {parseFloat(element.current)
                             .toFixed(2)
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         </Td>
                         <Td isNumeric>
                           <Flex>
-                            {parseFloat(topElement.growth)
+                            {parseFloat(element.growth)
                               .toFixed(2)
                               .toString()
                               .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "%"}
-                            {topElement.growth <= 0 ? (
+                            {element.growth <= 0 ? (
                               <Stat ml={1}>
                                 <StatArrow
                                   type="decrease"

@@ -56,7 +56,7 @@ export class CustomerController {
 
   @Get(':customerId/game-session')
   @UseGuards(AuthGuard())
-  public async findReportGgr(
+  public async findGameSessions(
     @Query() query: ReportDto,
     @Param() params: any,
     @Res() res: Response
