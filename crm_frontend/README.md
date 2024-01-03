@@ -9,7 +9,7 @@ Frontend codebase for Horizon CRM.
 ### Requirements
 
 - [NVM](https://github.com/nvm-sh/nvm)
-- CRM API setup. Refer to README in the rest_api folder.
+- CRM API setup. Refer to README in the rest_api_v2 folder.
 - Access to the GIT repository project. 
   The assumption is that you've already cloned the codebase in your local machine
   and is inside the project folder as reference.

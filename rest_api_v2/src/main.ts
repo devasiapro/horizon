@@ -16,6 +16,6 @@ async function bootstrap() {
     exceptionFactory: validationExceptionFactory                                     
   }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  await app.listen(3001);
+  await app.listen(8000);
 }
 bootstrap();
