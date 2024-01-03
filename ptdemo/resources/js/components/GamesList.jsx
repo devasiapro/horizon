@@ -111,14 +111,14 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
             return (
               <div 
                 key={game.id} 
-                className="col-lg-2 col-md-4 col-sm-4 col-xs-4 mb-4" 
+                className="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-xs-6 mb-4" 
                 onMouseOver={(ev) => onMouseOver(ev, game)}
                 onMouseOut={(ev) => onMouseOut(ev, game)}
               >
                 <div className="image-wrapper d-flex justify-content-center">
                   <img 
                     alt={game.name}
-                    src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`}
+                    src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`} 
                     className="img-fluid" 
                   />
                   <div className={`overlay mb-3 ${game.isHover ? '' : 'd-none'}`}>

@@ -65,6 +65,29 @@ export const GamesContainer = ({ user, isLogin }) => {
 
   return (
     <div className="container-games pt-4 pb-4 mb-5">
+
+      <div className="mx-5 row d-lg-none">
+        <div className="col">
+          <h2>
+          {filter.charAt(0).toUpperCase() + filter.slice(1)} Games
+          </h2>
+        </div>
+        <div className="col">
+          <div className="input-group">
+            <input 
+              value={search}
+              onChange={(ev) => setSearch(ev.target.value)}
+              placeholder="Search Game ..."
+              type="text" 
+              className="text-dark form-control form-control-sm bg-light placeholder-dark border-0" 
+            />
+            <span className="input-group-text bg-light border-0">
+              <img src="/images/search_icon.svg" />
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="d-lg-block d-none">
         <GameFilter 
           setSearch={setSearch} 
