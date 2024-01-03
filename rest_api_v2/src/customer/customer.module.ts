@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { customerProviders } from './customer.providers';
 import { CustomerService } from './customer.service';
@@ -9,6 +9,7 @@ import { KioskModule } from '../kiosk/kiosk.module';
 import { InstanceModule } from '../instance/instance.module';
 import { GameSessionModule } from '../game-session/game-session.module';
 import { AuthModule } from '../auth/auth.module';
+import { ContactModule } from '../contact/contact.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { AuthModule } from '../auth/auth.module';
     KioskModule,
     InstanceModule,
     GameSessionModule,
-    AuthModule
+    forwardRef(() => ContactModule),
+    AuthModule,
   ],
   providers: [
     ...customerProviders,

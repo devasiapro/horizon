@@ -5,6 +5,7 @@ import {
   Get, 
   Post, 
   Patch,
+  Delete,
   Res, 
   Body,
   HttpStatus,
@@ -23,6 +24,7 @@ import { WalletTypeEnum } from '../wallet-type/wallet-type.enum';
 import { KioskService } from '../kiosk/kiosk.service';
 import { InstanceService } from '../instance/instance.service';
 import { GameSessionService } from '../game-session/game-session.service';
+import { ContactService } from '../contact/contact.service';
 
 @Controller('customer')
 export class CustomerController {
@@ -32,7 +34,8 @@ export class CustomerController {
     private walletTypeService: WalletTypeService,
     private instanceService: InstanceService,
     private kioskService: KioskService,
-    private gameSessionService: GameSessionService
+    private gameSessionService: GameSessionService,
+    private contactService: ContactService
   ) {}
 
   @Get('')
@@ -109,7 +112,7 @@ export class CustomerController {
     if (createCustomerDto.parent) {
       parent = await this.customerService.findByBrandName(createCustomerDto.parent);
       if (!parent) {
-        return res.status(400).json({ test: 'est' });
+        return res.status(400).json({ group: 'Group does not exists.' });
       }
     }
 
@@ -122,7 +125,9 @@ export class CustomerController {
     const walletType = await this.walletTypeService.findById(createCustomerDto.wallet_type_id);
 
     if (!walletType) {
-      return res.status(400).json();
+      return res.status(400).json({
+        wallet_type: 'Wallet type does not exists.' 
+      });
     }
 
     customer.walletType = walletType;
@@ -162,5 +167,23 @@ export class CustomerController {
 
     }
     return response.status(200).json({customerId});
+  }
+
+  @Delete(':customerId')
+  @UseGuards(AuthGuard())
+  public async delete(
+    @Param() params: any, 
+    @Res() response: Response
+  ) {
+    const customerId = params.customerId;
+    const children = await this.customerService.fetchChildren(customerId);
+    if (children.length > 0) {
+      return response.status(400).json({
+        customer: `Customer with sub-brands can't be deleted. Please delete the sub-brands first.`
+      });
+    }
+    await this.contactService.deleteByCustomer(customerId);
+    await this.customerService.deleteById(customerId);
+    return response.status(200).json({delete: 'ok'});
   }
 }

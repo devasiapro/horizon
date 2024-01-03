@@ -28,4 +28,7 @@ export class Contact {
 
   @ManyToOne(() => Customer, (customer) => customer.contacts)
   customer: Customer;
+
+  @Column({ type: 'int' })
+  customerId: number;
 }

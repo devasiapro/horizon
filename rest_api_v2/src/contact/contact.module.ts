@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { ContactController } from './contact.controller';
@@ -9,7 +9,7 @@ import { CustomerModule } from '../customer/customer.module';
 @Module({
   imports: [
     DatabaseModule,
-    CustomerModule,
+    forwardRef(() => CustomerModule),
     AuthModule
   ],
   controllers: [ContactController],
