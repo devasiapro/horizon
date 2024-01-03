@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +33,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
 
     window.iapiLoginAndGetTempToken(
       user.username, 
-      user.password, 
+      Cookies.get('password'), 
       language, 
       languageCode
     );
@@ -52,7 +53,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
 
     const formData = new FormData();
     formData.append('username', user.username);
-    formData.append('password', user.password);
+    formData.append('password', Cookies.get('password'));
     console.log('url', url);
     try {
       const response = await fetch(url, {

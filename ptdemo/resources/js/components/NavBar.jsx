@@ -7,6 +7,7 @@ export const NavBar = ({ setIsShowModal, setIsLogin, setUser, isLogin }) => {
       password: ''
     });
     setIsLogin(false);
+    Cookies.remove('password');
     window.iapiLogout(1, 1);
   };
 
