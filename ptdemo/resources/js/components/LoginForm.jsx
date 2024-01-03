@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export const LoginForm = ({ errors, user, setUser }) => {
   const [ isLoading, setIsLoading ] = useState(false);
@@ -10,6 +11,7 @@ export const LoginForm = ({ errors, user, setUser }) => {
     ev.preventDefault();
     setIsLoading(true);
     try {
+      Cookies.set('password', user.password);
       window.iapiSetClientType('casino'); 
       window.iapiSetClientPlatform('web');
       window.iapiLogin(user.username, user.password, 1, language);
