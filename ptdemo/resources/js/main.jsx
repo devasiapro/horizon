@@ -7,6 +7,7 @@ import { DemoMarquee } from './components/DemoMarquee';
 import { GamesContainer } from './components/GamesContainer';
 import { Footer } from './components/Footer';
 import { LoginModal } from './components/LoginModal';
+import Cookies from 'js-cookie';
 
 const App = () => {
   const [user, setUser] = useState({
@@ -43,6 +44,7 @@ const App = () => {
     }
     setIsLogin(true);
     setIsShowModal(false);
+    Cookies.set('password', user.password);
   };
 
   const calloutGetLoggedInPlayer = (response) => {
