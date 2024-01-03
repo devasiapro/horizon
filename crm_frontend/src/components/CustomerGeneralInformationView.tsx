@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+  Divider,
   Button,
   ButtonGroup,
   Grid,
   GridItem,
   Image,
   Box,
+  Flex,
   Heading
 } from '@chakra-ui/react';
 import axios from 'axios';
@@ -16,13 +18,26 @@ import { StockFormButton } from './StockFormButton';
 
 export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [contactForms, setContactForms] = useState([]);
 
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
 
-  const update = async (ev) => {
-    ev.preventDefault();
-    setIsEditMode(false);
+  const addContactForm = () => {
+    setContactForms([...contactForms, 
+      {
+        id: Math.random() * (1000 - 1) + 1,
+        labelEmail: 'Email',
+        email: '',
+        labelSkypeId: 'Skype ID',
+        skypeId: '',
+        labelTestUserCredential: 'Test User Credential',
+        testUserCredential: ''
+      }        
+    ]); 
+  };
+
+  const updateGeneralInformation = async () => {
     const response = await axios.patch(
       `${import.meta.env.VITE_API_URL}/customer/${customer.id}`, {
         instance: customer.instance ? customer.instance.name : null,
@@ -33,6 +48,36 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
         }
       }
     );
+  };
+
+  const createNewContacts = async () => {
+    const contacts = contactForms.map(contact => {
+      return {
+        email: contact.email,
+        skype_id: contact.skypeId,
+        test_user_credential: contact.testUserCredential
+      };
+    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/contact`, {
+        customer: customer.id,
+        contacts
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  };
+
+  const deleteCustomer = async (ev) => {
+  };
+
+  const update = async (ev) => {
+    ev.preventDefault();
+    setIsEditMode(false);
+    updateGeneralInformation();
+    createNewContacts();
   };
 
   return ( 
@@ -59,7 +104,13 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
             Save
           </Button>
         }
-        <Button bg="white" colorScheme="white" size="xs">
+        <Button 
+          type={"button"} 
+          onClick={(ev) => {deleteCustomer(ev)}} 
+          bg={"white"}
+          colorScheme={"white"} 
+          size={"xs"}
+        >
           <Image boxSize="30px" src="/images/delete_icon.svg" />
         </Button>
       </Box>
@@ -132,11 +183,97 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
           }
         </GridItem>
         <GridItem colSpan={3}>
-          <Heading>Contact Details:</Heading>
-          <InlineInputText label={"Name"} />
-          <InlineInputText label={"Email"} />
-          <InlineInputText label={"Skype ID"} />
-          <InlineInputText label={"Test User Credentials"} />
+          <Flex>
+            <Heading>
+              Contact Details:
+            </Heading> 
+            {
+              isEditMode && (
+                <Button 
+                  ms={2}
+                  onClick={(ev) => addContactForm(ev)}
+                  colorScheme="horizon" 
+                  size="sm"
+                >
+                  Additional Contact
+                </Button>
+              )
+            }
+          </Flex>
+
+          {
+            contactForms.map((contactForm, index) => {
+              return (
+                <React.Fragment key={contactForm.id}>
+                  <InlineInputText 
+                    label={contactForm.labelEmail} 
+                    value={contactForm.email}  
+                    onChange={(ev) => {
+                      setContactForms(contactForms.map((contactForm, index2) => {
+                        if (index === index2) {
+                          contactForm['email'] = ev.target.value;
+                        }
+                        return contactForm;
+                      }))
+                    }}
+                  />
+                  <InlineInputText 
+                    label={contactForm.labelSkypeId} 
+                    value={contactForm.skypeId}  
+                    onChange={(ev) => {
+                      setContactForms(contactForms.map((contactForm, index2) => {
+                        if (index === index2) {
+                          contactForm['skypeId'] = ev.target.value;
+                        }
+                        return contactForm;
+                      }))
+                    }}
+                  />
+                  <InlineInputText 
+                    label={contactForm.labelTestUserCredential} 
+                    value={contactForm.testUserCredential}  
+                    onChange={(ev) => {
+                      setContactForms(contactForms.map((contactForm, index2) => {
+                        if (index === index2) {
+                          contactForm['testUserCredential'] = ev.target.value;
+                        }
+                        return contactForm;
+                      }))
+                    }}
+                  />
+                  <Divider mb={"4"} />
+                </React.Fragment>
+              );
+            })
+          }
+
+          {
+            customer.contacts.map(contact => {
+              return (
+                <React.Fragment key={contact.id}>
+                  <InlineInputText  
+                    isDisabled={true}
+                    label={"Email"} 
+                    onChange={(ev) => {}}
+                    value={contact.email}
+                  />
+                  <InlineInputText  
+                    isDisabled={true}
+                    label={"Skype ID"} 
+                    onChange={(ev) => {}}
+                    value={contact.skypeId}
+                  />
+                  <InlineInputText  
+                    isDisabled={true}
+                    label={"Test User Credential"} 
+                    onChange={(ev) => {}}
+                    value={contact.testUserCredential}
+                  />
+                  <Divider mb={5} />
+                </React.Fragment>
+              ); 
+            })
+          }
         </GridItem>
       </Grid>
     </form>

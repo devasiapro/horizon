@@ -48,7 +48,8 @@ export const CustomerView = () => {
     instance: {
       id: 0,
       name: ''
-    }
+    },
+    contacts: []
   });
 
   const params = useParams();
@@ -120,6 +121,7 @@ export const CustomerView = () => {
           id: 0,
           name: ''
         },
+        contacts: customerModel.contacts
       });
     } catch (err) {
       console.log('err', err);

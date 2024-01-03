@@ -20,6 +20,7 @@ import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
 import { WalletTypeModule } from './wallet-type/wallet-type.module';
 import { ValidationModule } from './validation/validation.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { ValidationModule } from './validation/validation.module';
     UserModule,
     ReportModule,
     WalletTypeModule,
-    ValidationModule
+    ValidationModule,
+    ContactModule
   ],
   controllers: [AppController],
   providers: [AppService],
