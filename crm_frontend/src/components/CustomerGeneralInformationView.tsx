@@ -10,6 +10,7 @@ import {
   Flex,
   Heading
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAuthHook } from '../hooks/useAuthHook';
@@ -22,6 +23,7 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
 
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
+  const navigate = useNavigate();
 
   const addContactForm = () => {
     setContactForms([...contactForms, 
@@ -71,6 +73,18 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
   };
 
   const deleteCustomer = async (ev) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/customer/${customer.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      navigate('/customer');
+    } catch (err) {
+      console.log('err', err);
+    }
   };
 
   const update = async (ev) => {

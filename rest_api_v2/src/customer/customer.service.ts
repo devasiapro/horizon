@@ -19,6 +19,15 @@ export class CustomerService {
     return customers;
   }
 
+  public async fetchChildren(parentId) {
+    const customers = await this.customerRepository.find({
+      where: {
+        parentId: parentId,
+      }        
+    });
+    return customers;
+  }
+
   public async findByBrandName(brandName: string): Promise<Customer> {
     const customer = await this.customerRepository.findOneBy({ brandName });
     return customer;
@@ -44,5 +53,9 @@ export class CustomerService {
   public async store(customer: Customer): Promise<Customer> {
     await this.customerRepository.save(customer);
     return customer;
+  }
+
+  public async deleteById(customerId) {
+    await this.customerRepository.delete({ id: customerId });
   }
 }

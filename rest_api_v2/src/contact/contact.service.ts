@@ -13,4 +13,8 @@ export class ContactService {
     await this.contactRepository.save(contact);
     return contact;
   }
+
+  public async deleteByCustomer(customerId) {
+    await this.contactRepository.delete({ customerId });
+  }
 }

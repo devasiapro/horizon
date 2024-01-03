@@ -31,6 +31,9 @@ export class Customer {
   @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
   parent: Customer;
 
+  @Column({ type: 'int' })
+  parentId: number;
+
   @OneToMany(() => Customer, (customer) => customer.parent)
   subCustomers: Customer[];
 
