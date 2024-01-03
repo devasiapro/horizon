@@ -33,7 +33,8 @@ export class CustomerService {
         parent: true,
         walletType: true,
         instance: true,
-        kiosk: true 
+        kiosk: true,
+        contacts: true
       } 
     });
     console.log(customer.parent);

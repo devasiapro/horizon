@@ -13,6 +13,7 @@ import { GameSession } from '../game-session/game-session.entity';
 import { WalletType } from '../wallet-type/wallet-type.entity';
 import { Kiosk } from '../kiosk/kiosk.entity';
 import { Instance } from '../instance/instance.entity';
+import { Contact } from '../contact/contact.entity';
 
 @Entity()
 export class Customer {
@@ -48,5 +49,6 @@ export class Customer {
   @Column({ length: 256 })
   skypeGroup: string;
 
-
+  @OneToMany(() => Contact, (contact) => contact.customer)
+  contacts: Contact[]
 }
