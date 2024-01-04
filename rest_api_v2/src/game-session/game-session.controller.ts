@@ -24,7 +24,6 @@ export class GameSessionController {
     const startDate = query.start_date;
     const endDate = query.end_date;
     const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
-    console.log('gameSessions', gameSessions);
     return res.status(200).json(gameSessions);
   }
 }

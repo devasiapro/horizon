@@ -17,7 +17,6 @@ import {
   Skeleton,
   useToast
 } from "@chakra-ui/react";
-import axios from 'axios';
 import moment from 'moment';
 
 import { useAuthHook } from '../hooks/useAuthHook';
@@ -39,59 +38,10 @@ export const Home = () => {
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
   
-  const [gameSessions, setGameSessions] = useState({
-    current: [],
-    previous: []
-  });
-
   const currentDateStart = moment().startOf('month');
   const currentDateEnd = moment().subtract(1, 'days');
   const previousDateStart = moment().subtract(1, 'months').startOf('month');
   const previousDateEnd = moment().subtract(1, 'months').subtract(1, 'days');
-
-  const fetchGameSessions = async (dateStart, dateEnd) => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/game-session`, {
-          params: {
-            start_date: dateStart,
-            end_date: dateEnd
-          },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-      }
-    ); 
-    return Promise.resolve(response.data);
-  };
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const responses = await Promise.all([
-          fetchGameSessions(
-            currentDateStart.format('YYYY-MM-DD'), 
-            currentDateEnd.format('YYYY-MM-DD')
-          ),
-          fetchGameSessions(
-            previousDateStart.format('YYYY-MM-DD'), 
-            previousDateEnd.format('YYYY-MM-DD')
-          ),
-        ]);
-        setGameSessions({
-          current: responses[0],
-          previous: responses[1]
-        });
-      } catch (err) {
-        console.log('err', err);
-      } finally {
-
-      }
-    };
-    init();                 
-  }, []);
-
-  useEffect(() => {
-  }, [selectedIncomeFilter]);
 
   return (
     <Box mx={6} mt={8} mb={8}>
@@ -107,7 +57,6 @@ export const Home = () => {
         mt={{ base: 1, sm: 2, md: 4, lg: 6 }}
       >
         <KPIContainer 
-          gameSessions={gameSessions} 
           currentDateStart={currentDateStart}
           currentDateEnd={currentDateEnd}
           previousDateStart={previousDateStart}
@@ -123,14 +72,13 @@ export const Home = () => {
             boxShadow="lg"
             borderRadius={"5px"}
           >
-            <Skeleton isLoaded={!isLoading}>
-              <IncomePerCategory
-                filter={selectedIncomeFilter}
-                gameSessions={gameSessions}
-                dateStart={currentDateStart}
-                dateEnd={currentDateEnd}
-              />
-            </Skeleton>
+            <IncomePerCategory
+              filter={selectedIncomeFilter}
+              currentDateStart={currentDateStart}
+              currentDateEnd={currentDateEnd}
+              previousDateStart={previousDateStart}
+              previousDateEnd={previousDateEnd}
+            />
           </GridItem>
           <GridItem colSpan={{ base: 12, lg: 6 }}>
             <Box boxShadow="lg" mb={4}>
@@ -140,11 +88,15 @@ export const Home = () => {
                   currentDateEnd={currentDateEnd}
                   previousDateStart={previousDateStart}
                   previousDateEnd={previousDateEnd}
-                  gameSessions={gameSessions} 
                 />
               </Skeleton>
             </Box>
-            <DistributionChart gameSessions={gameSessions} />
+            <DistributionChart 
+              currentDateStart={currentDateStart}
+              currentDateEnd={currentDateEnd}
+              previousDateStart={previousDateStart}
+              previousDateEnd={previousDateEnd}
+            />
           </GridItem>
         </Grid>
       </Box>

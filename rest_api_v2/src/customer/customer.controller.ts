@@ -57,6 +57,41 @@ export class CustomerController {
     return res.status(200).json(customer);
   }
 
+  @Get(':customerId/kpi')
+  @UseGuards(AuthGuard())
+  public async findCustomerKpi(
+    @Query() query: ReportDto,
+    @Param() params: any,
+    @Res() res: Response
+  ) {
+    const customerId = params.customerId;
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+
+    const customer = await this.customerService.findById(customerId);
+    const gameSessions = await this
+      .gameSessionService
+      .fetchByCustomer(customer, startDate, endDate);
+
+    const totalWins = gameSessions
+      .reduce((sum, current) => sum + Number(current.totalGameWins), 0);
+
+    const totalBets = gameSessions
+      .reduce((sum, current) => sum + Number(current.totalGameBets), 0);
+
+    const kpi = {
+      ggr: gameSessions
+        .reduce((sum, current) => sum + Number(current.totalIncome), 0),
+      total_bets: totalBets,
+      total_players: gameSessions
+        .reduce((sum, current) => sum + Number(current.playersCount), 0),
+      rtp: totalWins / totalBets,
+      bet_count: gameSessions
+        .reduce((sum, current) => sum + Number(current.gamesCount), 0)
+    };
+    return res.status(200).json(kpi);
+  }
+
   @Get(':customerId/game-session')
   @UseGuards(AuthGuard())
   public async findGameSessions(
