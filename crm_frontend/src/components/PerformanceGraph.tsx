@@ -100,7 +100,7 @@ export const PerformanceGraph = ({
       );
     }
     setPerformances({
-      labels: [currents.map((current, index) => index + 1)],
+      labels: currents.map((current, index) => index + 1),
       datasets: [
         {
           label: 'Current Month',
@@ -126,7 +126,7 @@ export const PerformanceGraph = ({
       >
         <Box my={2}>
           <Heading size={{ base: "sm", sm: "md" }} color={"horizon.300"}>
-            Week to Date Performance
+            Month to Date Performance
           </Heading>
         </Box>
         <Box pb={1}>
