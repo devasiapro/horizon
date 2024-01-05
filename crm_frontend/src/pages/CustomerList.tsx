@@ -199,8 +199,6 @@ export const CustomerList = () => {
         </Button>
       </Flex>
       <SimpleGrid>
-
-        <Skeleton isLoaded={!isLoading}>
         <TableContainer
           bg="white"
           mb="10px"
@@ -255,7 +253,6 @@ export const CustomerList = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        </Skeleton>
       </SimpleGrid>
       <CustomerCreateModal isOpen={isOpen} onClose={onClose} />
     </Box>

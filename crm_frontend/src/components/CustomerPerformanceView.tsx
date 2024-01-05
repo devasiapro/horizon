@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Grid, 
   GridItem,
+  Skeleton,
   Flex
 } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
@@ -28,6 +29,7 @@ export const CustomerPerformanceView = ({ customer }) => {
     label: 'Monthly Weekly Players',
     movement: 0.00
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const params = useParams();
   const customerId = params.customerId;
@@ -37,6 +39,7 @@ export const CustomerPerformanceView = ({ customer }) => {
   useEffect(() => {
     const init = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/customer/${customerId}/player-count`, {
             headers: {
@@ -64,7 +67,9 @@ export const CustomerPerformanceView = ({ customer }) => {
       } catch (err) {
         console.log('err', err);
       } finally {
-
+        setTimeout(() => {
+        setIsLoading(false);
+        }, 3000);
       }
     };
     init();
@@ -75,16 +80,19 @@ export const CustomerPerformanceView = ({ customer }) => {
       <GridItem w="100%">
         <Flex justifyContent={"space-between"} grow={1} gap={2}>
           <PerformanceCard 
+            isLoading={isLoading}
             movementPercent={dailyPlayerStat.movement} 
             value={dailyPlayerStat.value}
             label={dailyPlayerStat.label} 
           />
           <PerformanceCard 
+            isLoading={isLoading}
             movementPercent={weeklyPlayerStat.movement} 
             value={weeklyPlayerStat.value}
             label={weeklyPlayerStat.label} 
           />
           <PerformanceCard 
+            isLoading={isLoading}
             movementPercent={monthlyPlayerStat.movement} 
             value={monthlyPlayerStat.value}
             label={monthlyPlayerStat.label} 

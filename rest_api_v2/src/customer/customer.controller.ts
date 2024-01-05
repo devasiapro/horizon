@@ -82,7 +82,8 @@ export class CustomerController {
       .clone()
       .startOf('month')
       .format('YYYY-MM-DD');
-
+    console.log(previousDateStart, previousDateEnd);
+    console.log(currentDateStart, currentDateEnd);
     const responses = await Promise.all([
       this.gameSessionService.fetchByCustomer(customer, currentDateStart, currentDateEnd),
       this.gameSessionService.fetchByCustomer(customer, previousDateStart, previousDateEnd),
@@ -90,7 +91,7 @@ export class CustomerController {
 
     const gameSessions = {
       current: responses[0],
-      previous: responses[0]
+      previous: responses[1]
     };
 
     const totalCurrentDaily = gameSessions.current.filter(gameSession => {
@@ -137,10 +138,13 @@ export class CustomerController {
 
     return res.status(200).json({
       daily: totalCurrentDaily,
+      daily_previous: totalPreviousDaily,
       daily_movement: movementDaily,
       weekly: totalCurrentWeekly,
+      weeky_previous: totalPreviousWeekly,
       weekly_movement: movementWeekly,
       monthly: totalCurrentMonthly,
+      monthly_previous: totalPreviousMonthly,
       monthly_movement: movementMonthly,
     });
   }
@@ -370,6 +374,7 @@ export class CustomerController {
   }
 
   private computeMovement (current, previous) {
-    return ((current - previous) / ((current + previous) / 2 )) * 100
+    console.log(current, previous);
+    return ((current - previous) / ((current + previous) / 2 )) * 100;
   }
 }
