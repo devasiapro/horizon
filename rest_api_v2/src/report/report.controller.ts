@@ -1,11 +1,106 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
+
+import { GameSessionService } from '../game-session/game-session.service';
+import { ReportQueryDto } from './report-query.dto';
 
 @Controller('report')
 export class ReportController {
 
+  public constructor(private gameSessionService: GameSessionService) {}
+
   @Get('/kpi')
-  public fetchKpi() {
-    return [];
+  @UseGuards(AuthGuard())
+  public async fetchKpi( 
+    @Query() query: ReportQueryDto,
+    @Res() res: Response
+  ) {
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
+
+    const totalWins = gameSessions
+      .reduce((sum, current) => sum + Number(current.totalGameWins), 0);
+
+    const totalBets = gameSessions
+      .reduce((sum, current) => sum + Number(current.totalGameBets), 0);
+
+    const kpi = {
+      ggr: gameSessions
+        .reduce((sum, current) => sum + Number(current.totalIncome), 0),
+      total_bets: totalBets,
+      total_players: gameSessions
+        .reduce((sum, current) => sum + Number(current.playersCount), 0),
+      rtp: totalWins / totalBets,
+      bet_count: gameSessions
+        .reduce((sum, current) => sum + Number(current.gamesCount), 0)
+    };
+    return res.status(200).json(kpi);
+  }
+
+  // STUB: Currently handles /ggr only.
+  @Get('/distribution/:indicator')
+  @UseGuards(AuthGuard())
+  public async fetchDistributionReport(
+    @Query() query: ReportQueryDto,
+    @Res() res: Response
+  ) {
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
+
+    const gameTypeCategories = {
+      'Live Games': 0,
+      'Slot Machines': 0,
+      'Progressive Slot Machines': 0 
+    };
+    gameSessions.forEach(gameSession => {
+      if (gameSession.game.gameType.name in gameTypeCategories) {
+        gameTypeCategories[gameSession.game.gameType.name] += Number(gameSession.totalIncome);
+      }
+    });
+    return res.status(200).json(gameTypeCategories);
+  }
+
+  // STUB: Currently handles /ggr only.
+  @Get('/daily/:indicator')
+  @UseGuards(AuthGuard())
+  public async fetchDailyReport(
+    @Query() query: ReportQueryDto,
+    @Res() res: Response
+  ) {
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
+    const report = {};
+    gameSessions.forEach((gameSession) => {
+      report[gameSession.datePlayed] = 0;
+    });
+    gameSessions.forEach(gameSession => {
+      report[gameSession.datePlayed] += Number(gameSession.totalIncome);
+    });
+    return res.status(200).json(report);
+  }
+
+  // STUB: Currently handles /country/ggr only.
+  @Get('/:category/:indicator')
+  @UseGuards(AuthGuard())
+  public async fetchReportPerCategoryAndIndicator(
+    @Query() query: ReportQueryDto,
+    @Res() res: Response
+  ) {
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
+    const categories = {};
+    gameSessions.forEach((gameSession) => {
+      categories[gameSession.player.countryName] = 0;
+    });
+    gameSessions.forEach((gameSession) => {
+      categories[gameSession.player.countryName] += Number(gameSession.totalIncome);
+    });
+    return res.status(200).json(categories);
   }
 
   @Get('/game-earning')

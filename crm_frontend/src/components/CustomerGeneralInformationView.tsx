@@ -269,19 +269,19 @@ export const CustomerGeneralInformationView = ({ setCustomer, customer }) => {
                     isDisabled={true}
                     label={"Email"} 
                     onChange={(ev) => {}}
-                    value={contact.email}
+                    value={contact.email ?? ''}
                   />
                   <InlineInputText  
                     isDisabled={true}
                     label={"Skype ID"} 
                     onChange={(ev) => {}}
-                    value={contact.skypeId}
+                    value={contact.skypeId ?? ''}
                   />
                   <InlineInputText  
                     isDisabled={true}
                     label={"Test User Credential"} 
                     onChange={(ev) => {}}
-                    value={contact.testUserCredential}
+                    value={contact.testUserCredential ?? '' }
                   />
                   <Divider mb={5} />
                 </React.Fragment>
