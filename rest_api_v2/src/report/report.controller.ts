@@ -84,7 +84,7 @@ export class ReportController {
   }
 
   // STUB: Currently handles /country/ggr only.
-  @Get('/:category/:indicator')
+  @Get('/rank')
   @UseGuards(AuthGuard())
   public async fetchReportPerCategoryAndIndicator(
     @Query() query: ReportQueryDto,
@@ -92,13 +92,37 @@ export class ReportController {
   ) {
     const startDate = query.start_date;
     const endDate = query.end_date;
+    const category = query.category;
+    const indicator = query.indicator;
+
     const gameSessions = await this.gameSessionService.findAll(startDate, endDate);
     const categories = {};
+
     gameSessions.forEach((gameSession) => {
-      categories[gameSession.player.countryName] = 0;
+      let key = gameSession.player.countryName;
+      if (category == "customer") {
+        if (!gameSession.customer) {
+          return;
+        }
+        key = gameSession.customer.brandName;
+      }
+      if (category == "product") {
+        key = gameSession.game.name;
+      }
+      categories[key] = 0;
     });
     gameSessions.forEach((gameSession) => {
-      categories[gameSession.player.countryName] += Number(gameSession.totalIncome);
+      let key = gameSession.player.countryName;
+      if (category == "customer") {
+        if (!gameSession.customer) {
+          return;
+        }
+        key = gameSession.customer.brandName;
+      }
+      if (category == "product") {
+        key = gameSession.game.name;
+      }
+      categories[key] += Number(gameSession.totalIncome);
     });
     return res.status(200).json(categories);
   }

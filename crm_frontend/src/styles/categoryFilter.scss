@@ -1,0 +1,15 @@
+.filter-item {
+  background-color: #ffffff;
+  color: #374A16;
+  font-weight: bold;
+  display: inline;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.filter-item.active {
+  background-color: #374A16;
+  color: #ffffff;
+}

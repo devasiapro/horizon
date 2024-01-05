@@ -44,7 +44,8 @@ export class GameSessionService {
             clientType: true,
             clientPlatform: true,
             gameType: true
-          }
+          },
+          customer: true
         },
         where: {
           datePlayed: startDate == endDate ? startDate : Between(startDate, endDate)        
@@ -56,6 +57,21 @@ export class GameSessionService {
   public async findAllByInstance(instanceId, startDate, endDate) {
     console.log(instanceId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({
+      select: {
+        id: true, 
+        kioskId: true, 
+        instanceId: true,
+        datePlayed: true,
+        maximumRtp: true,
+        gamesCount: true,
+        playersCount: true,
+        totalBets: true,
+        totalGameBets: true,
+        totalGameWins: true,
+        totalIncome: true,
+        refund: true,
+        totalPlayerWins: true,
+      },
       relations: {
         player: {
           country: true
@@ -69,8 +85,36 @@ export class GameSessionService {
     return gameSessions;
   }
 
+  public async findAllByInstanceId(instanceId) {
+    const gameSessions = await this.gameSessionRepository.find({
+      select: {
+        id: true, 
+        kioskId: true, 
+        instanceId: true,
+        datePlayed: true,
+        maximumRtp: true,
+        gamesCount: true,
+        playersCount: true,
+        totalBets: true,
+        totalGameBets: true,
+        totalGameWins: true,
+        totalIncome: true,
+        refund: true,
+        totalPlayerWins: true,
+      },
+      relations: {
+        player: {
+          country: true
+        }
+      },
+      where: {
+        instanceId: instanceId,
+      }
+    });
+    return gameSessions;
+  }
+
   public async findAllByKiosk(kioskId, startDate, endDate) {
-    console.log('findAllByKiosk', kioskId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({
       select: {
         id: true, 
@@ -95,6 +139,35 @@ export class GameSessionService {
       where: {
         kioskId: kioskId,
         datePlayed: Between(startDate, endDate)        
+      }
+    });
+    return gameSessions;
+  }
+
+  public async findAllByKioskId(kioskId) {
+    const gameSessions = await this.gameSessionRepository.find({
+      select: {
+        id: true, 
+        kioskId: true, 
+        instanceId: true,
+        datePlayed: true,
+        maximumRtp: true,
+        gamesCount: true,
+        playersCount: true,
+        totalBets: true,
+        totalGameBets: true,
+        totalGameWins: true,
+        totalIncome: true,
+        refund: true,
+        totalPlayerWins: true,
+      },
+      relations: {
+        player: {
+          country: true
+        }
+      },
+      where: {
+        kioskId: kioskId,
       }
     });
     return gameSessions;
