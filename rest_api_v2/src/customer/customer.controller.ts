@@ -13,11 +13,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import * as moment from "moment";
 import { CustomerService } from './customer.service';
 import { Customer } from './customer.entity';
 import { CreateCustomerDto } from './create-customer.dto';
 import { UpdateCustomerDto } from './update-customer.dto';
 import { ReportDto } from './report.dto';
+import { ReportDailyDto } from './report-daily.dto';
+import { ReportRankDto } from './report-rank.dto';
 import { WalletTypeService } from '../wallet-type/wallet-type.service';
 import { WalletType } from '../wallet-type/wallet-type.entity';
 import { WalletTypeEnum } from '../wallet-type/wallet-type.enum';
@@ -55,6 +58,150 @@ export class CustomerController {
   ) {
     const customer = await this.customerService.findById(params.customerId);
     return res.status(200).json(customer);
+  }
+
+  @Get(':customerId/player-count')
+  @UseGuards(AuthGuard())
+  public async findCustomerPlayerCount(
+    @Param() params: any,
+    @Res() res: Response
+  ) {
+    const customerId = params.customerId;
+    const customer = await this.customerService.findById(customerId);
+
+    const yesterday = moment().subtract(1, 'days');
+    const weekBefore = moment().subtract(8, 'days');
+        
+    const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
+    const currentDateEnd = yesterday.format('YYYY-MM-DD');
+    const currentMonthStart = moment().startOf('month').clone().format('YYYY-MM-DD');;
+    const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
+    const previousDateEnd = weekBefore.format('YYYY-MM-DD');
+    const previousMonthStart = moment()
+      .subtract(1, 'months')
+      .clone()
+      .startOf('month')
+      .format('YYYY-MM-DD');
+
+    const responses = await Promise.all([
+      this.gameSessionService.fetchByCustomer(customer, currentDateStart, currentDateEnd),
+      this.gameSessionService.fetchByCustomer(customer, previousDateStart, previousDateEnd),
+    ]);
+
+    const gameSessions = {
+      current: responses[0],
+      previous: responses[0]
+    };
+
+    const totalCurrentDaily = gameSessions.current.filter(gameSession => {
+      return gameSession.datePlayed == currentDateStart;
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const totalPreviousDaily = gameSessions.previous.filter(gameSession => {
+      return gameSession.datePlayed == previousDateStart;
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const movementDaily = this.computeMovement(totalCurrentDaily, totalPreviousDaily);
+
+    const totalCurrentWeekly = gameSessions.current.filter(gameSession => { 
+      return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const totalPreviousWeekly = gameSessions.previous.filter(gameSession => {
+      return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const movementWeekly = this.computeMovement(totalCurrentWeekly, totalPreviousWeekly);
+
+    const totalCurrentMonthly = gameSessions.current.filter(gameSession => { 
+      return moment(currentMonthStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const totalPreviousMonthly = gameSessions.previous.filter(gameSession => {
+      return moment(previousMonthStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
+    })
+    .reduce((total, current) => {
+      return total + Number(current.playersCount);
+    }, 0);
+    const movementMonthly = this.computeMovement(totalCurrentMonthly, totalPreviousMonthly);
+
+    return res.status(200).json({
+      daily: totalCurrentDaily,
+      daily_movement: movementDaily,
+      weekly: totalCurrentWeekly,
+      weekly_movement: movementWeekly,
+      monthly: totalCurrentMonthly,
+      monthly_movement: movementMonthly,
+    });
+  }
+
+  // STUB: handles country and GGR only for now.
+  @Get(':customerId/rank')
+  @UseGuards(AuthGuard())
+  public async fetchCustomerRank(
+    @Query() query: ReportRankDto,
+    @Param() params: any,
+    @Res() res: Response
+  ) {
+    const customerId = params.customerId;
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const category = query.category;
+    const indicator = query.indicator;
+
+    const customer = await this.customerService.findById(customerId);
+    const categories = {};
+    const gameSessions = await this
+      .gameSessionService
+      .fetchByCustomer(customer, startDate, endDate);
+    gameSessions.forEach((gameSession) => {
+      categories[gameSession.player.countryName] = {
+        income: 0,
+        bets: 0,
+      };
+    });
+    gameSessions.forEach((gameSession) => {
+      categories[gameSession.player.countryName]['income'] += Number(gameSession.totalIncome);
+      categories[gameSession.player.countryName]['bets'] += Number(gameSession.totalBets);
+    });
+    return res.status(200).json(categories);
+  }
+
+  // STUB: Currently handles /ggr only.
+  @Get(':customerId/daily-total')
+  @UseGuards(AuthGuard())
+  public async fetchCustomerDailyReport(
+    @Query() query: ReportDailyDto,
+    @Param() params: any,
+    @Res() res: Response
+  ) {
+    const customerId = params.customerId;
+    const startDate = query.start_date;
+    const endDate = query.end_date;
+    const category = query.category;
+
+    const customer = await this.customerService.findById(customerId);
+    const gameSessions = await this
+      .gameSessionService
+      .fetchByCustomer(customer, startDate, endDate);
+    const report = {};
+    gameSessions.forEach((gameSession) => {
+      report[gameSession.datePlayed] = 0;
+    });
+    gameSessions.forEach(gameSession => {
+      report[gameSession.datePlayed] += Number(gameSession.totalIncome);
+    });
+    return res.status(200).json(report);
   }
 
   @Get(':customerId/kpi')
@@ -220,5 +367,9 @@ export class CustomerController {
     await this.contactService.deleteByCustomer(customerId);
     await this.customerService.deleteById(customerId);
     return response.status(200).json({delete: 'ok'});
+  }
+
+  private computeMovement (current, previous) {
+    return ((current - previous) / ((current + previous) / 2 )) * 100
   }
 }
