@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Repository, Between } from 'typeorm';
 import { GameSession } from './game-session.entity';
+import { Customer } from '../customer/customer.entity';
+import { WalletTypeEnum } from '../wallet-type/wallet-type.enum';
 
 @Injectable()
 export class GameSessionService {
@@ -64,5 +66,33 @@ export class GameSessionService {
       }
     });
     return gameSessions;
+  }
+
+  public async fetchByCustomer(customer: Customer, startDate, endDate) { 
+    if (customer.walletType.id == WalletTypeEnum.SEAMLESS) {
+      if (!customer.instance) {
+        return Promise.resolve([]);
+      }
+      const gameSessions = await this.findAllByInstance(
+        customer.instance.id,
+        startDate,
+        endDate
+      );
+      return Promise.resolve(gameSessions);
+    }
+
+    if (customer.walletType.id == WalletTypeEnum.TRANSFER) {
+      if (!customer.kiosk) {
+        return Promise.resolve([]);
+      }
+      const gameSessions = await this.findAllByKiosk(
+        customer.kiosk.id,
+        startDate,
+        endDate
+      );
+      return Promise.resolve(gameSessions);
+    }
+
+    return Promise.resolve([]);
   }
 }

@@ -4,15 +4,15 @@ import {
   GridItem,
   Flex
 } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import axios from 'axios';
 import { PerformanceCard } from './PerformanceCard';
 import { CustomerPerformanceGraph } from './CustomerPerformanceGraph';
 import { CustomerPerformanceTable } from './CustomerPerformanceTable';
+import { useAuthHook } from '../hooks/useAuthHook';
 
-export const CustomerPerformanceView = ({ 
-  gameSessions, 
-  customer,
-}) => {
+export const CustomerPerformanceView = ({ customer }) => {
   const [dailyPlayerStat, setDailyPlayerStat] = useState({
     value: 0,
     label: 'Daily Players',
@@ -29,84 +29,47 @@ export const CustomerPerformanceView = ({
     movement: 0.00
   });
 
-  const yesterday = moment().subtract(1, 'days');
-  const weekBefore = moment().subtract(8, 'days');
+  const params = useParams();
+  const customerId = params.customerId;
+  const useAuth = useAuthHook();
+  const token = useAuth.getToken();
 
-  const currentDateStart = yesterday.clone().weekday(0).format('YYYY-MM-DD');
-  const currentDateEnd = yesterday.format('YYYY-MM-DD');
-  const currentMonthStart = moment().startOf('month').clone().format('YYYY-MM-DD');;
-  const previousDateStart = weekBefore.clone().weekday(0).format('YYYY-MM-DD');
-  const previousDateEnd = weekBefore.format('YYYY-MM-DD');
-  const previousMonthStart = moment()
-    .subtract(1, 'months')
-    .clone()
-    .startOf('month')
-    .format('YYYY-MM-DD');
-
-  const computeMovement = (current, previous) => {
-    return ((current - previous) / ((current + previous) / 2 )) * 100
-  };
-  
   useEffect(() => {
-    const totalCurrentDaily = gameSessions.current.filter(gameSession => {
-      return gameSession.datePlayed == currentDateStart;
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const totalPreviousDaily = gameSessions.previous.filter(gameSession => {
-      return gameSession.datePlayed == previousDateStart;
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const movementDaily = computeMovement(totalCurrentDaily, totalPreviousDaily);
-    setDailyPlayerStat({
-      value: totalCurrentDaily,
-      label: 'Daily Players',
-      movement: movementDaily
-    });
+    const init = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/customer/${customerId}/player-count`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            } 
+          }
+        ); 
+        console.log('response', response.data);
+        setDailyPlayerStat({
+          value: response.data.daily,
+          label: 'Daily Players',
+          movement: Number(response.data.daily_movement),
+        });
+        setWeeklyPlayerStat({
+          value: response.data.weekly,
+          label: 'Weekly Players',
+          movement: Number(response.data.weekly_movement),
+        });
+        setMonthlyPlayerStat({
+          value: response.data.monthly,
+          label: 'Monthly Players',
+          movement: Number(response.data.monthly_movement),
+        });
 
-    const totalCurrentWeekly = gameSessions.current.filter(gameSession => { 
-      return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const totalPreviousWeekly = gameSessions.previous.filter(gameSession => {
-      return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const movementWeekly = computeMovement(totalCurrentWeekly, totalPreviousWeekly);
-    setWeeklyPlayerStat({
-      value: totalCurrentWeekly,
-      label: 'Total Weekly Players',
-      movement: movementWeekly
-    });
+      } catch (err) {
+        console.log('err', err);
+      } finally {
 
-    const totalCurrentMonthly = gameSessions.current.filter(gameSession => { 
-      return moment(currentMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix();
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const totalPreviousMonthly = gameSessions.previous.filter(gameSession => {
-      return moment(previousMonthStart).unix() <= moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix();
-    })
-    .reduce((total, current) => {
-      return total + Number(current.playersCount);
-    }, 0);
-    const movementMonthly = computeMovement(totalCurrentMonthly, totalPreviousMonthly);
-    setMonthlyPlayerStat({
-      value: totalCurrentMonthly,
-      label: 'Total Monthly Players',
-      movement: movementMonthly
-    });
-
-  }, [gameSessions]);
-
+      }
+    };
+    init();
+  }, []);
+  
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={2}>
       <GridItem w="100%">
@@ -127,10 +90,10 @@ export const CustomerPerformanceView = ({
             label={monthlyPlayerStat.label} 
           />
         </Flex>
-        <CustomerPerformanceGraph gameSessions={gameSessions} />
+        <CustomerPerformanceGraph />
       </GridItem>
       <GridItem w="100^">
-        <CustomerPerformanceTable gameSessions={gameSessions} label={"Brand"} />
+        <CustomerPerformanceTable label={"Country"} />
       </GridItem>
     </Grid>
   );

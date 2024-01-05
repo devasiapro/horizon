@@ -7,6 +7,7 @@ import {
   CardFooter,
   Container,
   SimpleGrid,
+  Skeleton,
   Heading,
   Box,
   Tabs, 
@@ -24,14 +25,6 @@ import { CustomerGeneralInformationView } from '../components/CustomerGeneralInf
 import { CustomerPerformanceView } from '../components/CustomerPerformanceView';
 
 export const CustomerView = () => {
-  const [gameSessions, setGameSessions] = useState({
-    current: [],
-    previous: []
-  });
-  const [weeklyGameSessions, setWeeklyGameSessions] = useState({
-    current: [],
-    previous: []
-  });
   const [customer, setCustomer] = useState({
     brandName: '',
     parent: {
@@ -51,6 +44,7 @@ export const CustomerView = () => {
     },
     contacts: []
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const params = useParams();
   const useAuth = useAuthHook();
@@ -69,36 +63,12 @@ export const CustomerView = () => {
   const previousMonthStart = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD');
 
   useEffect(() => {
-    const init = async () => {
-      fetchCustomerInfo();
-      try {
-        const responses = await Promise.all([
-          fetchGameSessions(customerId, currentMonthStart, currentDateEnd),
-          fetchGameSessions(customerId, previousMonthStart, previousDateEnd)
-        ]);
-        setGameSessions({
-          current: responses[0],
-          previous: responses[1]
-        });
-        setWeeklyGameSessions({
-          current: responses[0].filter((gameSession) => {
-            return moment(currentDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(currentDateEnd).unix(); 
-          }),
-          previous: responses[1].filter((gameSession) => {
-            return moment(previousDateStart).unix() <= moment(gameSession.datePlayed).unix() && moment(gameSession.datePlayed).unix() <= moment(previousDateEnd).unix(); 
-          })
-        });
-      } catch (err) {
-          console.log('err', err);
-      } finally {
-
-      }
-    };
-    init();
+    fetchCustomerInfo();
   }, []);
 
   const fetchCustomerInfo = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/customer/${customerId}`, {
             headers: {
@@ -126,28 +96,7 @@ export const CustomerView = () => {
     } catch (err) {
       console.log('err', err);
     } finally {
-
-    }
-  };
-
-  const fetchGameSessions = async (customerId, dateStart, dateEnd) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/customer/${customerId}/game-session`, {
-            params: {
-              start_date: dateStart,
-              end_date: dateEnd
-            },
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-        }
-      ); 
-      return Promise.resolve(response.data);
-    } catch (err) {
-      return Promise.reject(err);
-    } finally {
-
+      setIsLoading(false);
     }
   };
 
@@ -166,7 +115,6 @@ export const CustomerView = () => {
         mt={{ base: 1, sm: 1, md: 1, lg: 1 }}
       >
         <KPIContainerCustomer
-          gameSessions={weeklyGameSessions}
           currentDateStart={yesterday.clone().weekday(0)}
           currentDateEnd={yesterday}
           previousDateStart={weekBefore.clone().weekday(0)}
@@ -182,14 +130,15 @@ export const CustomerView = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <CustomerGeneralInformationView 
-                setCustomer={setCustomer} 
-                customer={customer} 
-              />
+              <Skeleton isLoaded={!isLoading}>
+                <CustomerGeneralInformationView 
+                  setCustomer={setCustomer} 
+                  customer={customer} 
+                />
+              </Skeleton>
             </TabPanel>
             <TabPanel>
               <CustomerPerformanceView 
-                gameSessions={gameSessions} 
                 customer={customer} 
               />
             </TabPanel>
