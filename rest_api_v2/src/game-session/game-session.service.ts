@@ -18,21 +18,38 @@ export class GameSessionService {
 
   public async findAll(startDate, endDate) {
     console.log(startDate == endDate);
-    const gameSessions = await this.gameSessionRepository.find({
-      relations: {
-        player: {
-          country: true
+    const gameSessions = await this
+      .gameSessionRepository
+      .find({
+        select: {
+          id: true, 
+          kioskId: true, 
+          instanceId: true,
+          datePlayed: true,
+          maximumRtp: true,
+          gamesCount: true,
+          playersCount: true,
+          totalBets: true,
+          totalGameBets: true,
+          totalGameWins: true,
+          totalIncome: true,
+          refund: true,
+          totalPlayerWins: true,
         },
-        game: {
-          clientType: true,
-          clientPlatform: true,
-          gameType: true
+        relations: {
+          player: {
+            country: true
+          },
+          game: {
+            clientType: true,
+            clientPlatform: true,
+            gameType: true
+          }
+        },
+        where: {
+          datePlayed: startDate == endDate ? startDate : Between(startDate, endDate)        
         }
-      },
-      where: {
-        datePlayed: startDate == endDate ? startDate : Between(startDate, endDate)        
-      }
-    });
+      });
     return Promise.resolve(gameSessions);
   }
 
@@ -55,6 +72,21 @@ export class GameSessionService {
   public async findAllByKiosk(kioskId, startDate, endDate) {
     console.log('findAllByKiosk', kioskId, startDate, endDate);
     const gameSessions = await this.gameSessionRepository.find({
+      select: {
+        id: true, 
+        kioskId: true, 
+        instanceId: true,
+        datePlayed: true,
+        maximumRtp: true,
+        gamesCount: true,
+        playersCount: true,
+        totalBets: true,
+        totalGameBets: true,
+        totalGameWins: true,
+        totalIncome: true,
+        refund: true,
+        totalPlayerWins: true,
+      },
       relations: {
         player: {
           country: true
