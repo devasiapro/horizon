@@ -120,7 +120,7 @@ export const GamesList = ({ filter, user, isLogin, games, setGames }) => {
                   <img 
                     alt={game.name}
                     src={`/images/games_icons_desktop/${fetchImageName(game)}.jpg`} 
-                    className="img-fluid" 
+                    className="rounded img-fluid" 
                   />
                   <div className={`overlay mb-3 ${game.isHover ? '' : 'd-none'}`}>
                     <div className="d-sm-flex d-lg-none flex-column px-3">
