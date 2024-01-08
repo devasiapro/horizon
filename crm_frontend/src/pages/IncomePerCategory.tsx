@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Divider,
@@ -33,7 +34,8 @@ export const IncomePerCategory = ({
   currentDateEnd,
   previousDateStart,
   previousDateEnd,
-  filter 
+  filter,
+  setIsProcessing
 }) => {
   const [topData, setTopData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
@@ -41,6 +43,7 @@ export const IncomePerCategory = ({
 
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
+  const navigate = useNavigate();
 
   const computeMovement = (current, previous) => {
     if (current + previous === 0) {
@@ -51,10 +54,12 @@ export const IncomePerCategory = ({
 
   const fetchReport = async (dateStart, dateEnd) => {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/report/customer/ggr`, {
+      `${import.meta.env.VITE_API_URL}/report/rank`, {
           params: {
             start_date: dateStart.format('YYYY-MM-DD'),
             end_date: dateEnd.format('YYYY-MM-DD'),
+            category: filter,
+            indicator: 'ggr',
           },
           headers: {
             Authorization: `Bearer ${token}`
@@ -64,35 +69,53 @@ export const IncomePerCategory = ({
     return Promise.resolve(response);
   };
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        setIsLoading(true);
-        const responses = await Promise.all([
-          fetchReport(previousDateStart, previousDateEnd),
-          fetchReport(currentDateStart, currentDateEnd)
-        ]);
-        const previousCategories = responses[0].data;
-        const currentCategories = responses[1].data;
-        const tempArr = [];
-        for (const key in currentCategories) {
-          const previousCategory = previousCategories[key] ? previousCategories[key] : 0;
-          tempArr.push({
-            category: key,
-            current: currentCategories[key],
-            previous: previousCategory,
-            growth: computeMovement(currentCategories[key], previousCategories[key]),
-          });
-        }
-        tempArr.sort((a, b) => a.current - b.current);
-        setSortedData(tempArr);
-      } catch (err) {
-        console.log('err', err);
-      } finally {
-        setIsLoading(false);
+  const truncate = (str, n) => {
+    return (str.length > n) ? str.slice(0, n-1) + '...' : str;
+  };
+
+  const process = async () => {
+    try {
+      setIsLoading(true);
+      setIsProcessing(true);
+      const responses = await Promise.all([
+        fetchReport(previousDateStart, previousDateEnd),
+        fetchReport(currentDateStart, currentDateEnd)
+      ]);
+      const previousCategories = responses[0].data;
+      const currentCategories = responses[1].data;
+      const tempArr = [];
+      for (const key in currentCategories) {
+        const previousCategory = previousCategories[key] ? previousCategories[key] : 0;
+        tempArr.push({
+          category: truncate(key, 32),
+          current: currentCategories[key],
+          previous: previousCategory,
+          growth: computeMovement(currentCategories[key], previousCategories[key]),
+        });
       }
-    };
-    init();
+      tempArr.sort((a, b) => b.current - a.current);
+      setSortedData(tempArr.splice(0, 15));
+    } catch (err) {
+      console.log('err', err);
+    } finally {
+      setIsLoading(false);
+      setIsProcessing(false);
+    }
+  };
+
+  const onClick = (element) => {
+    if (filter != 'customer') {
+      return;
+    }
+    window.open(`/customer/12`, "_blank", "noreferrer");
+  };
+
+  useEffect(() => {
+    process();
+  }, [filter]);
+
+  useEffect(() => {
+    process();
   }, []);
 
   return (
@@ -160,6 +183,7 @@ export const IncomePerCategory = ({
                       const isOddIndex = index % 2 !== 1;
                       return (
                         <Tr
+                          onClick={(ev) => {onClick(element)}}
                           key={element.category}
                           py={0}
                           m={0}

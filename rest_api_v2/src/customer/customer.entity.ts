@@ -37,6 +37,9 @@ export class Customer {
   @OneToMany(() => Customer, (customer) => customer.parent)
   subCustomers: Customer[];
 
+  @OneToMany(() => GameSession, (gameSession) => gameSession.customer)
+  gameSessions: GameSession[];
+
   @ManyToOne(() => Kiosk, (kiosk) => kiosk.customers)
   kiosk: Kiosk;
 
