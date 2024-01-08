@@ -25,6 +25,7 @@ import { KPIContainer } from '../components/KPIContainer';
 import { EarningGamesContainer } from '../components/EarningGamesContainer';
 import { PerformanceGraph } from '../components/PerformanceGraph';
 import { DistributionChart } from '../components/DistributionChart';
+import '../styles/categoryFilter.scss';
 
 export const Home = () => {
   const [currentDateTime, setCurrentDateTime] = useState('');
@@ -34,6 +35,8 @@ export const Home = () => {
   });
   const [selectedIncomeFilter, setSelectedIncomeFilter] = useState('country');
   const [isLoading, setIsLoading] = useState(false);
+  const [isPerCategoryProcessing, setIsPerCategoryProcessing] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("country");
   const toast = useToast();
   const useAuth = useAuthHook();
   const token = useAuth.getToken();
@@ -43,13 +46,48 @@ export const Home = () => {
   const previousDateStart = moment().subtract(1, 'months').startOf('month');
   const previousDateEnd = moment().subtract(1, 'months').subtract(1, 'days');
 
+  const selectCategory = (category) => {
+    if (isPerCategoryProcessing) {
+      return;
+    }
+    setSelectedCategory(category);
+  };
+
   return (
     <Box mx={6} mt={8} mb={8}>
       <Box my={3}>
         <Flex align={"center"}>
-          <Heading size={["md", "lg"]} color="horizon.300">
-            Monthly
-          </Heading>
+          <Box>
+            <Heading size={["md", "lg"]} color="horizon.300">
+              Monthly Statistics
+            </Heading>
+          </Box>
+          <Spacer />
+          <Box 
+            bg={"white"} 
+            py={3} 
+            px={2}
+            borderRadius={10}
+          >
+            <div 
+              className={`filter-item ${selectedCategory === "country" ? "active" : ""}`}
+              onClick={(ev) => selectCategory('country')}
+            >
+              Country 
+            </div>
+            <div 
+              className={`filter-item ${selectedCategory === "customer" ? "active" : ""}`}
+              onClick={(ev) => selectCategory('customer')}
+            >
+              Customer 
+            </div>
+            <div 
+              className={`filter-item ${selectedCategory === "product" ? "active" : ""}`}
+              onClick={(ev) => selectCategory('product')}
+            >
+              Product
+            </div>
+          </Box>
         </Flex>
       </Box>
       <Box
@@ -73,7 +111,8 @@ export const Home = () => {
             borderRadius={"5px"}
           >
             <IncomePerCategory
-              filter={selectedIncomeFilter}
+              setIsProcessing={setIsPerCategoryProcessing}
+              filter={selectedCategory}
               currentDateStart={currentDateStart}
               currentDateEnd={currentDateEnd}
               previousDateStart={previousDateStart}

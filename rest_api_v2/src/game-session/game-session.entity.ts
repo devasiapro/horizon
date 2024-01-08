@@ -15,6 +15,7 @@ import { Currency } from '../currency/currency.entity';
 import { Game } from '../game/game.entity';
 import { Language } from '../language/language.entity';
 import { Instance } from '../instance/instance.entity';
+import { Customer } from '../customer/customer.entity';
 
 @Entity()
 export class GameSession {
@@ -45,6 +46,12 @@ export class GameSession {
   @ManyToOne(() => Language, (language) => language.gameSessions)
   @JoinColumn({ name: 'language', referencedColumnName: 'language' })
   language: Language;
+
+  @ManyToOne(() => Customer, (customer) => customer.gameSessions)
+  customer: Customer;
+
+  @Column({ type: 'int', nullable: true })
+  customerId: number;
 
   @Column({ type: 'date' })
   datePlayed: string;

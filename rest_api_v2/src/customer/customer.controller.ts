@@ -338,15 +338,23 @@ export class CustomerController {
       if (customer.walletType.id == WalletTypeEnum.SEAMLESS) {
         const instance = await this.instanceService.findByName(request.instance);
         customer.instance = instance;
+        const gameSessions = await this.gameSessionService.findAllByInstanceId(instance.id);
+        gameSessions.forEach(async (gameSession) => {
+          gameSession.customer = customer;
+          await this.gameSessionService.store(gameSession);
+        });
       }
 
       if (customer.walletType.id == WalletTypeEnum.TRANSFER) {
         const kiosk = await this.kioskService.findByName(request.kiosk);
         customer.kiosk = kiosk;
+        const gameSessions = await this.gameSessionService.findAllByKioskId(kiosk.id);
+        gameSessions.forEach(async (gameSession) => {
+          gameSession.customer = customer;
+          await this.gameSessionService.store(gameSession);
+        });
       }
-
       await this.customerService.store(customer);
-
     } catch (err) {
       console.log('err', err);
     } finally {

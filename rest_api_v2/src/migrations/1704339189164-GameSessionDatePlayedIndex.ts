@@ -13,6 +13,6 @@ export class GameSessionDatePlayedIndex1704339189164 implements MigrationInterfa
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.dropIndex("game_session", "IDX_GAME_SESSION_DATE_PLAYED")
+      await queryRunner.dropIndex("game_session", "IDX_GAME_SESSION_DATE_PLAYED");
     }
 }
